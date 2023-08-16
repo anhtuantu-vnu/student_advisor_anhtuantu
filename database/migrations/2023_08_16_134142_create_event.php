@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('event', function (Blueprint $table) {
             $table->integer('id');
             $table->string('uuid')->primary();
-            $table->string('description');
-            $table->text('access');
+            $table->string('name');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            $table->string('color');
+            $table->string('updated_by');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('event');
     }
 };

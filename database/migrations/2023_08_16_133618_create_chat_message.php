@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('chat_message', function (Blueprint $table) {
             $table->integer('id');
             $table->string('uuid')->primary();
-            $table->string('description');
-            $table->text('access');
+            $table->text('content');
+            $table->string('channel_id');
+            $table->foreign('channel_id')->references('uuid')->on('chat_channel');
+            $table->string('sender_id');
+            $table->string('receiver_id');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('chat_message');
     }
 };
