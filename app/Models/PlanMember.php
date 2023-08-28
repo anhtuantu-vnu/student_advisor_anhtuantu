@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class PlanMember extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id', 'uuid'];
-    protected $table = TableConstant::USER_TABLE;
+    protected $table = TableConstant::PLAN_MEMBER_TABLE;
 }
