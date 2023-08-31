@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('plan_member', function (Blueprint $table) {
             $table->integer('id');
             $table->string('uuid')->primary();
-            $table->string('description');
-            $table->text('access');
+            $table->string('plan_id');
+            $table->foreign('plan_id')->references('uuid')->on('plan');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('uuid')->on('user');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('plan_member');
     }
 };
