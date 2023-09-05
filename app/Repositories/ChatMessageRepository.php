@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 use App\Repositories\Contracts\RepositoryInterface;
-use App\Models\ChatMember;
+use App\Models\ChatMessage;
 
-class ChatMemberRepository implements AbstractRepository
+class ChatMessageRepository implements AbstractRepository
 {
-    public function __construct(ChatMember $model)
+    public function __construct(ChatMessage $model)
     {
         parent::__construct($model);
     }
