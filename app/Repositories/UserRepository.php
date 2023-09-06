@@ -4,7 +4,7 @@ namespace App\Repositories;
 use App\Repositories\Contracts\RepositoryInterface;
 use App\Models\User;
 
-class UserRepository implements AbstractRepository
+class UserRepository extends AbstractRepository
 {
     public function __construct(User $model)
     {

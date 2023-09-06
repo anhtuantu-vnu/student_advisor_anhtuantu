@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('uuid')->primary();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('role_id');
-            $table->foreign('role_id')->references('uuid')->on('role');
+            $table->enum('role' , ['teacher' , 'student', 'admin']);
+//            $table->string('role_id');
+//            $table->foreign('role_id')->references('uuid')->on('role');
             $table->string('unique_id');
             $table->string('email');
             $table->string('password');

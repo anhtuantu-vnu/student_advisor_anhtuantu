@@ -21,7 +21,6 @@ class TestService
      */
     public function testFunction ()
     {
-        dd(1231);
         return $this->userRepository->all();
     }
 }
