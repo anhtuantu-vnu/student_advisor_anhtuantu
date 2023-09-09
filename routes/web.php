@@ -22,3 +22,7 @@ Route::get('/', function () {
 Route::get('/auth/redirect', [LoginController::class , 'redirectToGoogle']);
 
 Route::get('/auth/callback',[LoginController::class , 'handleGoogleCallback']);
+
+Route::get("test", function() {
+    return view('font-end.layout.layout_home');
+});
