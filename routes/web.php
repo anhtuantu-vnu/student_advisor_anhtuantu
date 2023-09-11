@@ -14,15 +14,16 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 //authentication socialite
 Route::get('/auth/redirect', [LoginController::class , 'redirectToGoogle']);
-
 Route::get('/auth/callback',[LoginController::class , 'handleGoogleCallback']);
 
-Route::get("test", function() {
-    return view('font-end.layout.layout_home');
+Route::get("/", function() {
+    return view('front-end.layouts.layout_home');
+});
+Route::get("to-do", function() {
+    return view('front-end.layouts.layout_todo');
+});
+Route::get('/login', function() {
+   return view('front-end.layouts.login');
 });
