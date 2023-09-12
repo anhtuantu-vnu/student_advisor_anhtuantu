@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use App\Http\Controllers\LoginController;
 */
 
 //authentication socialite
-Route::get('/auth/redirect', [LoginController::class , 'redirectToGoogle']);
+Route::get('/auth/redirect', [LoginController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[LoginController::class , 'handleGoogleCallback']);
 
 Route::get("/", function() {

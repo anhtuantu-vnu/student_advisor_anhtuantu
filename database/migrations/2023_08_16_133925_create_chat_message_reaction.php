@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_message_reaction', function (Blueprint $table) {
-            $table->integer('id');
+            $table->integer('id')->autoIncrement();
             $table->string('uuid')->primary();
             $table->string('chat_message_id');
             $table->foreign('chat_message_id')->references('uuid')->on('chat_message');

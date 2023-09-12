@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_member', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('uuid')->primary();
+        Schema::create('user', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->autoIncrement();
+            $table->string('uuid');
             $table->string('event_id');
             $table->foreign('event_id')->references('uuid')->on('event');
             $table->string('user_id');
             $table->foreign('user_id')->references('uuid')->on('user');
             $table->timestamps();
+
+            // Đặt 'uuid' làm khoá chính
+            $table->primary('uuid');
         });
     }
 

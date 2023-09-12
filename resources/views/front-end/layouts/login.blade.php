@@ -66,7 +66,7 @@
 
                         <h6 class="mb-0 d-inline-block bg-white fw-500 font-xsss text-grey-500 mb-3">Or, Sign in with your social account </h6>
                         <div class="form-group mb-1">
-                            <a href="#" class="form-control text-left style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2" onclick="handleLoginGoogle()">
+                            <a href="{{route('login.google')}}" class="form-control text-left style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2" >
                                 <img src="{{ asset('images/icon-1.png') }}" alt="icon" class="ms-2 w40 mb-1 me-5"> Sign in with Google
                             </a>
                         </div>
@@ -174,21 +174,6 @@
 
 <script src=" {{ asset('js/plugin.js') }}"></script>
 <script src="{{ asset('js/scripts.js') }}"></script>
-<script>
-    function handleLoginGoogle() {
-        $.ajax({
-            url: "{{ url('/auth/redirect') }}",
-            type: 'GET',
-            data: {
-                name: $('#name').val(),
-                type: $('#type').val(),
-                price: $('#price').val()
-            },
-            success: function(result){
-                console.log(result);
-            }});
-    }
-</script>
 </body>
 
 
