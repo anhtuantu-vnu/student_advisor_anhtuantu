@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('plan_member', function (Blueprint $table) {
-            $table->integer('id')->autoIncrement();
-            $table->string('uuid')->primary();
+            $table->id();
+            $table->string('uuid')->unique();
             $table->string('plan_id');
             $table->foreign('plan_id')->references('uuid')->on('plan');
             $table->string('user_id');

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Str;
 
 /*
@@ -16,15 +16,15 @@ use Illuminate\Support\Str;
 */
 
 //authentication socialite
-Route::get('/auth/redirect', [LoginController::class , 'redirectToGoogle'])->name('login.google');
-Route::get('/auth/callback',[LoginController::class , 'handleGoogleCallback']);
+Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 
 Route::get("/", function() {
     return view('front-end.layouts.layout_home');
-});
+})->name('app.home');
 Route::get("to-do", function() {
     return view('front-end.layouts.layout_todo');
-});
+})->name('app.to_do');
 Route::get('/login', function() {
    return view('front-end.layouts.login');
-});
+})->name('app.login');

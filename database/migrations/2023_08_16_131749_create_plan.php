@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('plan', function (Blueprint $table) {
-            $table->integer('id')->autoIncrement();
-            $table->string('uuid')->primary();
+            $table->id();
+            $table->string('uuid')->unique();
             $table->string('name');
             $table->string('description');
             $table->string('create_by');
