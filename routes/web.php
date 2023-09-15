@@ -19,12 +19,19 @@ use Illuminate\Support\Str;
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 
+//route view
 Route::get("/", function() {
     return view('front-end.layouts.layout_home');
 })->name('app.home');
+
+Route::get("plan", function() {
+    return view('front-end.layouts.layout_plan');
+})->name('app.plan');
+
 Route::get("to-do", function() {
     return view('front-end.layouts.layout_todo');
 })->name('app.to_do');
+
 Route::get('/login', function() {
    return view('front-end.layouts.login');
 })->name('app.login');
