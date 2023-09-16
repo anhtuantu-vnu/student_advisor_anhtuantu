@@ -13,6 +13,10 @@
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+    {{--    Script Boostrap--}}
+{{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--}}
+{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>--}}
+
     {{--  Style for page  --}}
     @yield("style_page")
 </head>
@@ -41,7 +45,9 @@
     @include('front-end.components.footer');
     {{-- End Footer--}}
 </div>
+@yield("modal_page")
 
+@yield('script_page')
 <script src="{{ asset("js/plugin.js") }}"></script>
 <script src="{{ asset("js/lightbox.js") }}"></script>
 <script src="{{ asset("js/scripts.js") }}"></script>

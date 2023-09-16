@@ -13,12 +13,12 @@ $(document).ready(function() {
 
     function PageLoad() {
       $( window ).on( "load", function() {
-            setInterval(function(){ 
+            setInterval(function(){
                 $('.preloader-wrap').fadeOut(300);
             }, 400);
-            setInterval(function(){ 
+            setInterval(function(){
                 $('body').addClass('loaded');
-            }, 600); 
+            }, 600);
       });
     }
 
@@ -30,7 +30,7 @@ $(document).ready(function() {
         loop:false,
         margin:10,
         nav:false,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         autoWidth:true
     })
@@ -41,7 +41,7 @@ $(document).ready(function() {
         loop:false,
         margin:7,
         nav:true,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         navText:['<i class="ti-angle-left"></i>','<i class="ti-angle-right"></i>'],
         autoWidth:true
@@ -51,7 +51,7 @@ $(document).ready(function() {
         loop:true,
         margin:15,
         nav:true,
-        autoplay:false,  
+        autoplay:false,
         dots:true,
         navText: ["<i class='ti-angle-left icon-nav'></i>","<i class='ti-angle-right icon-nav'></i>"],
         responsive:{
@@ -64,15 +64,15 @@ $(document).ready(function() {
             1200:{
                 items:1,
             }
-            
-        }      
+
+        }
     })
 
      $('.brand-slider').owlCarousel({
         loop:true,
         margin:15,
         nav:false,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         items:5,
         responsive:{
@@ -85,7 +85,7 @@ $(document).ready(function() {
             1200:{
                 items:5,
             }
-            
+
         }
     })
 
@@ -94,7 +94,7 @@ $(document).ready(function() {
         margin:3,
         // nav:true,
         // navText: ["<i class='ti-angle-left icon-nav'></i>","<i class='ti-angle-right icon-nav'></i>"],
-        autoplay:true,  
+        autoplay:true,
         dots:false,
         responsive:{
             0:{
@@ -106,8 +106,8 @@ $(document).ready(function() {
             1200:{
                 items:2,
             }
-            
-        }      
+
+        }
     })
 
 
@@ -116,7 +116,7 @@ $(document).ready(function() {
         loop:true,
         margin:15,
         nav:true,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         items:5,
         navText:['<i class="ti-angle-left"></i>','<i class="ti-angle-right"></i>'],
@@ -130,14 +130,14 @@ $(document).ready(function() {
             1200:{
                 items:3,
             }
-            
+
         }
     })
      $('.feedback-slider2').owlCarousel({
         loop:true,
         margin:15,
         nav:true,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         items:5,
         navText:['<i class="ti-angle-left"></i>','<i class="ti-angle-right"></i>'],
@@ -151,7 +151,7 @@ $(document).ready(function() {
             1200:{
                 items:2,
             }
-            
+
         }
     })
 
@@ -159,7 +159,7 @@ $(document).ready(function() {
         loop:true,
         margin:0,
         nav:true,
-        autoplay:true,  
+        autoplay:true,
         dots:true,
         touchDrag:true,
         navText: ["<i class='ti-angle-left icon-nav'></i>","<i class='ti-angle-right icon-nav'></i>"],
@@ -173,15 +173,15 @@ $(document).ready(function() {
             1200:{
                 items:1,
             }
-            
-        }      
+
+        }
     })
 
     $('.product-slider-6').owlCarousel({
         loop:true,
         margin:15,
         nav:false,
-        autoplay:false,  
+        autoplay:false,
         dots:false,
         items:5,
         responsive:{
@@ -194,21 +194,21 @@ $(document).ready(function() {
             1200:{
                 items:6,
             }
-            
+
         }
     });
 
-     
 
-    
-    
+
+
+
     $('#lightbox').append('<div class="right-comment chat-left scroll-bar theme-dark-bg"><div class="card-body ps-2 pe-4 pb-0 d-flex"> <figure class="avatar me-3"><img src="images/user-8.png" alt="image" class="shadow-sm rounded-circle w45"></figure><h4 class="fw-700 text-grey-900 font-xssss mt-1 text-left">Hurin Seary <span class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">2 hour ago</span></h4> <a href="#" class="ms-auto"><i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i></a></div><div class="card-body d-flex ps-2 pe-4 pt-0 mt-0"> <a href="#" class="d-flex align-items-center fw-600 text-grey-900 lh-26 font-xssss me-3 text-dark"><i class="feather-thumbs-up text-white bg-primary-gradiant me-1 btn-round-xs font-xss"></i> <i class="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss"></i>2.8K Like</a> <a href="#" class="d-flex align-items-center fw-600 text-grey-900 lh-26 font-xssss text-dark"><i class="feather-message-circle text-grey-900 btn-round-sm font-lg text-dark"></i>22 Comment</a></div><div class="card w-100 border-0 shadow-none right-scroll-bar"><div class="card-body border-top-xs pt-4 pb-3 pe-4 d-block ps-5"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-6.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Victor Exrixon <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nulla dolor.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-4.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Surfiya Zakir <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nulla dolor.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5 ms-5 position-relative"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-3.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Goria Coast <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5 ms-5 position-relative"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-3.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Hurin Seary <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5 ms-5 position-relative"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-3.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">David Goria <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-4.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Seary Victor <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nulla dolor.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-4.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Ana Seary <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nulla dolor.</p></div></div><div class="card-body pt-0 pb-3 pe-4 d-block ps-5"> <figure class="avatar position-absolute left-0 ms-2 mt-1"><img src="images/user-4.png" alt="image" class="shadow-sm rounded-circle w35"></figure><div class="chat p-3 bg-greylight rounded-xxl d-block text-left theme-dark-bg"><h4 class="fw-700 text-grey-900 font-xssss mt-0 mb-1">Studio Express <a href="#" class="ms-auto"><i class="ti-more-alt float-right text-grey-800 font-xsss"></i></a></h4><p class="fw-500 text-grey-500 lh-20 font-xssss w-100 mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nulla dolor.</p></div> </div></div></div>');
 
 
     $(window).on('load',function(){
         $('#Modalstories').modal('show');
     });
-    
+
 
     $('.emoji-bttn').on('click', function() {
       $(this).parent().find('.emoji-wrap').toggleClass('active');
@@ -242,34 +242,34 @@ $(document).ready(function() {
         return false;
     });
 
-    
-    
+
+
     $('.dropdown-menu-icon').on('click', function() {
         $('.dropdown-menu-settings').toggleClass('active');
     });
-    
 
 
-    
+
+
     $('.menu-search-icon').on('click', function() {
         $('.app-header-search').addClass('show');
     });
     $('.searchbox-close').on('click', function() {
         $('.app-header-search').removeClass('show');
     });
-    
-    
+
+
 
     $('.switchcolor').on('click', function() {
         $(this).addClass('active');
         $('.backdrop').addClass('active');
-        $('.switchcolor-wrap').addClass('active'); 
+        $('.switchcolor-wrap').addClass('active');
     });
 
     $('.sheet-close,.backdrop').on('click', function() {
         $('.switchcolor').removeClass('active');
         $('.backdrop').removeClass('active');
-        $('.switchcolor-wrap').removeClass('active'); 
+        $('.switchcolor-wrap').removeClass('active');
     });
 
     $('#darkmodeswitch').on('change', function () {
@@ -281,7 +281,7 @@ $(document).ready(function() {
     });
 
 
-    
+
 
     $('.chat-active-btn').on('click', function() {
         $('.right-chat').toggleClass('active-sidebar');
@@ -321,7 +321,7 @@ $(document).ready(function() {
         }
     });
 
-    
+
     $('.nav-menu').on('click', function () {
         $(this).toggleClass('active');
         $('.navigation').toggleClass('nav-active');
@@ -335,17 +335,18 @@ $(document).ready(function() {
         $('.modal-popup-chat').removeClass('d-block');
         return false;
     });
+    $('.close-btn-modal-plan').on('click', function() {
+        $('#ModalCreatePlan').removeAttr();
+        return true;
+    })
 
-    
-
-    
 
     $('.close-nav').on('click', function () {
         $('.navigation').removeClass('nav-active');
         return false;
     });
 
-    
+
     $('.toggle-menu-color input').on('change', function () {
         if (this.checked) {
             $('.navigation').addClass('menu-current-color');
@@ -361,7 +362,7 @@ $(document).ready(function() {
             $('.navigation,.main-content').removeClass('menu-active');
         }
     });
-    
+
     $('.toggle-screen input').on('change', function () {
         if (this.checked) {
             $('body').addClass('theme-full');
@@ -369,8 +370,8 @@ $(document).ready(function() {
             $('body').removeClass('theme-full');
         }
     });
-    
-    
+
+
     $('.toggle-dark input').on('change', function () {
         if (this.checked) {
             $('body').addClass('theme-dark');
@@ -386,7 +387,7 @@ $(document).ready(function() {
         }
     });
 
-    
+
 
 });
 
@@ -400,7 +401,7 @@ function PageScroll() {
         $("html, body").stop().animate({
             scrollTop: $($anchor.attr("href")).offset().top - 0
         }, 1500, 'easeInOutExpo');
-        $('.overlay-section').removeClass('active'); 
+        $('.overlay-section').removeClass('active');
         e.preventDefault();
 
     });
