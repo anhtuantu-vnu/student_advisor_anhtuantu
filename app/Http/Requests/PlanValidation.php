@@ -12,7 +12,7 @@ class PlanValidation extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class PlanValidation extends FormRequest
         return [
             'name' => "required|max:255",
             'description' => 'required',
-            'created_by' => "required"
+            'create_by' => "required"
         ];
     }
 

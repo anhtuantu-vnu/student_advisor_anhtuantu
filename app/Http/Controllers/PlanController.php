@@ -19,15 +19,15 @@ class PlanController extends Controller
         $this->planService = $planService;
     }
 
-    public function createPlan(PlanValidation $request)
+    /**
+     * @param PlanValidation $request
+     * @return true
+     */
+    public function createPlan(PlanValidation $request): bool
     {
         $dataPlan = $request->input();
-        try {
-            $this->formValidation->validate($dataPlan);
-            $this->planService->createPlan($dataPlan);
-        }  catch (BaseValidationException $e) {
-            dd($e);
-        }
+        dd($dataPlan);
+        //$this->planService->createPlan($dataPlan);
         return true;
     }
 
