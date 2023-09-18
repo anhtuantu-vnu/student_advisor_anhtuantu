@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
 use App\Http\Requests\PlanValidation;
 
 class PlanController extends Controller
 {
-    use ResponseTrait;
     public PlanService $planService;
 
     public function __construct(
@@ -25,8 +23,10 @@ class PlanController extends Controller
      */
     public function createPlan(PlanValidation $request): bool
     {
-        $dataPlan = $request->input();
-        dd($dataPlan);
+        dd(231231);
+        $validated = $request->validated();
+        $dataPlan = $request->input(['name']);
+        dd($dataPlan, 123);
         //$this->planService->createPlan($dataPlan);
         return true;
     }

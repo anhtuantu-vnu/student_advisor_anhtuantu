@@ -30,16 +30,16 @@ class PlanValidation extends FormRequest
     }
 
 
-//    /**
-//     * Define message in validation
-//     * @return string[]
-//     */
-//    public function messages(): array
-//    {
-//        return [
-//            'name.required' => 'Name is required!',
-//            'description.required' => 'Description is required!',
-//            'created_by.required' => 'Password is too short',
-//        ];
-//    }
+    /**
+     * Define message in validation
+     * @return string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Name is required!',
+            'description.required' => 'Description is required!',
+            'created_by.required' => 'Password is too short',
+        ];
+    }
 }

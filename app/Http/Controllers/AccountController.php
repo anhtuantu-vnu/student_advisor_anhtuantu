@@ -8,14 +8,11 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\RedirectResponse;
 use Exception;
 use App\Services\AccountService;
-use App\Traits\ResponseTrait;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
-    use ResponseTrait;
-
     public AccountService $loginService;
 
     public function __construct(

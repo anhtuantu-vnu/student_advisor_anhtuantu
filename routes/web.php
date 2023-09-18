@@ -14,13 +14,16 @@ use Illuminate\Support\Str;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 
 //authentication socialite
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 
 //route view
-Route::get("/", function() {
+Route::get("/home", function() {
     return view('front-end.layouts.layout_home');
 })->name('app.home');
 
