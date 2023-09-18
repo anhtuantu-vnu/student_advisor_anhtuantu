@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_channel', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('uuid')->primary();
+            $table->id();
+            $table->string('uuid')->unique();
             $table->string('name');
             $table->timestamps();
         });

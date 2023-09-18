@@ -4,7 +4,7 @@ namespace App\Repositories;
 use App\Repositories\Contracts\RepositoryInterface;
 use App\Models\EventMember;
 
-class EventMemberRepository implements AbstractRepository
+class EventMemberRepository extends AbstractRepository
 {
     public function __construct(EventMember $model)
     {

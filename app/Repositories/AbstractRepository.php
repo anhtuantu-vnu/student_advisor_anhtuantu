@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\App;
-use App\Repositories\Contracts\RepositoryinterInterface;
+use App\Repositories\Contracts\RepositoryInterface;
 
-class AbstractRepository implements RepositoryinterInterface
+class AbstractRepository implements RepositoryInterface
 {
     protected Model $model;
 

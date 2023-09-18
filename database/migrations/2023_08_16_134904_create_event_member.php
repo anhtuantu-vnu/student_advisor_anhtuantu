@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('event_member', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('uuid')->primary();
+            $table->id();
+            $table->string('uuid')->unique();
             $table->string('event_id');
             $table->foreign('event_id')->references('uuid')->on('event');
             $table->string('user_id');
