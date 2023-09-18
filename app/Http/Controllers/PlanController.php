@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\PlanService;
-use App\Http\Requests\PlanValidation;
+use App\Http\Requests\PlanRequest;
 
 class PlanController extends Controller
 {
@@ -21,13 +21,11 @@ class PlanController extends Controller
      * @param PlanValidation $request
      * @return true
      */
-    public function createPlan(PlanValidation $request): bool
+    public function createPlan(PlanRequest $request): bool
     {
-        dd(231231);
-        $validated = $request->validated();
-        $dataPlan = $request->input(['name']);
-        dd($dataPlan, 123);
-        //$this->planService->createPlan($dataPlan);
+        $data = $request->input();
+        dd($data);
+        $this->planService->createPlan($data);
         return true;
     }
 

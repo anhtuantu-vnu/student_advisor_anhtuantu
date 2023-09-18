@@ -1,0 +1,9 @@
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+/*Css for todo page*/
+.to_do .cart_task:hover {
+    cursor: pointer;
+    background-color: #4c91d6!important;
+}

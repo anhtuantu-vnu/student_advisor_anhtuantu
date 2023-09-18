@@ -2,26 +2,22 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
-use App\Traits\ResponseTrait;
+use Illuminate\Foundation\Http\FormRequest;
 
-class PlanValidation extends BaseRequest
+class PlanRequest extends FormRequest
 {
-    use ResponseTrait;
-
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        parent::__construct();
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -31,5 +27,4 @@ class PlanValidation extends BaseRequest
             'create_by' => "required"
         ];
     }
-
 }

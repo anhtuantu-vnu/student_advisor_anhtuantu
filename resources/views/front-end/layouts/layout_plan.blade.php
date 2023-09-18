@@ -2,6 +2,7 @@
 
 @section('style_page')
     <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/layout_custom.css") }}"/>
 @endsection
 
 @section('content')
@@ -19,7 +20,7 @@
                                     <input type="text" class="form-control text-grey-500 mb-0 bg-greylight theme-dark-bg border-0" placeholder="Search here.">
                                 </div>
                                 <a href="#" class="btn-round-md ms-2 bg-greylight theme-dark-bg rounded-3"><i class="feather-filter font-xss text-grey-500"></i></a>
-                                <a href="#" class="btn-round-md ms-2 bg-greylight theme-dark-bg rounded-3" data-bs-toggle="modal" data-bs-target="#ModalCreatePlan"><i class="feather-plus font-xss text-grey-500"></i></a>
+                                <a href="#" class="btn-round-md ms-2 bg-current theme-dark-bg rounded-3" data-bs-toggle="modal" data-bs-target="#ModalCreatePlan"><i class="feather-plus font-xss fw-700" style="color: white !important;"></i></a>
                             </div>
                         </div>
 
@@ -64,11 +65,11 @@
                                 </div>
                                 <div class="form-gorup mt-2">
                                     <label class="mont-font fw-600 font-xsss">Description</label>
-                                    <textarea class="form-control mb-0 p-3 h200 bg-greylight lh-16" rows="5" placeholder="Write your message..." spellcheck="false"></textarea>
+                                    <textarea class="form-control mb-0 p-3 h200 lh-16" rows="5" placeholder="Write your message..." spellcheck="false"></textarea>
                                 </div>
                             </form>
                             <div class="col-sm-12 p-0 text-left mt-5">
-                                <div class="form-group mb-1"><a href="#" class="form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 ">Create</a></div>
+                                <div class="form-group mb-1"><a href="{{ route('app.to_do') }}" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 ">Create</a></div>
                             </div>
                         </div>
                     </div>
