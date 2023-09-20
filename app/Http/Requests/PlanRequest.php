@@ -21,10 +21,10 @@ class PlanRequest extends FormRequest
      */
     public function rules(): array
     {
+//        dd(123123);
         return [
-            'name' => "required|max:255",
-            'description' => 'required',
-            'create_by' => "required"
+            'name' => "bail|required|max:255",
+            'description' => 'bail|required'
         ];
     }
 }

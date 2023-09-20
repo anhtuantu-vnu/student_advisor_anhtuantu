@@ -8,6 +8,16 @@
 @section('content')
     <div class="main-content right-chat-active">
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="middle-sidebar-bottom">
             <div class="middle-sidebar-left pe-0">
                 <div class="row">
@@ -58,19 +68,23 @@
                     <div class="card shadow-none rounded-0 w-100 p-2 pt-3 border-0">
                         <div class="card-body rounded-0 text-left p-3">
                             <h2 class="fw-700 display1-size display2-md-size mb-4">Create your plan</h2>
-                            <form>
+                            <form method="POST" action="{{ route('create_plan') }}">
+                                @csrf
                                 <div class="form-gorup">
                                     <label class="mont-font fw-600 font-xsss">Name plan</label>
-                                    <input type="text" name="comment-name" class="form-control">
+                                    <input type="text" name="name" class="form-control">
                                 </div>
                                 <div class="form-gorup mt-2">
                                     <label class="mont-font fw-600 font-xsss">Description</label>
-                                    <textarea class="form-control mb-0 p-3 h200 lh-16" rows="5" placeholder="Write your message..." spellcheck="false"></textarea>
+                                    <textarea class="form-control mb-0 p-3 h200 lh-16" name="description" rows="5" placeholder="Write your message..." spellcheck="false"></textarea>
                                 </div>
+                                <button type="submit" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 mt-4">Create</button>
+{{--                                <div class="col-sm-12 p-0 text-left mt-4">--}}
+{{--                                    <div class="form-group mb-1">--}}
+{{--                                        <button type="submit" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 ">Create</button>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </form>
-                            <div class="col-sm-12 p-0 text-left mt-5">
-                                <div class="form-group mb-1"><a href="{{ route('app.to_do') }}" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 ">Create</a></div>
-                            </div>
                         </div>
                     </div>
                 </div>

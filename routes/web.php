@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
 use Illuminate\Support\Str;
+use App\Http\Controllers\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//api
+Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
+Route::post('/get-plan', [PlanController::class, 'getPlan']);
+
 //authentication socialite
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
@@ -26,15 +31,12 @@ Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback'])
 Route::get("/home", function() {
     return view('front-end.layouts.layout_home');
 })->name('app.home');
-
 Route::get("plan", function() {
     return view('front-end.layouts.layout_plan');
 })->name('app.plan');
-
 Route::get("to-do", function() {
     return view('front-end.layouts.layout_todo');
 })->name('app.to_do');
-
 Route::get('/login', function() {
    return view('front-end.layouts.login');
 })->name('app.login');

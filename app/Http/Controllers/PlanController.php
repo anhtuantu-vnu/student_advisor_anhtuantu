@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\PlanService;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\PlanRequest;
 
 class PlanController extends Controller
@@ -18,13 +19,16 @@ class PlanController extends Controller
     }
 
     /**
-     * @param PlanValidation $request
      * @return true
      */
-    public function createPlan(PlanRequest $request): bool
+    public function createPlan(Request $request): bool
     {
+        $validate = $request->validate([
+            'name' => "bail|required|max:255",
+            'description' => 'bail|required'
+        ]);
+        dd(123132);
         $data = $request->input();
-        dd($data);
         $this->planService->createPlan($data);
         return true;
     }
