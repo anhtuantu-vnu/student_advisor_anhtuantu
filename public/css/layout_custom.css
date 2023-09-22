@@ -7,3 +7,41 @@
     cursor: pointer;
     background-color: #4c91d6!important;
 }
+
+/*CSS for plan page*/
+.layout_add_plan .select_add_customer{
+    position: relative;
+}
+.layout_add_plan .select_add_customer i::before {
+    position: absolute;
+    top: 50%;
+    font-size: 26px !important;
+    right: 10px;
+}
+.layout_add_plan #selected {
+    /* Remove default list styling */
+    list-style-type: none;
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    background-color: white;
+    height: 200px;
+    overflow-y: scroll;
+    border-radius: 4px;
+}
+
+.layout_add_plan #selected li a {
+    margin-top: -1px;
+    padding: 8px 6px;
+    text-decoration: none;
+    font-size: 12px;
+    color: black;
+    display: block;
+    font-weight: 400;
+}
+
+.layout_add_plan #selected li a:hover:not(.header) {
+    background-color: #eee; /* Add a hover effect to all links, except for headers */
+}

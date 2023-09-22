@@ -15,12 +15,7 @@ use App\Http\Controllers\PlanController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
-});
 
-//api
-Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 Route::post('/get-plan', [PlanController::class, 'getPlan']);
 
 //authentication socialite
@@ -28,12 +23,14 @@ Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->n
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 
 //route view
-Route::get("/home", function() {
+Route::get("/", function() {
     return view('front-end.layouts.layout_home');
 })->name('app.home');
-Route::get("plan", function() {
-    return view('front-end.layouts.layout_plan');
-})->name('app.plan');
+
+Route::get("plan",[PlanController::class , 'index'])->name('app.plan');
+Route::get("create-plan", [PlanController::class , 'showCreatePlan'])->name('ui_create_plan');
+Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
+
 Route::get("to-do", function() {
     return view('front-end.layouts.layout_todo');
 })->name('app.to_do');

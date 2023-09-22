@@ -2,6 +2,7 @@
 namespace App\Services;
 use App\Repositories\PlanRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class PlanService
@@ -24,7 +25,7 @@ class PlanService
 
     /**
      * @param $plan
-     * @return PlanRepository
+     * @return array
      */
     public function createPlan($plan): mixed
     {
@@ -34,4 +35,12 @@ class PlanService
         return $this->planRepository->create($plan);
     }
 
+    /**
+     * @param $userId
+     * @return Collection
+     */
+    public function getPlans($userId): mixed
+    {
+        return $this->planRepository->find(['uuid' => $userId]);
+    }
 }

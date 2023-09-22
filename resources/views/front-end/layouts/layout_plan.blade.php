@@ -7,17 +7,6 @@
 
 @section('content')
     <div class="main-content right-chat-active">
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="middle-sidebar-bottom">
             <div class="middle-sidebar-left pe-0">
                 <div class="row">
@@ -30,7 +19,7 @@
                                     <input type="text" class="form-control text-grey-500 mb-0 bg-greylight theme-dark-bg border-0" placeholder="Search here.">
                                 </div>
                                 <a href="#" class="btn-round-md ms-2 bg-greylight theme-dark-bg rounded-3"><i class="feather-filter font-xss text-grey-500"></i></a>
-                                <a href="#" class="btn-round-md ms-2 bg-current theme-dark-bg rounded-3" data-bs-toggle="modal" data-bs-target="#ModalCreatePlan"><i class="feather-plus font-xss fw-700" style="color: white !important;"></i></a>
+                                <a href="{{ route("ui_create_plan") }}" class="btn-round-md ms-2 bg-current theme-dark-bg rounded-3"><i class="feather-plus font-xss fw-700" style="color: white !important;"></i></a>
                             </div>
                         </div>
 
@@ -58,41 +47,4 @@
     </div>
 @endsection
 
-@section('modal_page')
-    <!-- Modal create plan -->
-    <div class="modal bottom fade" style="overflow-y: scroll;" id="ModalCreatePlan" tabindex="1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content border-0">
-                <button type="button" class="close close-btn-modal-plan" data-dismiss="modal" aria-label="Close"><i class="ti-close text-grey-500"></i></button>
-                <div class="modal-body p-3 d-flex align-items-center bg-none">
-                    <div class="card shadow-none rounded-0 w-100 p-2 pt-3 border-0">
-                        <div class="card-body rounded-0 text-left p-3">
-                            <h2 class="fw-700 display1-size display2-md-size mb-4">Create your plan</h2>
-                            <form method="POST" action="{{ route('create_plan') }}">
-                                @csrf
-                                <div class="form-gorup">
-                                    <label class="mont-font fw-600 font-xsss">Name plan</label>
-                                    <input type="text" name="name" class="form-control">
-                                </div>
-                                <div class="form-gorup mt-2">
-                                    <label class="mont-font fw-600 font-xsss">Description</label>
-                                    <textarea class="form-control mb-0 p-3 h200 lh-16" name="description" rows="5" placeholder="Write your message..." spellcheck="false"></textarea>
-                                </div>
-                                <button type="submit" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 mt-4">Create</button>
-{{--                                <div class="col-sm-12 p-0 text-left mt-4">--}}
-{{--                                    <div class="form-group mb-1">--}}
-{{--                                        <button type="submit" class="form-control text-center style2-input text-white fw-600 bg-current border-0 p-0 ">Create</button>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
 
-@section('script_page')
-
-@endsection
