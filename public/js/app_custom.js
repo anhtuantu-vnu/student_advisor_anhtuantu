@@ -1,7 +1,13 @@
-export function addClassNone(element) {
+function addClassNone(element) {
     element.classList.add('d-none');
 }
 
-export function removeClassNone(element) {
+function removeClassNone(element) {
     element.classList.remove('d-none');
+}
+
+function removeAllElementChild(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }

@@ -27,7 +27,8 @@
     margin: 0;
     border: 1px solid #ddd;
     background-color: white;
-    height: 200px;
+    max-height: 200px;
+    height: fit-content;
     overflow-y: scroll;
     border-radius: 4px;
 }
@@ -44,4 +45,22 @@
 
 .layout_add_plan #selected li a:hover:not(.header) {
     background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+.layout_add_plan .selected_user .tag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: var(--theme-color) !important;
+    padding: 4px 8px;
+    margin-top: 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: white;
+}
+
+.layout_add_plan .selected_user .icon_delete {
+    margin-left: 6px;
+}
+.layout_add_plan .selected_user .icon_delete:hover {
+    cursor: pointer;
 }

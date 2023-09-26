@@ -20,7 +20,7 @@
     @yield("style_page")
 
     {{--  Script customr --}}
-    <script type="module" src="{{ asset("js/app_custom.js") }}"></script>
+    <script type="text/javascript" src="{{ asset("js/app_custom.js") }}"></script>
     @stack('js_page')
 
 </head>

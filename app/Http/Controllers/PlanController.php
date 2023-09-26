@@ -6,17 +6,21 @@ use Illuminate\Http\Request;
 use App\Services\PlanService;
 use Illuminate\Http\Response;
 use App\Http\Requests\PlanRequest;
+use App\Repositories\UserRepository;
 use Illuminate\View\View;
 
 class PlanController extends Controller
 {
     public PlanService $planService;
+    public UserRepository $userRepository;
 
     public function __construct(
-        PlanService $planService
+        PlanService $planService,
+        UserRepository $userRepository
     )
     {
         $this->planService = $planService;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -33,10 +37,11 @@ class PlanController extends Controller
     /**
      * @return View
      */
-    public function showCreatePlan(): View
+    public function formCreatePlan(): View
     {
         $userId = "c0cf400b-b81f-4779-9a1d-12ae3978ac3a";
-        return view('front-end.layouts.layout_create_plan');
+        $listUser = $this->userRepository->find()->toArray();
+        return view('front-end.layouts.layout_create_plan', compact('listUser', "userId"));
     }
 
     /**

@@ -16,8 +16,6 @@ use App\Http\Controllers\PlanController;
 |
 */
 
-Route::post('/get-plan', [PlanController::class, 'getPlan']);
-
 //authentication socialite
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
@@ -27,13 +25,8 @@ Route::get("/", function() {
     return view('front-end.layouts.layout_home');
 })->name('app.home');
 
-Route::get("plan",[PlanController::class , 'index'])->name('app.plan');
-Route::get("create-plan", [PlanController::class , 'showCreatePlan'])->name('ui_create_plan');
+Route::get("/plan",[PlanController::class , 'index'])->name('app.plan');
+Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
 Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
-
-Route::get("to-do", function() {
-    return view('front-end.layouts.layout_todo');
-})->name('app.to_do');
-Route::get('/login', function() {
-   return view('front-end.layouts.login');
-})->name('app.login');
+Route::get("/to-do", function() { return view('front-end.layouts.layout_todo');})->name('app.to_do');
+Route::get('/login', function() { return view('front-end.layouts.login');})->name('app.login');
