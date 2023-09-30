@@ -27,7 +27,7 @@
     margin: 0;
     border: 1px solid #ddd;
     background-color: white;
-    max-height: 200px;
+    max-height: 250px;
     height: fit-content;
     overflow-y: scroll;
     border-radius: 4px;
@@ -64,3 +64,104 @@
 .layout_add_plan .selected_user .icon_delete:hover {
     cursor: pointer;
 }
+
+/*checkbox*/
+.list{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    border-radius: 4px;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    color: black !important;
+}
+
+.list .list-item{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    border-bottom: 1px solid #ECF0F1;
+}
+
+.list .list-item:last-child{
+    border: 0;
+}
+
+.check-label{
+    display: flex;
+    font-size: 14px;
+    height: 48px;
+    margin: 0;
+}
+.check-label:hover{
+    cursor: pointer;
+    background: #F1F1F1;
+}
+
+.check-label-box{
+    display: flex;
+    align-self: center;
+    position: relative;
+    height: 14px;
+    width: 14px;
+    margin: 0 12px;
+    cursor: pointer;
+    border: 2px solid black;
+}
+
+.check-label-text{
+    display: flex;
+    align-self: center;
+    position: relative;
+    cursor: pointer;
+    padding: 24px 0;
+}
+
+.hidden-box{
+    opacity: 0;
+    position: absolute;
+    appearance: none;
+}
+
+.check-label-text:after{
+    content: "";
+    display: block;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    left: 8%;
+    transform: translateY(-50%);
+    transition: width 100ms ease-in-out;
+}
+
+.hidden-box:checked + .check-label{
+}
+
+.hidden-box:checked + .check-label .check-label-box:after{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 3px;
+    width: 4px;
+    height: 9px;
+    border: solid black;
+    border-width: 0px 2px 2px 0px;
+    transform: rotate(45deg);
+}
+
+.hidden-box:checked + .check-label .check-label-text:after{
+    width: 100%;
+}
+
+.list_member_selected {
+    display: flex;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+    padding: 0 8px;
+    min-height: 100%;
+}
+

@@ -11,3 +11,7 @@ function removeAllElementChild(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+
+function initElement (nameElement) {
+    return document.createElement(nameElement);
+}

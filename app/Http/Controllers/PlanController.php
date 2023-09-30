@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\PlanService;
-use Illuminate\Http\Response;
 use App\Http\Requests\PlanRequest;
 use App\Repositories\UserRepository;
 use Illuminate\View\View;
@@ -50,6 +49,7 @@ class PlanController extends Controller
     public function createPlan(Request $request): bool
     {
         $data = $request->input();
+        dd($data);
         $this->planService->createPlan($data);
         return true;
     }
