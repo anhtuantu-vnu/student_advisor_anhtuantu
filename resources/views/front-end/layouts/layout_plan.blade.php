@@ -19,7 +19,9 @@
                                     <input type="text" class="form-control text-grey-500 mb-0 bg-greylight theme-dark-bg border-0" placeholder="Search here.">
                                 </div>
                                 <a href="#" class="btn-round-md ms-2 bg-greylight theme-dark-bg rounded-3"><i class="feather-filter font-xss text-grey-500"></i></a>
-                                <a href="{{ route("ui_create_plan") }}" class="btn-round-md ms-2 bg-current theme-dark-bg rounded-3"><i class="feather-plus font-xss fw-700" style="color: white !important;"></i></a>
+                                <a href="{{ route("ui_create_plan") }}"
+                                   style="padding: 10px; color: white; display:flex; align-items: center; font-size: 14px; font-weight: 500"
+                                   class="ms-2 bg-current theme-dark-bg rounded-3">Create plan</a>
                             </div>
                         </div>
 

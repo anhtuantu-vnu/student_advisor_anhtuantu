@@ -7,6 +7,7 @@
 @push('js_page')
     <script>
         const listUserSelected = [];
+        const idUserSelected = [];
         const listUser = {!! json_encode($listUser) !!};
         const listUserShow = listUser;
         let isShowListMember = false;
@@ -19,19 +20,24 @@
         function clickOutSide() {
             let listUser = document.querySelector('.list_customer');
             return addClassNone(listUser);
-        }
-
+        };
         function clickSelectedUser(user) {
             let flagCheck = true;
+            let inputCheckbox = document.querySelector('.list_member');
             for (let i = 0; i < listUserSelected.length; i++) {
                 if (listUserSelected[i].email === user['email']) {
                     listUserSelected.splice(i, 1);
+                    idUserSelected.splice(i, 1);
                     flagCheck = false;
                     break; // Exit the loop when the condition is met
                 }
             }
 
-            flagCheck && listUserSelected.push(user);
+            if (flagCheck) {
+                listUserSelected.push(user);
+                idUserSelected.push(user.uuid);
+            }
+            inputCheckbox.value = JSON.stringify(idUserSelected);
             renderListMemberSelected();
             return true;
         }
@@ -69,7 +75,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-group">
                                             <label class="mont-font fw-600 font-xsss">Name Plan *</label>
-                                            <input type="text" class="form-control" name="name" required>
+                                            <input type="text" class="form-control input_name" name="name" required>
 {{--                                            @error('name')--}}
 {{--                                                <div class="alert alert-danger">{{ $message }}</div>--}}
 {{--                                            @enderror--}}
@@ -82,7 +88,7 @@
                                             <div class="form-group select_add_customer">
                                                 <label class="mont-font fw-600 font-xsss">Add Member</label>
                                                 <div class="input_add_member position-relative" onclick="clickSearchMember()">
-                                                    <input type="text" class="form-control" name="list_member">
+                                                    <input type="text" class="form-control list_member" style="color:transparent" name="list_member">
                                                     {{-- Show list member selected --}}
                                                     <div class="list_member_selected position-absolute top-0">
                                                     </div>
@@ -96,7 +102,7 @@
                                                     @foreach($listUser as $user)
                                                         <li class="list-item">
                                                             <input type="checkbox" class="hidden-box" id="{{ $user['id'] }}" />
-                                                            <label class="check-label" for="{{ $user['id'] }}" onclick="clickSelectedUser({{json_encode($user)}})">
+                                                            <label class="check-label" for="{{ $user['id'] }}" onclick="clickSelectedUser({{ json_encode($user) }})">
                                                                 <span class="check-label-box"></span>
                                                                 <span class="check-label-text">{{ $user['email'] }}</span>
                                                             </label>
@@ -113,7 +119,7 @@
 {{--                                        @error('name')--}}
 {{--                                            <div class="alert alert-danger">{{ $message }}</div>--}}
 {{--                                        @enderror--}}
-                                        <textarea class="form-control mb-0 p-3 h200 bg-greylight lh-16" name="description" rows="5" placeholder="Description for plan..." spellcheck="false" required></textarea>
+                                        <textarea class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16" name="description" rows="5" placeholder="Description for plan..." spellcheck="false" required></textarea>
                                     </div>
                                 </div>
                                 <input type="submit" value="Save" class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>

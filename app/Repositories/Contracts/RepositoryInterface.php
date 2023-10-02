@@ -36,6 +36,13 @@ interface RepositoryInterface {
      */
     public function create(array $attribute);
 
+    /**
+     * Create a record
+     * @param array $attribute
+     * @return mixed
+     */
+    public function createMany(array $attribute);
+
 
     /**
      * @param array $attribute

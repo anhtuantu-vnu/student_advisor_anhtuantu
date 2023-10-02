@@ -55,6 +55,14 @@ class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function createMany(array $attributes) {
+        return $this->model->insert($attributes);
+    }
+
+    /**
      * @inheritdoc
      */
     public function update(array $attributes = [])

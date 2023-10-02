@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
-use App\Http\Requests\PlanRequest;
 use App\Repositories\UserRepository;
 use Illuminate\View\View;
 
@@ -48,9 +48,8 @@ class PlanController extends Controller
      */
     public function createPlan(Request $request): bool
     {
-        $data = $request->input();
-        dd($data);
-        $this->planService->createPlan($data);
+        $plan = $this->planService->createPlan($request->only(Plan::NAME, Plan::DESCRIPTION, Plan::DESCRIPTION));
+        $this->planService->createPlanMember($request->only('list_member'), $plan);
         return true;
     }
 
