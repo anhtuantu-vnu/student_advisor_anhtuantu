@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
-class TodoController extends Controller
+class HomeController extends Controller
 {
-
     /**
      * @return View
      */
-    public function showToDo(): View
+    public function showHome(): View
     {
-        return view('front-end.layouts.layout_todo');
+        return view('front-end.layouts.layout_home');
     }
 }

@@ -26,7 +26,7 @@ class PlanController extends Controller
      * Show the application plan
      * @return View
      */
-    public function index():View
+    public function showPlan():View
     {
         $userId = "c0cf400b-b81f-4779-9a1d-12ae3978ac3a";
         $listPlan = $this->planService->getPlans($userId)->toArray();
