@@ -16,14 +16,10 @@ class AuthLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        dd(Auth::check());
         if (Auth::check()) {
-            dd(12313);
             $user = Auth::user();
             $request->session()->put('user', $user);
         }
-        dd(456);
-
         return redirect('/login');
     }
 }
