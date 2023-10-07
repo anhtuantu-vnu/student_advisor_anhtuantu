@@ -91,22 +91,11 @@ class AccountController extends Controller
     public function login(Request $request): JsonResponse|RedirectResponse
     {
         try {
-//            dd([
-//                'email' => $request->email,
-//                'password' => Hash::make($request->password)
-//            ]);
-            dd(Auth::attempt([
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
-            ]));
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $resultLogin = $this->loginService->loginAccount($email, $password);
-            if($resultLogin) {
-                Auth::attempt($request->only('email', 'password'));
+            if(Auth::attempt($request->only('email', 'password'))) {
                 return redirect('/create-plan');
             }
-            return redirect('/login');
+
+            return redirect('/login')->withErrors(['error', __('messages.login_failed')])->withInput();
         } catch (Exception $e) {
             return $this->failedWithErrors(500, $e->getMessage());
         }

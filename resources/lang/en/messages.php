@@ -4,7 +4,7 @@ return [
     'account' => [
         'login_success' => 'Login success',
         'register_success' => 'Register account success',
-        'login_failed' => 'Login failed',
+        'login_failed' => 'Account information or password is incorrect',
         'register_failed' => 'Register account failed',
     ]
 ];

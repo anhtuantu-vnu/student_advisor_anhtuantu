@@ -62,6 +62,11 @@
                                    placeholder="Password">
                             <i class="font-sm ti-lock text-grey-500 pe-0"></i>
                         </div>
+                        @if ($errors->any())
+                            <div class="alert-danger mt-2" style="background: none; margin-left: 4px; font-size: 14px">
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
                         <button
                             type="submit"
                             class="mt-2 form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 ">
