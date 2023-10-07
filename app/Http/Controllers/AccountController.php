@@ -74,7 +74,7 @@ class AccountController extends Controller
     {
         try {
             $dataUser = $request->input();
-            $dataUser['password'] = Hash::make($dataUser['password']);
+            $dataUser['password'] = bcrypt($dataUser['password']);
             $this->loginService->createAccount($dataUser);
             return $this->successWithNoContent(__("messages.account.register_success"));
         } catch (Exception $e) {
@@ -91,7 +91,14 @@ class AccountController extends Controller
     public function login(Request $request): JsonResponse|RedirectResponse
     {
         try {
-            dd(Auth::attempt(['email' => $request->email, 'password' => $request->password]));
+//            dd([
+//                'email' => $request->email,
+//                'password' => Hash::make($request->password)
+//            ]);
+            dd(Auth::attempt([
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]));
             $email = $request->input('email');
             $password = $request->input('password');
             $resultLogin = $this->loginService->loginAccount($email, $password);
