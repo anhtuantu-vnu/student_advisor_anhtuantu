@@ -9,6 +9,9 @@ class Plan extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id', 'uuid'];
+    protected $guarded = ['id'];
     protected $table = TableConstant::PLAN_TABLE;
+    const NAME = 'name';
+    const DESCRIPTION = 'description';
+    const CREATED_BY = 'created_by';
 }

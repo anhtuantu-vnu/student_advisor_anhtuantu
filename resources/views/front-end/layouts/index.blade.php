@@ -8,17 +8,21 @@
     <title>Elomoas - Online Course and LMS HTML Template</title>
     <link rel="stylesheet" href="{{asset("css/themify-icons.css")}}">
     <link rel="stylesheet" href="{{asset('css/feather.css')}}">
+
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon.png') }}">
+
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
-    {{--    Script Boostrap--}}
-{{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--}}
-{{--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>--}}
+    <link rel="stylesheet" href="{{ asset('css/app_custom.css') }}">
 
     {{--  Style for page  --}}
     @yield("style_page")
+
+    {{--  Script customr --}}
+    <script type="text/javascript" src="{{ asset("js/app_custom.js") }}"></script>
+    @stack('js_page')
+
 </head>
 <body class="color-theme-blue">
 {{--    Loaded--}}
@@ -45,9 +49,7 @@
     @include('front-end.components.footer');
     {{-- End Footer--}}
 </div>
-@yield("modal_page")
 
-@yield('script_page')
 <script src="{{ asset("js/plugin.js") }}"></script>
 <script src="{{ asset("js/lightbox.js") }}"></script>
 <script src="{{ asset("js/scripts.js") }}"></script>

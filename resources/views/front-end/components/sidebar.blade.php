@@ -5,11 +5,11 @@
                 <div class="nav-caption fw-600 font-xssss text-grey-500"><span>New </span>Feeds</div>
                 <ul class="mb-1 top-content">
                     <li class="logo d-none d-xl-block d-lg-block"></li>
-                    <li><a href="default.html" class="nav-content-bttn open-font" ><i class="feather-tv btn-round-md bg-blue-gradiant me-3"></i><span>Newsfeed</span></a></li>
-                    <li><a href="default-badge.html" class="nav-content-bttn open-font" ><i class="feather-award btn-round-md bg-red-gradiant me-3"></i><span>Badges</span></a></li>
-                    <li><a href="default-storie.html" class="nav-content-bttn open-font" ><i class="feather-globe btn-round-md bg-gold-gradiant me-3"></i><span>Explore Stories</span></a></li>
-                    <li><a href="default-group.html" class="nav-content-bttn open-font" ><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Popular Groups</span></a></li>
-                    <li><a href="user-page.html" class="nav-content-bttn open-font"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Author Profile </span></a></li>
+                    <li><a href="{{ route('app.home') }}" class="nav-content-bttn open-font" ><i class="feather-home btn-round-md bg-blue-gradiant me-3"></i><span>Home</span></a></li>
+                    <li><a href="{{ route('app.plan') }}" class="nav-content-bttn open-font" ><i class="feather-award btn-round-md bg-red-gradiant me-3"></i><span>Plan</span></a></li>
+                    <li><a href="default-storie.html" class="nav-content-bttn open-font" ><i class="feather-calendar btn-round-md bg-gold-gradiant me-3"></i><span>Calendar</span></a></li>
+{{--                    <li><a href="default-group.html" class="nav-content-bttn open-font" ><i class="feather-zap btn-round-md bg-mini-gradiant me-3"></i><span>Popular Groups</span></a></li>--}}
+{{--                    <li><a href="user-page.html" class="nav-content-bttn open-font"><i class="feather-user btn-round-md bg-primary-gradiant me-3"></i><span>Author Profile </span></a></li>--}}
                 </ul>
             </div>
 

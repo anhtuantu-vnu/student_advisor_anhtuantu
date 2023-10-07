@@ -43,12 +43,12 @@ trait ResponseTrait
 
 
     /**
-     * @param string $errorCode
+     * @param int $errorCode
      * @param string $errorMessage
      * @param int $status
      * @return JsonResponse
      */
-    protected function failedWithErrors(string $errorCode = '', string $errorMessage = '', int $status = 400) : JsonResponse
+    protected function failedWithErrors(int $errorCode = 500, string $errorMessage = '', int $status = 400) : JsonResponse
     {
         return response()->json([
             'meta' => [
@@ -61,5 +61,23 @@ trait ResponseTrait
                 'error_message' => !empty($errorMessage) ? $errorMessage : __('message.common.error_system')
             ]
         ], $status);
+    }
+
+    /**
+     * @param $data
+     * @param int $errorCode
+     * @param string $errorMessage
+     * @return JsonResponse
+     */
+    protected function failedWithContent($data, int $errorCode , string $errorMessage): JsonResponse
+    {
+        return response()->json([
+            'meta' => [
+                'success' => false,
+                'status' => $errorCode,
+            ],
+            'data' => $data,
+            'message' => $errorMessage
+        ], $errorCode);
     }
 }
