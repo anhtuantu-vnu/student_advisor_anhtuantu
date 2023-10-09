@@ -17,8 +17,7 @@ class AuthLogin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            $user = Auth::user();
-            $request->session()->put('user', $user);
+            return $next($request);
         }
         return redirect('/login');
     }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('unique_id')->unique();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('avatar', 255);
             $table->timestamps();
         });
     }

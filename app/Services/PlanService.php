@@ -72,6 +72,6 @@ class PlanService
      */
     public function getPlans($userId): mixed
     {
-        return $this->planRepository->find(['uuid' => $userId]);
+        return $this->planRepository->find(['create_by' => $userId]);
     }
 }
