@@ -104,6 +104,12 @@ interface RepositoryInterface {
      */
     public function updateOrCreate(array $attributes, array $values);
 
+    /**
+     * @param array $condition
+     * @param array $value
+     * @return mixed
+     */
+    public function updateByCondition(array $condition, array $value);
 
     /**
      * Find all existing record

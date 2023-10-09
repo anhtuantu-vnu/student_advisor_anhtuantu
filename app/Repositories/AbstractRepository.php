@@ -137,6 +137,13 @@ class AbstractRepository implements RepositoryInterface
     /**
      * @inheritdoc
      */
+    public function updateByCondition(array $condition, array $value) {
+        return $this->model->where($condition)->update($value);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function findAll($columns = ['*'])
     {
         return $this->model->all($columns);

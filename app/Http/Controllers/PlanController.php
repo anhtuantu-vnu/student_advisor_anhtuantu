@@ -6,6 +6,7 @@ use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PlanController extends Controller
@@ -28,9 +29,8 @@ class PlanController extends Controller
      */
     public function showPlan():View
     {
-        $userId = "c0cf400b-b81f-4779-9a1d-12ae3978ac3a";
-        $listPlan = $this->planService->getPlans($userId)->toArray();
-        return view('front-end.layouts.layout_plan');
+        $listPlan = $this->planService->getPlans(Auth::user()->uuid)->toArray();
+        return view('front-end.layouts.layout_plan', compact('listPlan'));
     }
 
     /**

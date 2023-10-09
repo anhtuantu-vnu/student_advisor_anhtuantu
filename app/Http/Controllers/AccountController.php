@@ -35,9 +35,8 @@ class AccountController extends Controller
 
     /**
      * Redirect the use to the Google authentication page
-     * @return Response
      */
-    public function redirectToGoogle(): Response
+    public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
@@ -55,7 +54,8 @@ class AccountController extends Controller
                 'last_name' => $user->user['family_name'],
                 'role'      => 'student',
                 'email'     => $user->email,
-                'password'  => Str::uuid()
+                'avatar'    => $user->user['picture'],
+                'password'  => Hash::make($user->id)
             ];
             $this->loginService->createAccount($dataUser);
             return redirect()->route("app.home");
@@ -92,7 +92,7 @@ class AccountController extends Controller
     {
         try {
             if(Auth::attempt($request->only('email', 'password'))) {
-                return redirect('/create-plan');
+                return redirect('/');
             }
 
             return redirect('/login')->withErrors(['error', __('messages.login_failed')])->withInput();
