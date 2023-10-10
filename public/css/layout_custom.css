@@ -71,9 +71,7 @@
     border-radius: 50%;
 }
 .avt_member img:not(:first-child) {
-    position: absolute;
-    top: 2px;
-    left: 70%;
+    margin-left: -12px;
 }
 .time_create {
     color: #e7b584;
@@ -86,11 +84,13 @@
 .btn_plus{
     background-color: #e7b584;
     border: none;
-    padding: 0 10px;
+    padding: 2px 8px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 13px;
+    margin-left: -5px;
     color: white;
-    font-weight: 700;
+    display: flex;
+    align-items: center;
 }
 /*checkbox*/
 .list{

@@ -57,12 +57,15 @@
                                         </div>
                                     </div>
                                     <div class="plan_member">
-                                        <div class="avt_members d-flex justify-content-between">
-                                            <div class="avt_member position-relative ">
-                                                <img src="https://lh3.googleusercontent.com/a/ACg8ocIpKC5-v6W_3y0DNt4lw7nIzeWdOPVcrsPOecHe8PwE=s96-c" alt="avatar" />
-                                                <img src="https://lh3.googleusercontent.com/a/ACg8ocIpKC5-v6W_3y0DNt4lw7nIzeWdOPVcrsPOecHe8PwE=s96-c" alt="avatar" />
+                                        <div class="avt_members">
+                                            <div class="avt_member d-flex">
+                                                <div>
+                                                    <img src="https://lh3.googleusercontent.com/a/ACg8ocIpKC5-v6W_3y0DNt4lw7nIzeWdOPVcrsPOecHe8PwE=s96-c" alt="avatar" />
+                                                    <img src="https://lh3.googleusercontent.com/a/ACg8ocIpKC5-v6W_3y0DNt4lw7nIzeWdOPVcrsPOecHe8PwE=s96-c" alt="avatar" />
+                                                    <img src="https://lh3.googleusercontent.com/a/ACg8ocIpKC5-v6W_3y0DNt4lw7nIzeWdOPVcrsPOecHe8PwE=s96-c" alt="avatar" />
+                                                </div>
+                                                <button class="btn_plus">+3</button>
                                             </div>
-                                            <button class="btn_plus">+</button>
                                         </div>
                                         <div class="time_create">2 day left</div>
                                     </div>
