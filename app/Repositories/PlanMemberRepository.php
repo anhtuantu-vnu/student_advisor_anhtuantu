@@ -10,4 +10,8 @@ class PlanMemberRepository extends AbstractRepository
     {
         parent::__construct($model);
     }
+
+    public function getInfoMember($idMember) {
+
+    }
 }
