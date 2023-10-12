@@ -11,4 +11,5 @@ class PlanMember extends Model
 
     protected $guarded = ['id'];
     protected $table = TableConstant::PLAN_MEMBER_TABLE;
+
 }

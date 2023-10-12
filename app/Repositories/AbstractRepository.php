@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Repositories\Contracts\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\App;
-use App\Repositories\Contracts\RepositoryInterface;
 
 class AbstractRepository implements RepositoryInterface
 {
@@ -55,19 +55,20 @@ class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * @param array $attributes
-     * @return mixed
+     * @inheritdoc
      */
-    public function createMany(array $attributes) {
-        return $this->model->insert($attributes);
+    public function updateByCondition(array $attributes = [], array $condition = [])
+    {
+        $attributes['updated_at'] = now()->timestamp;
+        return $this->model->where($condition)->update($attributes);
     }
 
     /**
      * @inheritdoc
      */
-    public function update(array $attributes = [])
+    public function updateByConditionWithNoUpdatedAt(array $attributes = [], array $condition = [])
     {
-        return $this->model->update($attributes);
+        return $this->model->where($condition)->update($attributes);
     }
 
     /**
@@ -89,6 +90,35 @@ class AbstractRepository implements RepositoryInterface
     /**
      * @inheritdoc
      */
+    public function deleteRowByCondition($condition) {
+        return $this->model->where($condition)->delete();
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function countRemoveData($timeRemove)
+    {
+        return $this->model
+            ->where('created_at', '<=', $timeRemove)
+            ->count();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeDataByLimit($limit, $timeRemove)
+    {
+        return $this->model
+            ->where('created_at', '<=', $timeRemove)
+            ->limit($limit)
+            ->delete();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function get($query)
     {
         return $query->get();
@@ -101,6 +131,15 @@ class AbstractRepository implements RepositoryInterface
     {
         return $this->model->destroy($ids);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteByCondition(array $condition)
+    {
+        return $this->model->where($condition)->delete();
+    }
+
 
     /**
      * @inheritdoc
@@ -132,13 +171,6 @@ class AbstractRepository implements RepositoryInterface
     public function updateOrCreate(array $attributes, array $values)
     {
         return $this->model->updateOrCreate($attributes, $values);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function updateByCondition(array $condition, array $value) {
-        return $this->model->where($condition)->update($value);
     }
 
     /**
@@ -259,5 +291,16 @@ class AbstractRepository implements RepositoryInterface
     public function selectFirstByCondition(array $columns, $condition)
     {
         return $this->model->select($columns)->where($condition)->first();
+    }
+
+    /**
+     * @param $conditions
+     * @param $column
+     * @param $arrayConditions
+     * @return mixed
+     */
+    public function findOneWithWhereIn($conditions, $column, $arrayConditions)
+    {
+        return $this->model->where($conditions)->whereIn($column, $arrayConditions)->first();
     }
 }

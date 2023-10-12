@@ -1,6 +1,9 @@
 <?php
 namespace App\Services;
+use App\Models\Plan;
+use App\Models\Task;
 use App\Repositories\PlanRepository;
+use App\Repositories\TaskRepository;
 use App\Repositories\PlanMemberRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,29 +19,38 @@ class PlanService
      * @var PlanMemberRepository
      */
     protected PlanMemberRepository $planMemberRepository;
-
+    /**
+     * @var TaskRepository
+     */
+    protected TaskRepository $taskRepository;
+    
     /**
      * @param PlanRepository $planRepository
+     * @param TaskRepository $taskRepository
+     * @param PlanMemberRepository $planMemberRepository
      */
     public function __construct(
         PlanRepository $planRepository,
+        TaskRepository $taskRepository,
         PlanMemberRepository $planMemberRepository
     )
     {
         $this->planRepository = $planRepository;
+        $this->taskRepository = $taskRepository;
         $this->planMemberRepository = $planMemberRepository;
     }
 
     /**
      * @param $plan
-     * @return array
+     * @param $userId
      */
-    public function createPlan($plan): mixed
+    public function createPlan($plan, $userId)
     {
         $plan['uuid'] = Str::uuid();
         $plan['created_at'] = Carbon::today();
         $plan['updated_at'] = Carbon::today();
-        $plan['create_by'] = "0a3f33ba-2ac0-4ef0-a95a-7e95ad09ef63";
+        $plan['create_by'] = $userId;
+        $plan['settings'] = Plan::SETTING_DEFAULT[rand(0, 5)];
 
         return $this->planRepository->create($plan);
     }
@@ -68,10 +80,39 @@ class PlanService
 
     /**
      * @param $userId
-     * @return Collection
+     * @return array
      */
-    public function getPlans($userId): mixed
+    public function getPlans($userId): array
     {
-        return $this->planRepository->find(['create_by' => $userId]);
+        return $this->planRepository->find(['create_by' => $userId])->map(function($plan) {
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $plan['created_at']);
+            $plan['date_created'] = $date->format('F d, Y');
+            $plan['count_date'] = $date->diffInDays(now());
+            $dataReturn = $this->handleStatusPlan($plan['uuid'], $plan);
+            $listMember = $this->planMemberRepository->find(['plan_id' => $plan['uuid']]);
+            dd($listMember);
+//            $dataReturn['list_member'] = $this->planMemberRepository->getInfoMember();
+            return $dataReturn;
+        })->toArray();
+    }
+
+    /**
+     * @param $planId
+     * @param $plan
+     * @return array
+     */
+    private function handleStatusPlan($planId, $plan): array
+    {
+        $totalTask = $this->taskRepository->findCount(['plan_id' => $planId]);
+        $totalTaskDone = $this->taskRepository->findCount(['plan_id' => $planId, 'status' => Task::STATUS_TASK_DONE]);
+        $plan['percent'] = empty($totalTask) ? 0 : (int) ceil($totalTaskDone / $totalTask) * 100;
+        $plan['status'] = empty($totalTask) ? 'In Active' : 'Active';
+        $plan['status_key'] = empty($totalTask) ? 'in_active' : 'active';
+
+        if($plan['percent'] === 100) {
+            $plan['status'] = "Complete";
+            $plan['status_key'] = 'complete';
+        }
+        return $plan->toArray();
     }
 }
