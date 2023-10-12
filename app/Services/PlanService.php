@@ -23,7 +23,7 @@ class PlanService
      * @var TaskRepository
      */
     protected TaskRepository $taskRepository;
-
+    
     /**
      * @param PlanRepository $planRepository
      * @param TaskRepository $taskRepository
@@ -89,7 +89,9 @@ class PlanService
             $plan['date_created'] = $date->format('F d, Y');
             $plan['count_date'] = $date->diffInDays(now());
             $dataReturn = $this->handleStatusPlan($plan['uuid'], $plan);
-            $dataReturn['list_member'] = $this->planMemberRepository->getInfoMember($plan['uuid']);
+            $listMember = $this->planMemberRepository->find(['plan_id' => $plan['uuid']]);
+            dd($listMember);
+//            $dataReturn['list_member'] = $this->planMemberRepository->getInfoMember();
             return $dataReturn;
         })->toArray();
     }

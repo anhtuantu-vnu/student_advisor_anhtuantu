@@ -45,6 +45,7 @@ class PlanController extends Controller
         foreach ($groupByStatus as $key => $value) {
             $dataPlan['data'][$key] = $value;
         }
+        dd($dataPlan);
         return view('front-end.layouts.layout_plan', compact('dataPlan'));
     }
 
