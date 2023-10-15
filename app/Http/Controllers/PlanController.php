@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class PlanController extends Controller
 {
@@ -41,11 +39,11 @@ class PlanController extends Controller
     public function showPlan():View
     {
         $dataPlan['list_plan'] = $this->planService->getPlans(Auth::user()->uuid);
-        $groupByStatus = collect($dataPlan['list_plan'])->countBy('status_key')->toArray();
-        foreach ($groupByStatus as $key => $value) {
+        $listPlanGroup = collect($dataPlan['list_plan'])->countBy('status_key');
+        foreach ($listPlanGroup as $key => $value) {
             $dataPlan['data'][$key] = $value;
         }
-        dd($dataPlan);
+        $dataPlan['data']['total_plan'] = $listPlanGroup->sum();
         return view('front-end.layouts.layout_plan', compact('dataPlan'));
     }
 

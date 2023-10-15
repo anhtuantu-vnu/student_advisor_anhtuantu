@@ -287,11 +287,20 @@
     right: 8px;
     top: 50%;
     transform: translatey(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    border: 1px solid #4A4A4A;
+    width: 12px;
+    height: 12px;
+    border-radius: 58%;
 }
+.item-status:nth-child(1) .status-type:after {
+    background-color: #fe9431;
+}
+.item-status:nth-child(2) .status-type:after {
+    background-color: #0662f4;
+}
+.item-status:nth-child(3) .status-type:after {
+    background-color: #08b15e;
+}
+
 .status-number {
     font-size: 24px;
     line-height: 32px;
@@ -461,4 +470,10 @@
 .box-content-header:hover:before, .box-content-header:hover:after {
     opacity: 1;
     transform: translatey(0);
+}
+
+
+/*css to do page*/
+.to_do .draggable_item{
+    min-height: 100vh;
 }

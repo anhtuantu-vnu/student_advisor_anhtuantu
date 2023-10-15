@@ -25,7 +25,7 @@ Route::post('/login', [AccountController::class , 'login']);
 Route::post('/register', [AccountController::class , 'register']);
 
 Route::middleware(['auth.login'])->group(function() {
-    Route::get("/plan",[PlanController::class , 'showPlan'])->name('app.plan');
+    Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
     Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
     Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 
