@@ -28,6 +28,13 @@ interface RepositoryInterface {
      */
     public function findById(int $id);
 
+    /**
+     * @param $condition
+     * @param $limit
+     * @param int $offset
+     * @return mixed
+     */
+    public function findByConditionWithLimit($condition, $limit, $offset = 0);
 
     /**
      * Create a record
