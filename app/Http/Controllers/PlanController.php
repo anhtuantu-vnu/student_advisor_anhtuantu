@@ -56,14 +56,14 @@ class PlanController extends Controller
         return view('front-end.layouts.layout_create_plan', compact('listUser'));
     }
 
-    /**
-     * @return true
-     */
-    public function createPlan(Request $request): bool
+
+    public function createPlan(Request $request)
     {
         $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
-        $this->planService->createPlanMember($request->only('list_member'), $plan);
-        return true;
+        if($request->input('list_member')) {
+            $this->planService->createPlanMember($request->only('list_member'), $plan);
+        }
+        return redirect('/plan');
     }
 
 }
