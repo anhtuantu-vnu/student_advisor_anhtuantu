@@ -13,6 +13,7 @@ class TodoController extends Controller
      */
     public function showToDo(): View
     {
-        return view('front-end.layouts.layout_todo');
+        $tasks = [];
+        return view('front-end.layouts.layout_todo', compact('tasks'));
     }
 }

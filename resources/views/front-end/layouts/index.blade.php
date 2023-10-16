@@ -21,7 +21,6 @@
 
     {{--  Script customr --}}
     <script type="text/javascript" src="{{ asset("js/app_custom.js") }}"></script>
-    @stack('js_page')
 
 </head>
 <body class="color-theme-blue">
@@ -50,6 +49,7 @@
     {{-- End Footer--}}
 </div>
 
+@stack('js_page')
 <script src="{{ asset("js/plugin.js") }}"></script>
 <script src="{{ asset("js/lightbox.js") }}"></script>
 <script src="{{ asset("js/scripts.js") }}"></script>

@@ -52,7 +52,7 @@ class PlanController extends Controller
      */
     public function formCreatePlan(): View
     {
-        $listUser = $this->userRepository->find();
+        $listUser = $this->userRepository->find([['uuid' , '<>' , Auth::user()->uuid]]);
         return view('front-end.layouts.layout_create_plan', compact('listUser'));
     }
 
@@ -63,7 +63,7 @@ class PlanController extends Controller
         if($request->input('list_member')) {
             $this->planService->createPlanMember($request->only('list_member'), $plan);
         }
-        return redirect('/plan');
+        return redirect('/to-do');
     }
 
 }

@@ -477,3 +477,16 @@
 .to_do .draggable_item{
     min-height: 100vh;
 }
+.to_do .text_create_task h2 {
+    margin-top: 22px;
+    font-size: 22px;
+    font-weight: 500;
+}
+.to_do .text_create_task button {
+    border: none;
+    padding: 6px 32px;
+    font-weight: 600;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--theme-color);
+}
