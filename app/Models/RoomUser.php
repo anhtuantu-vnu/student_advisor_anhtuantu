@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ChatChanel extends Model
+class ChatMember extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-    protected $table = TableConstant::CHAT_CHANNEL_TABLE;
+    protected $guarded = ['id', 'uuid'];
+    protected $table = TableConstant::CHAT_MEMBER_TABLE;
 }

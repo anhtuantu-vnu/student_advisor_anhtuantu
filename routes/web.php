@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
@@ -34,3 +35,7 @@ Route::middleware(['auth.login'])->group(function() {
 //route view
 Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
 Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
+
+Route::get('chat', [ChatController::class, 'index'])->name('app.login');
+Route::post('/broadcast', [ChatController::class, 'broadcast']);
+Route::post('/receive', [ChatController::class, 'receive']);

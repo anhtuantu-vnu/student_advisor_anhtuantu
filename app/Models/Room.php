@@ -9,6 +9,6 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'uuid'];
     protected $table = TableConstant::CHAT_MESSAGE_TABLE;
 }
