@@ -44,7 +44,7 @@ class PlanController extends Controller
             $dataPlan['data'][$key] = $value;
         }
         $dataPlan['data']['total_plan'] = $listPlanGroup->sum();
-        return view('front-end.layouts.layout_plan', compact('dataPlan'));
+        return view('front-end.layouts.plan.layout_plan', compact('dataPlan'));
     }
 
     /**
@@ -53,7 +53,7 @@ class PlanController extends Controller
     public function formCreatePlan(): View
     {
         $listUser = $this->userRepository->find([['uuid' , '<>' , Auth::user()->uuid]]);
-        return view('front-end.layouts.layout_create_plan', compact('listUser'));
+        return view('front-end.layouts.plan.layout_create_plan', compact('listUser'));
     }
 
 

@@ -49,6 +49,10 @@
     {{-- End Footer--}}
 </div>
 
+{{--  Modal  --}}
+@yield('modal')
+{{--  End Modal  --}}
+
 @stack('js_page')
 <script src="{{ asset("js/plugin.js") }}"></script>
 <script src="{{ asset("js/lightbox.js") }}"></script>

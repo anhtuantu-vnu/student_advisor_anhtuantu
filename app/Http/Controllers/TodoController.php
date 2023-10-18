@@ -14,6 +14,6 @@ class TodoController extends Controller
     public function showToDo(): View
     {
         $tasks = [];
-        return view('front-end.layouts.layout_todo', compact('tasks'));
+        return view('front-end.layouts.task.layout_todo', compact('tasks'));
     }
 }
