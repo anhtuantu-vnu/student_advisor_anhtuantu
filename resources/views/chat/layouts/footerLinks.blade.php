@@ -8,7 +8,8 @@
         allowedFiles: {!! json_encode(config('chatify.attachments.allowed_files')) !!},
         maxUploadSize: {{ \App\Facades\ChatMessage::getMaxUploadSize() }},
         pusher: {!! json_encode(config('chatify.pusher')) !!},
-        pusherAuthEndpoint: '{{route("pusher.auth")}}'
+        pusherAuthEndpoint: '{{route("pusher.auth")}}',
+        url: '{{url('')}}',
     };
     window.messageChat.allAllowedExtensions = messageChat.allowedImages.concat(messageChat.allowedFiles);
 </script>

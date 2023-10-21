@@ -391,11 +391,11 @@ class ChatUserMessenger
     /**
      * Delete message by ID
      *
-     * @param int $id
-     * @return bool|int
+     * @param $id
+     * @return int
      * @throws Exception
      */
-    public function deleteMessage(int $id): bool|int
+    public function deleteMessage($id)
     {
         try {
             $msg = Message::where('from_id', auth()->id())->where('id', $id)->firstOrFail();
