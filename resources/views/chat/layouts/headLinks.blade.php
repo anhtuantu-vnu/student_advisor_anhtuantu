@@ -5,8 +5,8 @@
 <meta name="id" content="{{ $id }}">
 <meta name="messenger-color" content="{{ $messengerColor }}">
 <meta name="messenger-theme" content="{{ $dark_mode }}">
-<meta name="url" content="{{ url('/student-chat') }}">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="url" content="{{ url('').'/student-chat' }}" data-user="{{ Auth::user()->id }}">
+<meta name="csrf-token" content="{{ csrf_token() }}" >
 
 {{-- scripts --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

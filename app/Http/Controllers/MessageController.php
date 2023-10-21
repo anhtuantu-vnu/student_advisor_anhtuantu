@@ -132,7 +132,7 @@ class MessageController extends Controller
             }
         }
 
-        if (!$error->status) {
+        if (! $error->status) {
             $message = Chat::newMessage([
                 'from_id' => Auth::user()->id,
                 'to_id' => $request['id'],
@@ -144,7 +144,7 @@ class MessageController extends Controller
             ]);
             $messageData = Chat::parseMessage($message);
             if (Auth::user()->id != $request['id']) {
-                Chat::push("private-Chat.".$request['id'], 'messaging', [
+                Chat::push("private-chatify.".$request['id'], 'messaging', [
                     'from_id' => Auth::user()->id,
                     'to_id' => $request['id'],
                     'message' => Chat::messageCard($messageData, true)
@@ -454,7 +454,7 @@ class MessageController extends Controller
                     // upload
                     $avatar = Str::uuid() . "." . $file->extension();
                     $update = User::where('id', Auth::user()->id)->update(['avatar' => $avatar]);
-                    $file->storeAs(config('Chat.user_avatar.folder'), $avatar, config('Chat.storage_disk_name'));
+                    $file->storeAs(config('chat.user_avatar.folder'), $avatar, config('chat.storage_disk_name'));
                     $success = $update ? 1 : 0;
                 } else {
                     $msg = "File extension not allowed!";

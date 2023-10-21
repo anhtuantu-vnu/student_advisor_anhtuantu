@@ -102,7 +102,7 @@ return [
     */
     'sounds' => [
         'enabled' => true,
-        'public_path' => 'sounds/chatify',
+        'public_path' => 'assets/sounds',
         'new_message' => 'new-message-sound.mp3',
     ]
 ];

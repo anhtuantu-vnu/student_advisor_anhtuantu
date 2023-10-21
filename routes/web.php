@@ -23,7 +23,7 @@ use App\Http\Controllers\PlanController;
 //authentication socialite
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
-Route::post('/login', [AccountController::class , 'login']);
+Route::post('/login', [AccountController::class , 'login'])->name('login');
 Route::post('/register', [AccountController::class , 'register']);
 
 Route::middleware(['auth.login'])->group(function() {
@@ -115,6 +115,8 @@ Route::middleware(['auth.login'])->group(function() {
      * Set active status
      */
     Route::post('/student-chat/setActiveStatus', [MessageController::class, 'setActiveStatus'])->name('activeStatus.set');
+    Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
+
 });
 //route view
 Route::get("/", [HomeController::class, 'showHome'])->name('app.home');

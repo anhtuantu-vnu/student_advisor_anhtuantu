@@ -645,7 +645,7 @@ channel.bind("messaging", function (data) {
   }
 
   playNotificationSound(
-    "new_message",
+    "new-message-sound.mp3",
     !(data.from_id == getMessengerId() && data.to_id == auth_id)
   );
 });
@@ -1303,7 +1303,7 @@ $(document).ready(function () {
     routerPush(document.title, `${url}/${userID}`);
     updateSelectedContact(userID);
   });
-
+  $(".messenger-infoView").hide()
   // show info side button
   $(".messenger-infoView nav a , .show-infoSide").on("click", function () {
     $(".messenger-infoView").toggle();
@@ -1684,11 +1684,9 @@ emojiPicker.on("emoji", (emoji) => {
  *-------------------------------------------------------------
  */
 function playNotificationSound(soundName, condition = false) {
-  if ((document.hidden || condition) && messageChat.sounds.enabled) {
-    const sound = new Audio(
-      `/${messageChat.sounds.public_path}/${messageChat.sounds[soundName]}`
-    );
-    sound.play();
+  if (messageChat.sounds.enabled) {
+    const sound = new Audio(`${messageChat.url}/${messageChat.sounds.public_path}/${messageChat.sounds.new_message}`);
+    sound.autoplay = true
   }
 }
 /**
