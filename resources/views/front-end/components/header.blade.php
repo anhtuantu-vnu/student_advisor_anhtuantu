@@ -46,7 +46,7 @@
                 <h6 class="text-grey-500 fw-500 font-xssss lh-4">Mobile Apps UI Designer is require..</h6>
             </div>
         </div>
-        <a href="#" class="p-2 text-center ms-3 menu-icon chat-active-btn"><i class="feather-message-square font-xl text-current"></i></a>
+        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn"><i class="feather-message-square font-xl text-current"></i></a>
         <div class="p-2 text-center ms-3 position-relative dropdown-menu-icon menu-icon cursor-pointer">
             <i class="feather-settings animation-spin d-inline-block font-xl text-current"></i>
             <div class="dropdown-menu-settings switchcolor-wrap">
