@@ -13,9 +13,9 @@ class AddDarkModeToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('user', function (Blueprint $table) {
             // if not exist, add the new column
-            if (!Schema::hasColumn('users', 'dark_mode')) {
+            if (!Schema::hasColumn('user', 'dark_mode')) {
                 $table->boolean('dark_mode')->default(0);
             }
         });
@@ -28,7 +28,7 @@ class AddDarkModeToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('user', function (Blueprint $table) {
             $table->dropColumn('dark_mode');
         });
     }
