@@ -28,12 +28,10 @@ class ChatBroadcast implements ShouldBroadcast
 
     /**
      * Broadcast On
-     *
-     * @return PrivateChannel
-     */
-    public function broadcastOn(): PrivateChannel
+     **/
+    public function broadcastOn(): array
     {
-        return new PrivateChannel('public');
+        return ['public'];
     }
 
     public function broadcastAs(): string

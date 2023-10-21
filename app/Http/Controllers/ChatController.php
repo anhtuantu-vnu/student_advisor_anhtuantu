@@ -21,11 +21,13 @@ class ChatController extends Controller
 
     /**
      * @param Request $request
+     * @param $roomUUID
      * @return View
      */
     public function index(Request $request): View
     {
-        return view('front-end.layouts.chat.index');
+        $roomChat = $this->chatService->getRoomChat($request);
+        return view('front-end.layouts.chat.index', compact($roomChat));
     }
 
     /**
@@ -46,5 +48,13 @@ class ChatController extends Controller
     public function receive(Request $request): View
     {
         return view('front-end.layouts.chat.receive', ['message' => $request->get('message')]);
+    }
+
+    /**
+     * @return View
+     */
+    public function chatRoom(): View
+    {
+        return view('front-end.layouts.chat.list');
     }
 }
