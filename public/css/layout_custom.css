@@ -474,6 +474,41 @@
 
 
 /*css to do page*/
-.to_do .draggable_item{
-    min-height: 100vh;
+.to_do .text_create_task h2 {
+    margin-top: 22px;
+    font-size: 22px;
+    font-weight: 500;
 }
+.to_do .text_create_task button {
+    border: none;
+    padding: 6px 32px;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--theme-color);
+}
+.to_do .form_create_plan {
+    font-size: 14px;
+    border: 2px #eee solid;
+    height: 100px;
+    width: 100%;
+    border: none;
+    resize: none;
+}
+.to_do .input_create_task {
+    border: 2px solid var(--theme-color);
+}
+.to_do .draggable_item {
+    background-color: yellow;
+}
+.to_do .title_task i {
+    margin-top: 2px;
+    font-size: 20px;
+}
+.to_do .title_task_text {
+    margin-left: 8px;
+}
+.to_do .title_task_text  {
+    font-size: 24px;
+    font-weight: 500;
+}
+
