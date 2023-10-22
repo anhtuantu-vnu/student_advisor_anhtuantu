@@ -3,6 +3,7 @@
 @section('style_page')
     <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
     <link rel="stylesheet" href="{{ asset("css/layout_custom.css") }}"/>
+    <link rel="stylesheet" href="{{ asset("css/model_detail_task.css") }}"/>
 @endsection
 
 @push('js_page')
