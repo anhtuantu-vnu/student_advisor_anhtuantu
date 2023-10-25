@@ -120,11 +120,11 @@ class PlanService
     {
         $totalTask = $this->taskRepository->findCount(['plan_id' => $planId]);
         $totalTaskDone = $this->taskRepository->findCount(['plan_id' => $planId, 'status' => Task::STATUS_TASK_DONE]);
-        $plan['percent'] = empty($totalTask) ? 0 : (int) ceil($totalTaskDone / $totalTask) * 100;
+        $plan['percent'] = empty($totalTask) ? 0 : round(($totalTaskDone / $totalTask) * 100, 2);
         $plan['status'] = empty($totalTask) ? 'In Active' : 'In Progress';
         $plan['status_key'] = empty($totalTask) ? 'in_active' : 'in_progress';
 
-        if($plan['percent'] === 100) {
+        if(Str::contains($plan['percent'], 100)) {
             $plan['status'] = "Complete";
             $plan['status_key'] = 'complete';
         }

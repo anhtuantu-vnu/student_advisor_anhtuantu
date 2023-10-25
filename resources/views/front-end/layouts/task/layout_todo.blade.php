@@ -87,94 +87,8 @@
                                             <button class="float-right btn-round-sm bg-greylight btn_create_task"
                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
                                     </div>
-                                    <div
-                                        class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                        data-bs-toggle="modal" data-bs-target="#ModelTask"
-                                        draggable="true">
-                                        <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">App
-                                            Development</h4>
-                                        <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">Visit
-                                            Home
-                                            Depot to find out what is needed to rebuild backyard patio.</p>
-                                        <span
-                                            class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                        <span
-                                            class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                        <ul class="memberlist mt-4 mb-2 ms-0">
-                                            <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                 class="w30 d-inline-block"></a></li>
-                                            <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                 class="w30 d-inline-block"></a></li>
-                                            <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                 class="w30 d-inline-block"></a></li>
-                                            <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                 class="w30 d-inline-block"></a></li>
-                                            <li class="last-member"><a href="#"
-                                                                       class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                            </li>
-                                            <li class="ps-4 w-auto"><a href="#"
-                                                                       class="fw-500 text-grey-500 font-xssss">Member</a>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    @if(count($tasks))
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">App
-                                                Development</h4>
-                                            <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">Visit
-                                                Home
-                                                Depot to find out what is needed to rebuild backyard patio.</p>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-
-                                            </ul>
-                                        </div>
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-3 mt-1 d-block">Frontend
-                                                Developer</h4>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    @if(count($tasks['tasks_to_do']))
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do'])
                                     @endif
 
                                     <div class="rounded-3 create_task pb-3 ps-3 pe-3 d-none">
@@ -195,36 +109,8 @@
                                         <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">In progress </span>
                                         </h4>
                                     </div>
-                                    @if(count($tasks))
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">Laravel Product
-                                                Design</h4>
-                                            <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">Visit
-                                                Home
-                                                Depot to find out what is needed to rebuild backyard patio.</p>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    @if(count($tasks['tasks_in_process']))
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_in_process'], 'type' => 'Task In Process'])
                                     @endif
                                 </div>
                             </div>
@@ -236,36 +122,8 @@
                                         <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">Review</span>
                                         </h4>
                                     </div>
-                                    @if(count($tasks))
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">Laravel Product
-                                                Design</h4>
-                                            <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">Visit
-                                                Home
-                                                Depot to find out what is needed to rebuild backyard patio.</p>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    @if(count($tasks['task_review']))
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_review'], 'type' => 'Task Review'])
                                     @endif
                                 </div>
                             </div>
@@ -278,62 +136,8 @@
                                             <span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">Done </span>
                                         </h4>
                                     </div>
-                                    @if(count($tasks))
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">Laravel Product
-                                                Design</h4>
-                                            <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">Visit
-                                                Home
-                                                Depot to find out what is needed to rebuild backyard patio.</p>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                            draggable="true">
-                                            <h4 class="font-xsss fw-700 text-grey-900 mb-3 mt-1 d-block">Frontend
-                                                Developer</h4>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>
-                                            <span
-                                                class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block text-success me-1">Design</span>
-                                            <ul class="memberlist mt-4 mb-2 ms-0">
-                                                <li><a href="#"><img src="{{ asset("images/user-6.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-7.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-8.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li><a href="#"><img src="{{ asset("images/user-3.png") }}" alt="user"
-                                                                     class="w30 d-inline-block"></a></li>
-                                                <li class="last-member"><a href="#"
-                                                                           class="bg-white fw-600 text-grey-500 font-xssss ls-3 text-center">+2</a>
-                                                </li>
-                                                <li class="ps-4 w-auto"><a href="#"
-                                                                           class="fw-500 text-grey-500 font-xssss">Member</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    @if(count($tasks['task_done']))
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_done'], 'type' => 'Task Done'])
                                     @endif
                                 </div>
                             </div>
@@ -452,7 +256,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

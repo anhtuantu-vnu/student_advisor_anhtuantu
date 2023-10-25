@@ -24,18 +24,22 @@ Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->n
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 Route::post('/login', [AccountController::class , 'login']);
 Route::post('/register', [AccountController::class , 'register']);
+Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
 Route::middleware(['auth.login'])->group(function() {
+    Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
+
+    //route plan
     Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
     Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
     Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 
+    //route task
     Route::get("/to-do", [TodoController::class, 'showToDo'])->name('app.to_do');
-});
-//route view
-Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
-Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
-Route::get('chat', [ChatController::class, 'index'])->name('app.login');
-Route::post('/broadcast', [ChatController::class, 'broadcast']);
-Route::post('/receive', [ChatController::class, 'receive']);
+    //route chat
+    Route::get('chat', [ChatController::class, 'index'])->name('app.login');
+    Route::post('/broadcast', [ChatController::class, 'broadcast']);
+    Route::post('/receive', [ChatController::class, 'receive']);
+});
+
