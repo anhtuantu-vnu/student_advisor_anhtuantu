@@ -484,6 +484,14 @@
 
 
 /*css to do page*/
+.create_task {
+    position: relative;
+}
+.btn_post_task {
+    position: absolute;
+    bottom: 22px;
+    right: 22px;
+}
 .to_do .text_create_task h2 {
     margin-top: 22px;
     font-size: 22px;

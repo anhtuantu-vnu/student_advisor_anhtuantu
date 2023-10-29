@@ -17,10 +17,10 @@ class TaskRepository extends AbstractRepository
      */
     public function getListTaskByPlan($planId): array
     {
-        $taskToDo = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_TO_DO)->get()->toArray();
-        $taskInProcess = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_IN_PROCESS)->get()->toArray();
-        $taskDone = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_DONE)->get()->toArray();
-        $taskReview = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_REVIEW)->get()->toArray();
+        $taskToDo = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_TO_DO)->with('userAssign')->get()->toArray();
+        $taskInProcess = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_IN_PROCESS)->with('userAssign')->get()->toArray();
+        $taskDone = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_DONE)->with('userAssign')->get()->toArray();
+        $taskReview = $this->model->where(['plan_id' => $planId])->where('status', Task::STATUS_TASK_REVIEW)->with('userAssign')->get()->toArray();
         return [
             'tasks_to_do' => $taskToDo,
             'tasks_in_process' => $taskInProcess,

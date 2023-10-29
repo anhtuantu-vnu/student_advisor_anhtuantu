@@ -11,25 +11,28 @@ class TaskServices
      */
     protected UserRepository $userRepository;
     /**
-     * @var TaskRepository 
+     * @var TaskRepository
      */
     protected TaskRepository $taskRepository;
-    public function __construct() {
 
+    /**
+     * @param UserRepository $userRepository
+     * @param TaskRepository $taskRepository
+     */
+    public function __construct(
+        UserRepository $userRepository,
+        TaskRepository $taskRepository
+    ) {
+        $this->taskRepository = $taskRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
-     * @param $tasks
+     * @param $idTask
      * @return array
      */
-    public function getDataUserInTask($tasks): array
+    public function getDataTask($idTask): array
     {
-        foreach ($tasks as $key => $task) {
-            foreach ($task as $keyTask => $dataTask) {
-                dd($this->selectColumnByCondition(['avatar', 'email', 'uuid']));
-            }
-            $tasks[$key] = $task;
-        }
-        return $tasks;
+        return $this->taskRepository->getListTaskByPlan($idTask);
     }
 }

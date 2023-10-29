@@ -49,7 +49,6 @@
         //set height for draggable_item
         function setHeightForDraggableItem() {
             let heightDraggable = document.querySelector('.draggable_item').offsetHeight;
-            console.log(heightDraggable);
             document.querySelectorAll('.draggable_item').forEach(function (draggable) {
                 draggable.style.minHeight = `${heightDraggable - 60}px`;
             })
@@ -88,15 +87,16 @@
                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
                                     </div>
                                     @if(count($tasks['tasks_to_do']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do'])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do', 'backgroundTag' => "#1e74fd"])
                                     @endif
 
-                                    <div class="rounded-3 create_task pb-3 ps-3 pe-3 d-none">
+                                    <div class="rounded-3 create_task pb-3 ps-3 pe-3">
                                         <div class="input_create_task rounded-3">
                                                 <textarea class="form_create_plan mb-0 rounded-3 p-2"
                                                           onblur="handleBlurTextarea()"
                                                           placeholder="What needs to be done?"
                                                           maxlength="255"></textarea>
+                                            <button class="btn_post_task"><i class="feather-clock font-xss text-grey-900"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                                         </h4>
                                     </div>
                                     @if(count($tasks['tasks_in_process']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_in_process'], 'type' => 'Task In Process'])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_in_process'], 'type' => 'Task In Process', 'backgroundTag' => "#fe9431"])
                                     @endif
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_review']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_review'], 'type' => 'Task Review'])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_review'], 'type' => 'Task Review', 'backgroundTag' => "#673bb7"])
                                     @endif
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_done']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_done'], 'type' => 'Task Done'])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_done'], 'type' => 'Task Done', 'backgroundTag' => '#10d876'])
                                     @endif
                                 </div>
                             </div>
