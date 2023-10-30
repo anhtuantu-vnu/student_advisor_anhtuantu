@@ -96,7 +96,7 @@
                                                           onblur="handleBlurTextarea()"
                                                           placeholder="What needs to be done?"
                                                           maxlength="255"></textarea>
-                                            <button class="btn_post_task"><i class="feather-clock font-xss text-grey-900"></i></button>
+                                            <button class="btn_post_task"><i class="feather-paperclip icon_create_plan"></i></button>
                                         </div>
                                     </div>
                                 </div>

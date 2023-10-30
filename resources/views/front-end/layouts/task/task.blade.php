@@ -4,7 +4,10 @@
         class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
         data-bs-toggle="modal" data-bs-target="#ModelTask"
         draggable="true">
-        <h4 class="font-xsss fw-700 text-grey-900 mb-2 mt-1 d-block">{{ $task['name'] }}</h4>
+        <div class="d-flex justify-content-between align-content-center">
+            <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">{{ $task['name'] }}</h4>
+            <i class="feather-trash-2" style="font-size: 18px"></i>
+        </div>
         <p class="font-xssss lh-24 fw-500 text-grey-500 mt-3 d-block mb-3">{{ $task['description'] }}</p>
 {{--        <span--}}
 {{--            class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-info d-inline-block text-info">30 Min</span>--}}

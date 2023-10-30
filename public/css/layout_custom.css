@@ -489,8 +489,10 @@
 }
 .btn_post_task {
     position: absolute;
-    bottom: 22px;
-    right: 22px;
+    bottom: 16px;
+    right: 20px;
+    background-color: unset;
+    border: none;
 }
 .to_do .text_create_task h2 {
     margin-top: 22px;
@@ -514,6 +516,10 @@
 }
 .to_do .input_create_task {
     border: 2px solid var(--theme-color);
+}
+.to_do .input_create_task .icon_create_plan {
+    font-size: 22px;
+    color: #909091;
 }
 .to_do .draggable_item {
     background-color: yellow;
