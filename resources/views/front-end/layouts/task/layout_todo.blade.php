@@ -7,22 +7,27 @@
 @endsection
 
 @push('js_page')
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
         //logic drag drop
-        let boxDraggebles = document.querySelectorAll(".draggable_item");
-        let targetList = document.querySelectorAll(".target");
         let currentTarget = null;
 
-        targetList.forEach(target => {
-            target.addEventListener("dragstart", boxEnter);
-            target.addEventListener("dragend", boxLeave);
-        })
+        function initDropDrag() {
+            let boxDraggebles = document.querySelectorAll(".draggable_item");
+            let targetList = document.querySelectorAll(".target");
+            currentTarget = null;
+            targetList.forEach(target => {
+                target.addEventListener("dragstart", boxEnter);
+                target.addEventListener("dragend", boxLeave);
+            })
 
-        boxDraggebles.forEach((box) => {
-            box.addEventListener("dragenter", dragEnter);
-            box.addEventListener("dragover", dragOver);
-            box.addEventListener("drop", dropBox);
-        })
+            boxDraggebles.forEach((box) => {
+                box.addEventListener("dragenter", dragEnter);
+                box.addEventListener("dragover", dragOver);
+                box.addEventListener("drop", dropBox);
+            })
+            setHeightForDraggableItem();
+        }
 
         function boxEnter() {
             this.classList.add("dragstart");
@@ -48,26 +53,73 @@
 
         //set height for draggable_item
         function setHeightForDraggableItem() {
-            let heightDraggable = document.querySelector('.draggable_item').offsetHeight;
+            let heightDraggable = document.querySelector('.to_do_task').offsetHeight;
             document.querySelectorAll('.draggable_item').forEach(function (draggable) {
-                draggable.style.minHeight = `${heightDraggable - 60}px`;
+                draggable.style.minHeight = `${heightDraggable + 70}px`;
             })
             document.querySelector('.middle-sidebar-left').style.maxWidth = '1240px';
         }
-
-        setHeightForDraggableItem();
-
-        //logic create task
+        initDropDrag();
+        //logic show hide create task
         function showInputCreateTask() {
             document.querySelector('.btn_create_task').setAttribute("disable", "");
             document.querySelector('.create_task').classList.remove('d-none');
             document.querySelector('.form_create_plan').focus();
         }
 
-        function handleBlurTextarea() {
+        function handleFocusoutTextarea() {
             document.querySelector('.create_task').classList.add('d-none');
+            document.querySelector('#input_create_task').value = '';
             document.querySelector('.btn_create_task').removeAttribute("disable");
         }
+
+        //Create task
+        let url = new URL(window.location.href);
+        let idPlan = url.searchParams.get("id");
+        $("#input_create_task").keydown(function(e) {
+            if(e.keyCode == 13) {
+                let data = {
+                    _token: '{{csrf_token()}}',
+                    task: {
+                        'plan_id': idPlan,
+                        'name': $("#input_create_task").val()
+                    }
+                };
+
+                $.ajax({
+                    url: "/to-do",
+                    method: "post",
+                    data: data
+                }).done(function(res) {
+                    let data = res.data;
+                    let taskHtml = `<div
+                                class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
+                                data-bs-toggle="modal" data-bs-target="#ModelTask"
+                                draggable="true">
+                                <div class="d-flex justify-content-between align-content-center">
+                                    <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${data.name}</h4>
+                                    <i class="feather-trash-2" style="font-size: 18px"></i>
+                                </div>
+                                ${data.description ? `<p class="font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${data.description}</p>` : ''}
+                                <span
+                                    class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
+                                    style="color: white; background-color: #1e74fd"
+                                >${data.type}</span>
+                                ${data.user_assign ? `
+                                    <ul class="memberlist mt-4 mb-2 ms-0">
+                                        <li><a href="#"><img src="${data.user_assign.avatar}" alt="user" class="d-inline-block" style="border-radius: 50%; width: 24px; height: 24px"></a></li>
+                                        <li class="ps-2 w-auto"><a href="#" class="fw-500 text-grey-500 font-xssss">${data.user_assign.first_name + data.user_assign.last_name} assigned</a></li>
+                                    </ul>
+                                ` : ''}
+                            </div>`;
+                    $(".to_do_task").last().after(taskHtml);
+                    handleFocusoutTextarea();
+                    initDropDrag();
+                }).fail(function(xhr, status, error) {
+                    console.log(error);
+                });
+            }
+        });
     </script>
 @endpush
 
@@ -86,17 +138,19 @@
                                             <button class="float-right btn-round-sm bg-greylight btn_create_task"
                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
                                     </div>
-                                    @if(count($tasks['tasks_to_do']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do', 'backgroundTag' => "#1e74fd"])
-                                    @endif
-
-                                    <div class="rounded-3 create_task pb-3 ps-3 pe-3">
+                                    <div class="to_do_task">
+                                        @if(count($tasks['tasks_to_do']))
+                                            @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do', 'backgroundTag' => "#1e74fd"])
+                                        @endif
+                                    </div>
+                                    <div class="rounded-3 create_task pb-3 ps-3 pe-3 d-none">
                                         <div class="input_create_task rounded-3">
-                                                <textarea class="form_create_plan mb-0 rounded-3 p-2"
-                                                          onblur="handleBlurTextarea()"
-                                                          placeholder="What needs to be done?"
-                                                          maxlength="255"></textarea>
-                                            <button class="btn_post_task"><i class="feather-paperclip icon_create_plan"></i></button>
+{{--                                            <button class="btn_post_task"><i class="feather-paperclip icon_create_plan"></i></button>--}}
+                                            <textarea
+                                                id="input_create_task" class="form_create_plan mb-0 rounded-3 p-2"
+                                                placeholder="What needs to be done?"
+                                                onfocusout="handleFocusoutTextarea()"
+                                                maxlength="255"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -261,5 +315,5 @@
 @endsection
 
 @section('modal')
-    @include('front-end.layouts.task.modal_detail_task')
+    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members']])
 @endsection

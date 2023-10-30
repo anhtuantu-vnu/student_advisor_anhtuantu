@@ -35,7 +35,8 @@ Route::middleware(['auth.login'])->group(function() {
     Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 
     //route task
-    Route::get("/to-do", [TodoController::class, 'showToDo'])->name('app.to_do');
+    Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
+    Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
 
     //route chat
     Route::get('chat', [ChatController::class, 'index'])->name('app.login');

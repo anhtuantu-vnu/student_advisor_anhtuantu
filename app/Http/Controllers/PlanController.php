@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
 use App\Repositories\UserRepository;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -57,7 +60,11 @@ class PlanController extends Controller
     }
 
 
-    public function createPlan(Request $request)
+    /**
+     * @param Request $request
+     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
+     */
+    public function createPlan(Request $request): \Illuminate\Foundation\Application|Redirector|RedirectResponse|Application
     {
         $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
         if($request->input('list_member')) {

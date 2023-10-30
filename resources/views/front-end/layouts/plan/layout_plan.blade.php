@@ -62,7 +62,7 @@
                             <div class="row ps-2 pe-1" style="max-height: 60vh; overflow-y: scroll;">
                                 @if(isset($dataPlan['list_plan']))
                                     @foreach($dataPlan['list_plan'] as $plan)
-                                        <a href="{{ route('app.to_do') }}?id={{ $plan['uuid'] }}">
+                                        <a href="{{ route('show_task') }}?id={{ $plan['uuid'] }}">
                                             <div class="projects-section plan mt-3" onclick="">
                                                 <div class="project-boxes jsListView card_plan">
                                                     <div class="project-box-wrapper">

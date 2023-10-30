@@ -11,7 +11,7 @@
                             <i class="feather-bookmark text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                             <div class="title_task_text ms-2">
                                 <h2 style="margin-bottom: 0">App development</h2>
-                                <p class="mb-3">in list To Do</p>
+                                <p class="mb-3" style="font-size: 14px">in list To Do</p>
                             </div>
                         </div>
                         {{--Member--}}
@@ -20,11 +20,11 @@
                                 <i class="feather-share text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                                 <h2 class="ms-2">Assign to</h2>
                             </div>
-                            <div class="list_member">
+                            <div class="list_member_modal_task">
                                 <select class="p-2 rounded">
-                                    <option value="0">Unassigned</option>
-                                    <option value="1">Nguyễn Quốc Nam</option>
-                                    <option value="2">Nguyễn Văn A</option>
+                                    @foreach($listMember as $member)
+                                        <option value={{$member['email']}}>{{ sprintf("%s %s", $member['first_name'], $member['last_name']) }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
