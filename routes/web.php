@@ -6,8 +6,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
-use Illuminate\Support\Str;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +24,7 @@ use App\Http\Controllers\PlanController;
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 Route::post('/login', [AccountController::class , 'login'])->name('login');
+Route::post('/logout', [AccountController::class , 'logout'])->name('logout');
 Route::post('/register', [AccountController::class , 'register']);
 Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
@@ -38,6 +39,11 @@ Route::middleware(['auth.login'])->group(function() {
     //route task
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
     Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
+
+    /**
+     *  Fetch calendar events for a user
+     */
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
 
     Route::get('/student-chat', [MessageController::class, 'index'])->name('chat');
 

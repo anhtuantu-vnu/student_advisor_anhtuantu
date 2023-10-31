@@ -20,17 +20,22 @@ class AccountController extends Controller
 
     public function __construct(
         AccountService $loginService
-    )
-    {
+    ) {
         $this->loginService = $loginService;
     }
 
     /**
      * @return View
-    */
+     */
     public function showLogin(): View
     {
         return view('front-end.layouts.login');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
     }
 
     /**
@@ -55,7 +60,7 @@ class AccountController extends Controller
                 'role'      => 'student',
                 'email'     => $user->email,
                 'avatar'    => $user->user['picture'],
-                'password'  => Hash::make($user->id)
+                'password'  => Hash::make($user->email)
             ];
             $this->loginService->createAccount($dataUser);
             return redirect()->route("app.home");
@@ -80,7 +85,6 @@ class AccountController extends Controller
         } catch (Exception $e) {
             return $this->failedWithErrors(500, $e->getMessage());
         }
-
     }
 
     /**
@@ -91,11 +95,11 @@ class AccountController extends Controller
     public function login(Request $request): JsonResponse|RedirectResponse
     {
         try {
-            if(Auth::attempt($request->only('email', 'password'))) {
+            if (Auth::attempt($request->only('email', 'password'))) {
                 return redirect('/');
             }
 
-            return redirect('/login')->withErrors(['error', __('messages.login_failed')])->withInput();
+            return redirect('/login')->withErrors(['error', __('messages.account.login_failed')])->withInput();
         } catch (Exception $e) {
             return $this->failedWithErrors(500, $e->getMessage());
         }

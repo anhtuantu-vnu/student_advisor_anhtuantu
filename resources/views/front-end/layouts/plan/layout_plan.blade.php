@@ -30,7 +30,8 @@
                             <div class="card-body d-flex align-items-center p-0 mb-3">
                                 <div class="plan_header">
                                     <h1 class="fw-700 mb-0 mt-0 text-grey-900 mb-4" style="font-size: 34px !important;">
-                                        Plan</h1>
+                                        {{ __('texts.texts.plans') }}
+                                    </h1>
                                     <div class="d-flex justify-content-between">
                                         <div class="item-status">
                                                 <span

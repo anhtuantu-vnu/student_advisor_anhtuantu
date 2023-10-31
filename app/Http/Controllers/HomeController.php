@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-
 class HomeController extends Controller
 {
-    /**
-     * @return View
-     */
-    public function showHome(): View
+    public function showHome()
     {
-        return view('front-end.layouts.layout_home');
+        $user = auth()->user();
+        if ($user == null) {
+            return redirect('/login');
+        }
+
+        if ($user->role == _CONST::ADMIN_ROLE) {
+            return redirect('/admin/dashboard');
+        } else if (
+            $user->role == _CONST::TEACHER_ROLE
+            || $user->role == _CONST::STUDENT_ROLE
+        ) {
+            return redirect('/home');
+        } else {
+            return redirect('/login');
+        }
     }
 }
