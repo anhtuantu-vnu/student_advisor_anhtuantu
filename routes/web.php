@@ -6,8 +6,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
-use Illuminate\Support\Str;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +46,7 @@ Route::middleware(['auth.login'])->group(function () {
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 Route::post('/login', [AccountController::class , 'login'])->name('login');
+Route::post('/logout', [AccountController::class , 'logout'])->name('logout');
 Route::post('/register', [AccountController::class , 'register']);
 
 Route::middleware(['auth.login'])->group(function() {
@@ -54,6 +55,11 @@ Route::middleware(['auth.login'])->group(function() {
     Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 
     Route::get("/to-do", [TodoController::class, 'showToDo'])->name('app.to_do');
+
+    /**
+     *  Fetch calendar events for a user
+     */
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
 
     Route::get('/student-chat', [MessageController::class, 'index'])->name('chat');
 
