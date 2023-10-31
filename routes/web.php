@@ -41,6 +41,7 @@ Route::middleware(['auth.login'])->group(function () {
     Route::get("plan", function () {
         return view('front-end.layouts.layout_plan');
     })->name('app.plan');
+});
 
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);

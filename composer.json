@@ -11,7 +11,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.8",
         "laravel/tinker": "^2.8",
-        "php-open-source-saver/jwt-auth": "^2.1"
+        "php-open-source-saver/jwt-auth": "^2.1",
         "league/flysystem": "^3.17",
         "pusher/pusher-php-server": "^7.2"
     },
