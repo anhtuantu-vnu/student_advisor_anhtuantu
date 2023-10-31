@@ -17,7 +17,7 @@ class HomeController extends Controller
             $user->role == _CONST::TEACHER_ROLE
             || $user->role == _CONST::STUDENT_ROLE
         ) {
-            return redirect('/home');
+            return view('front-end.layouts.layout_home');
         } else {
             return redirect('/login');
         }

@@ -2,10 +2,10 @@
     <div class="card w-100 shadow-xss rounded-xxl border-0 mb-3">
         <div class="card-body d-flex align-items-center p-4">
             <h4 class="fw-700 mb-0 font-xssss text-grey-900">
-              {{ __('texts.texts.plans') }}
+                {{ __('texts.texts.plans.' . auth()->user()->lang) }}
             </h4>
             <a href="/plan" class="fw-600 ms-auto font-xssss text-primary">
-              {{ __('texts.texts.see_all') }}
+                {{ __('texts.texts.see_all.' . auth()->user()->lang) }}
             </a>
         </div>
         <div class="card-body d-flex pt-4 ps-4 pe-4 pb-0 border-top-xs bor-0">
@@ -26,10 +26,10 @@
     <div class="card w-100 shadow-xss rounded-xxl border-0 mb-3">
         <div class="card-body d-flex align-items-center  p-4">
             <h4 class="fw-700 mb-0 font-xssss text-grey-900">
-              {{ __('texts.texts.events') }}
+                {{ __('texts.texts.events.' . auth()->user()->lang) }}
             </h4>
             <a href="default-event.html" class="fw-600 ms-auto font-xssss text-primary">
-              {{ __('texts.texts.see_all') }}
+                {{ __('texts.texts.see_all.' . auth()->user()->lang) }}
             </a>
         </div>
         <div class="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">

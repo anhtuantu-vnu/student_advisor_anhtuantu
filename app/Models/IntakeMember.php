@@ -25,7 +25,8 @@ class IntakeMember extends Model
                 'start_minute',
                 'end_hour',
                 'end_minute',
-                'week_days'
+                'week_days',
+                'subject_id',
             ]);
     }
 }

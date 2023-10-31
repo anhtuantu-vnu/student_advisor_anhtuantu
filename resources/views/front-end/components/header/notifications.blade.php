@@ -1,5 +1,5 @@
 <h4 class="fw-700 font-xss mb-4">
-  {{ __('texts.texts.notifications') }}
+  {{ __('texts.texts.notifications.' . auth()->user()->lang) }}
 </h4>
 
 <div class="card bg-transparent-card w-100 border-0 ps-5 mb-3">
