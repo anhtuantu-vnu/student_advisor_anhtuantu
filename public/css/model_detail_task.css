@@ -30,3 +30,7 @@
     width: 100%;
     color: #565657;
 }
+.description_modal {
+    width: 100%;
+    resize: none;
+}

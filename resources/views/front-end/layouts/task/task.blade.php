@@ -1,8 +1,9 @@
-@foreach($dataTask as $task)
-{{--    @dd($task)--}}
+@foreach($dataTask as $index => $task)
+{{--    @dd($task['uuid'])--}}
     <div
         class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-        data-bs-toggle="modal" data-bs-target="#ModelTask"
+        data-bs-toggle="modal" data-bs-target="#{{$key}}_{{$index}}"
+        id="cart_task"
         draggable="true">
         <div class="d-flex justify-content-between align-content-center">
             <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">{{ $task['name'] }}</h4>

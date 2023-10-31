@@ -112,7 +112,8 @@
                                     </ul>
                                 ` : ''}
                             </div>`;
-                    $(".to_do_task").last().after(taskHtml);
+                    $(".to_do_task").append(taskHtml);
+                    $(".alert_create_task").addClass('d-none')
                     handleFocusoutTextarea();
                     initDropDrag();
                 }).fail(function(xhr, status, error) {
@@ -120,6 +121,7 @@
                 });
             }
         });
+
     </script>
 @endpush
 
@@ -140,7 +142,7 @@
                                     </div>
                                     <div class="to_do_task">
                                         @if(count($tasks['tasks_to_do']))
-                                            @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'type' => 'Task To Do', 'backgroundTag' => "#1e74fd"])
+                                            @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_to_do'], 'key' => 'tasks_to_do', 'type' => 'Task To Do', 'backgroundTag' => "#1e74fd"])
                                         @endif
                                     </div>
                                     <div class="rounded-3 create_task pb-3 ps-3 pe-3 d-none">
@@ -160,11 +162,11 @@
                             <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
                                 <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                     <div class="p-3 border-top-lg border-size-lg border-warning p-0">
-                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">In progress </span>
+                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">In process </span>
                                         </h4>
                                     </div>
                                     @if(count($tasks['tasks_in_process']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_in_process'], 'type' => 'Task In Process', 'backgroundTag' => "#fe9431"])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['tasks_in_process'], 'key' => 'tasks_in_process', 'type' => 'Task In Process', 'backgroundTag' => "#fe9431"])
                                     @endif
                                 </div>
                             </div>
@@ -177,7 +179,7 @@
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_review']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_review'], 'type' => 'Task Review', 'backgroundTag' => "#673bb7"])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_review'], 'key' => 'task_review', 'type' => 'Task Review', 'backgroundTag' => "#673bb7"])
                                     @endif
                                 </div>
                             </div>
@@ -191,13 +193,14 @@
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_done']))
-                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_done'], 'type' => 'Task Done', 'backgroundTag' => '#10d876'])
+                                        @include('front-end.layouts.task.task', ['dataTask' => $tasks['task_done'], 'key' => 'task_done', 'type' => 'Task Done', 'backgroundTag' => '#10d876'])
                                     @endif
                                 </div>
                             </div>
 
                             {{--ALERT CREATE TASK--}}
-                            @if(!count($tasks))
+                            @if(!count($tasks['tasks_to_do']) && !count($tasks['tasks_in_process'])
+                                && !count($tasks['task_review']) && !count($tasks['task_done']))
                                 <div class="alert_create_task" style="height: 76vh;
                                         display: flex; text-align: center; justify-content: center;
                                         align-items: center; flex-direction: column;
@@ -315,5 +318,5 @@
 @endsection
 
 @section('modal')
-    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members']])
+    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])
 @endsection
