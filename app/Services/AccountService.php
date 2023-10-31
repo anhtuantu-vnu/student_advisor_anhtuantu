@@ -27,12 +27,16 @@ class AccountService
      */
     public function createAccount($user): mixed
     {
-        $user['uuid'] = Str::uuid();
-        $user['unique_id'] = Str::uuid();
+        $condition = ['email' => $user['email']];
         $user['created_at'] = Carbon::today();
         $user['updated_at'] = Carbon::today();
-
-        return $this->userRepository->updateOrCreate(['email' => $user['email']], $user);
+        $users = $this->userRepository->findOne($condition);
+        if (empty($users)) {
+            $user['uuid'] = Str::uuid();
+            $user['unique_id'] = Str::uuid();
+            return $this->userRepository->create($user);
+        }
+        return $this->userRepository->updateByCondition($condition, $user);
     }
 
     /**

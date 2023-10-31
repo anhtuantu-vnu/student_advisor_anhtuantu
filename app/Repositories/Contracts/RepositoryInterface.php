@@ -28,6 +28,13 @@ interface RepositoryInterface {
      */
     public function findById(int $id);
 
+    /**
+     * @param $condition
+     * @param $limit
+     * @param int $offset
+     * @return mixed
+     */
+    public function findByConditionWithLimit($condition, $limit, $offset = 0);
 
     /**
      * Create a record
@@ -104,6 +111,12 @@ interface RepositoryInterface {
      */
     public function updateOrCreate(array $attributes, array $values);
 
+    /**
+     * @param array $condition
+     * @param array $value
+     * @return mixed
+     */
+    public function updateByCondition(array $condition, array $value);
 
     /**
      * Find all existing record

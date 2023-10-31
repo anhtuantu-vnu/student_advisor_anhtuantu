@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Repositories;
-use App\Repositories\Contracts\RepositoryInterface;
-use App\Models\ChatMessage;
+
+use App\Models\Room;
 
 class ChatMessageRepository extends AbstractRepository
 {
-    public function __construct(ChatMessage $model)
+    public function __construct(Room $model)
     {
         parent::__construct($model);
     }

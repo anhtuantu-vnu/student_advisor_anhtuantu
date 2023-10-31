@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -24,16 +25,25 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = TableConstant::USER_TABLE;
 
+    /*
+     * Associate Class Role Relation
+     */
     public function classRoles()
     {
         return $this->hasMany(ClassRole::class, 'user_id', 'uuid');
     }
 
+    /*
+     * Associate Intake Members Relation
+     */
     public function intakeMembers()
     {
         return $this->hasMany(IntakeMember::class, 'user_id', 'uuid');
     }
 
+    /*
+     * Associate Department Relation
+     */
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'uuid')
@@ -58,5 +68,13 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+  
+    /*
+     * Associate Chat Chanel Relation
+     */
+    public function chanel(): BelongsToMany
+    {
+        return $this->belongsToMany(ChatChanel::class, 'chat_member', 'user_id', 'chanel_id');
     }
 }

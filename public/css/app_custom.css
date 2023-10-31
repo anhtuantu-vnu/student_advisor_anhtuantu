@@ -16,3 +16,26 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/*process progress*/
+.progress {
+    background-color: #d8d8d8;
+    border-radius: 20px;
+    position: relative;
+    margin-top: 6px;
+    width: 500px;
+}
+
+.progress-done {
+    background-color: var(--theme-color);
+    box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px var(--theme-color);
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 0;
+    opacity: 0;
+    transition: 1s ease 0.3s;
+}

@@ -280,15 +280,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-
-    $('.chat-active-btn').on('click', function() {
-        $('.right-chat').toggleClass('active-sidebar');
-        $('.main-content').toggleClass('right-chat-active');
-        return false;
-    });
-
     $(window).resize(function(){
         if($(this).width() < 1600){
             $('.right-chat').removeClass('active-sidebar');

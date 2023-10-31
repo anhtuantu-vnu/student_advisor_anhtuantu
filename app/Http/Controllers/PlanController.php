@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class PlanController extends Controller
 {
-    public PlanService $planService;
-    public UserRepository $userRepository;
+    /**
+     * @var PlanService
+     */
+    protected PlanService $planService;
+    /**
+     * @var UserRepository
+     */
+    protected UserRepository $userRepository;
 
+    /**
+     * @param PlanService $planService
+     * @param UserRepository $userRepository
+     */
     public function __construct(
         PlanService $planService,
         UserRepository $userRepository
@@ -28,9 +38,13 @@ class PlanController extends Controller
      */
     public function showPlan():View
     {
-        $userId = "c0cf400b-b81f-4779-9a1d-12ae3978ac3a";
-        $listPlan = $this->planService->getPlans($userId)->toArray();
-        return view('front-end.layouts.layout_plan');
+        $dataPlan['list_plan'] = $this->planService->getPlans(Auth::user()->uuid);
+        $listPlanGroup = collect($dataPlan['list_plan'])->countBy('status_key');
+        foreach ($listPlanGroup as $key => $value) {
+            $dataPlan['data'][$key] = $value;
+        }
+        $dataPlan['data']['total_plan'] = $listPlanGroup->sum();
+        return view('front-end.layouts.plan.layout_plan', compact('dataPlan'));
     }
 
     /**
@@ -38,19 +52,18 @@ class PlanController extends Controller
      */
     public function formCreatePlan(): View
     {
-        $userId = "c0cf400b-b81f-4779-9a1d-12ae3978ac3a";
-        $listUser = $this->userRepository->find()->toArray();
-        return view('front-end.layouts.layout_create_plan', compact('listUser', "userId"));
+        $listUser = $this->userRepository->find([['uuid' , '<>' , Auth::user()->uuid]]);
+        return view('front-end.layouts.plan.layout_create_plan', compact('listUser'));
     }
 
-    /**
-     * @return true
-     */
-    public function createPlan(Request $request): bool
+
+    public function createPlan(Request $request)
     {
-        $plan = $this->planService->createPlan($request->only(Plan::NAME, Plan::DESCRIPTION, Plan::DESCRIPTION));
-        $this->planService->createPlanMember($request->only('list_member'), $plan);
-        return true;
+        $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
+        if($request->input('list_member')) {
+            $this->planService->createPlanMember($request->only('list_member'), $plan);
+        }
+        return redirect('/to-do');
     }
 
 }

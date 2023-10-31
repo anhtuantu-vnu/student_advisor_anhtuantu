@@ -11,4 +11,7 @@ class Task extends Model
 
     protected $guarded = ['id'];
     protected $table = TableConstant::TASK_TABLE;
+    const STATUS_TASK_DONE = 'done';
+    const STATUS_TASK_IN_PROCESS = 'progress';
+    const STATUS_TASK_TO_DO = 'to_do';
 }
