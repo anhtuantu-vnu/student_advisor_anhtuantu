@@ -70,7 +70,7 @@ class PlanController extends Controller
         if($request->input('list_member')) {
             $this->planService->createPlanMember($request->only('list_member'), $plan);
         }
-        return redirect('/to-do');
+        return redirect("/to-do?id=".$plan['uuid']);
     }
 
 }

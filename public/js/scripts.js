@@ -346,6 +346,10 @@ $(document).ready(function() {
         }
     });
 
+    // $('#btn_cancel_modal_task').on('click', function () {
+    //     $('.modal_detail_task').toggleClass('show');
+    // })
+
     $('.toggle-menu input').on('change', function () {
         if (this.checked) {
             $('.navigation,.main-content').addClass('menu-active');

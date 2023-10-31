@@ -60,31 +60,29 @@ class PlanService
         $plan['updated_at'] = Carbon::today();
         $plan['create_by'] = $userId;
         $plan['settings'] = Plan::SETTING_DEFAULT[rand(0, 5)];
-
         return $this->planRepository->create($plan);
     }
 
     /**
      * @param $user
      * @param $plan
-     * @return mixed
+     * @return bool
      */
-    public function createPlanMember($user, $plan): mixed
+    public function createPlanMember($user, $plan): bool
     {
         $idUsers = json_decode($user['list_member'], true);
-        $listMember = [];
         $today = Carbon::today();
         foreach ($idUsers as $userId) {
-            $listMember[] = [
+            $member = [
                 'uuid'       => Str::uuid(),
                 'plan_id'    => $plan['uuid'],
                 'user_id'    => $userId,
                 'created_at' => $today,
                 'updated_at' => $today,
             ];
+            $this->planMemberRepository->create($member);
         }
-
-        return $this->planMemberRepository->createMany($listMember);
+        return true;
     }
 
     /**
