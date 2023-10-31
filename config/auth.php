@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -61,7 +66,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'database',
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
             'table' => 'user'
         ],
     ],
