@@ -21,39 +21,23 @@ use App\Http\Controllers\PlanController;
 */
 
 //authentication socialite
-Route::get('/auth/redirect', [AccountController::class, 'redirectToGoogle'])->name('login.google');
-Route::get('/auth/callback', [AccountController::class, 'handleGoogleCallback']);
-Route::post('/login', [AccountController::class, 'login']);
-Route::post('/register', [AccountController::class, 'register']);
-
-Route::middleware(['auth.login'])->group(function () {
-    Route::get("/plan", [PlanController::class, 'showPlan'])->name('app.plan');
-    Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
-    Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
-
-    //route view
-    Route::get("/home", function () {
-        return view('front-end.layouts.layout_home');
-    })->name('app.home');
-
-    Route::post('register', 'App\Http\Controllers\AccountController@register')->name('register');
-
-    Route::get("plan", function () {
-        return view('front-end.layouts.layout_plan');
-    })->name('app.plan');
-});
-
 Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
 Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
 Route::post('/login', [AccountController::class , 'login'])->name('login');
 Route::post('/register', [AccountController::class , 'register']);
+Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
 Route::middleware(['auth.login'])->group(function() {
+    Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
+
+    //route plan
     Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
     Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
     Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
 
-    Route::get("/to-do", [TodoController::class, 'showToDo'])->name('app.to_do');
+    //route task
+    Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
+    Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
 
     Route::get('/student-chat', [MessageController::class, 'index'])->name('chat');
 
