@@ -85,7 +85,7 @@ class DataSeeder extends Seeder
                 ['uuid' => Str::uuid()->toString(), 'code' => 'PHI001-082023', 'subject_id' => $subjectsToInsert[3]['uuid'], 'start_date' => '2023-08-01', 'end_date' => '2023-12-31', 'duration_weeks' => 17, 'start_hour' => 7, 'start_minute' => 0, 'end_hour' => 8, 'end_minute' => 45, 'week_days' => '3,5,7'],
                 ['uuid' => Str::uuid()->toString(), 'code' => 'PHI002-082023', 'subject_id' => $subjectsToInsert[4]['uuid'], 'start_date' => '2023-08-01', 'end_date' => '2023-12-31', 'duration_weeks' => 17, 'start_hour' => 9, 'start_minute' => 15, 'end_hour' => 11, 'end_minute' => 0, 'week_days' => '3,5,7'],
                 ['uuid' => Str::uuid()->toString(), 'code' => 'TE001-082023', 'subject_id' => $subjectsToInsert[5]['uuid'], 'start_date' => '2023-08-01', 'end_date' => '2023-12-31', 'duration_weeks' => 17, 'start_hour' => 13, 'start_minute' => 15, 'end_hour' => 15, 'end_minute' => 0, 'week_days' => '3,5,7'],
-                ['uuid' => Str::uuid()->toString(), 'code' => 'TE002-082023', 'subject_id' => $subjectsToInsert[6]['uuid'], 'start_date' => '2023-08-01', 'end_date' => '2023-12-31', 'duration_weeks' => 17, 'start_hour' => 14, 'start_minute' => 15, 'end_hour' => 16, 'end_minute' => 30, 'week_days' => '3,5,7'],
+                ['uuid' => Str::uuid()->toString(), 'code' => 'TE002-082023', 'subject_id' => $subjectsToInsert[6]['uuid'], 'start_date' => '2023-08-01', 'end_date' => '2023-12-31', 'duration_weeks' => 17, 'start_hour' => 15, 'start_minute' => 15, 'end_hour' => 17, 'end_minute' => 30, 'week_days' => '3,5,7'],
             ];
     
             foreach($intakesToInsert as $i) {

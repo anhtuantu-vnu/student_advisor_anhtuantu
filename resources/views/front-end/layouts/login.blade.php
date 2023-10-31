@@ -29,7 +29,7 @@
 
                 <a href="/login"
                     class="header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl">
-                    {{ __('texts.texts.login') }}
+                    {{ __('texts.texts.login.' . auth()->user()->lang) }}
                 </a>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 <div class="card shadow-none border-0 ms-auto me-auto login-card">
                     <div class="card-body rounded-0 text-left">
                         <h2 class="fw-700 display1-size display2-md-size mb-3">
-                            {{ __('texts.texts.login_to_account') }}
+                            {{ __('texts.texts.login_to_account.' . auth()->user()->lang) }}
                         </h2>
                         <form action="/login" method="POST" id="loginForm">
                             @csrf
@@ -73,13 +73,13 @@
                             @endif
                             <button type="button" id="loginButton"
                                 class="mt-2 form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 ">
-                                {{ __('texts.texts.login') }}
+                                {{ __('texts.texts.login.' . auth()->user()->lang) }}
                             </button>
                         </form>
                         <div class="col-sm-12 p-0 text-center mt-2">
 
                             <h6 class="mb-0 d-inline-block bg-white fw-500 font-xsss text-grey-500 mb-3">
-                                {{ __('texts.texts.sign_in_with_social_account') }}
+                                {{ __('texts.texts.sign_in_with_social_account.' . auth()->user()->lang) }}
 
                             </h6>
                             <div class="form-group mb-1">
@@ -87,7 +87,7 @@
                                     class="form-control text-left style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2">
                                     <img src="{{ asset('images/icon-1.png') }}" alt="icon"
                                         class="ms-2 w40 mb-1 me-5">
-                                    {{ __('texts.texts.sign_in_with_google') }}
+                                    {{ __('texts.texts.sign_in_with_google.' . auth()->user()->lang) }}
                                 </a>
                             </div>
                         </div>

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthContoller as ApiAuthContoller;
+use App\Http\Controllers\Api\UserController as UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,5 @@ Route::controller(ApiAuthContoller::class)->group(function () {
     Route::post('logout', 'logout');
     Route::post('refresh', 'refresh');
 });
+
+Route::get('/student-intakes', [UserController::class, 'studentIntakes']);
