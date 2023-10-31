@@ -31,7 +31,7 @@
 
 
         document.addEventListener('DOMContentLoaded', function() {
-            function getCelndarEvents() {
+            function getCalendarEvents() {
                 $.ajax({
                     url: "/api/student-intakes",
                     type: "GET",
@@ -48,7 +48,7 @@
                 });
             }
 
-            getCelndarEvents();
+            getCalendarEvents();
 
             function addPreFixHourMinute(input) {
                 if (input < 10) {

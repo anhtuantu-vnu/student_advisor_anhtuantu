@@ -86,5 +86,10 @@ return [
       "vi" => 'Bạn chắc muốn đăng xuất chứ?',
       "en" => 'Are you sure you want to logout?'
     ],
+    'languages' => [
+      "vi" => 'Ngôn ngữ',
+      "en" => 'Languages'
+    ],
+
   ]
 ];

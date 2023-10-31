@@ -88,6 +88,23 @@ class AccountController extends Controller
     }
 
     /**
+     * Update user language
+     * @param Request $request
+     */
+    public function updateLang(Request $request)
+    {
+        try {
+            $lang = $request->lang;
+            $user = auth()->user();
+            $user->lang = $lang;
+            $user->save();
+            return $this->successWithNoContent(__("messages.account.update_success"));
+        } catch (Exception $e) {
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
+    }
+
+    /**
      * Login account by data login
      * @param Request $request
      * @return JsonResponse|RedirectResponse

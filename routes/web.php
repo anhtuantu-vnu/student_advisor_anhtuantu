@@ -32,6 +32,8 @@ Route::middleware(['auth.login'])->group(function() {
     Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
     Route::get("/home", [HomeController::class, 'showHome'])->name('app.home');
 
+    Route::post("/update-lang", [AccountController::class, 'updateLang'])->name('app.update.lang');
+
     //route plan
     Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
     Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');

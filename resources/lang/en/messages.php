@@ -8,5 +8,6 @@ return [
         'register_failed' => 'Register account failed',
         'token_refreshed' => 'Token refreshed',
         'logout_success' => 'Logout success',
+        'update_success' => "Update success",
     ]
 ];
