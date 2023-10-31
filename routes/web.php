@@ -19,15 +19,26 @@ use App\Http\Controllers\PlanController;
 */
 
 //authentication socialite
-Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
-Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
-Route::post('/login', [AccountController::class , 'login']);
-Route::post('/register', [AccountController::class , 'register']);
+Route::get('/auth/redirect', [AccountController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/callback', [AccountController::class, 'handleGoogleCallback']);
+Route::post('/login', [AccountController::class, 'login']);
+Route::post('/register', [AccountController::class, 'register']);
 
-Route::middleware(['auth.login'])->group(function() {
-    Route::get("/plan",[PlanController::class , 'showPlan'])->name('app.plan');
-    Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
-    Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
+Route::middleware(['auth.login'])->group(function () {
+    Route::get("/plan", [PlanController::class, 'showPlan'])->name('app.plan');
+    Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
+    Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
+
+    //route view
+    Route::get("/home", function () {
+        return view('front-end.layouts.layout_home');
+    })->name('app.home');
+
+    Route::post('register', 'App\Http\Controllers\AccountController@register')->name('register');
+
+    Route::get("plan", function () {
+        return view('front-end.layouts.layout_plan');
+    })->name('app.plan');
 
     Route::get("/to-do", [TodoController::class, 'showToDo'])->name('app.to_do');
 });

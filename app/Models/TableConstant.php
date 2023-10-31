@@ -16,4 +16,11 @@ class TableConstant
     const ROLE_TABLE = 'role';
     const TASK_TABLE = 'task';
     const USER_TABLE = 'user';
+    const DEPARTMENTS_TABLE = 'departments';
+    const CLASS__TABLE = 'class_';
+    const CLASS_ROLES_TABLE = 'class_roles';
+    const SUBJECTS_TABLE = 'subjects';
+    const INTAKES_TABLE = 'intakes';
+    const INTAKE_MEMBERS_TABLE = 'intake_members';
+    const INTAKE_SCHEDULES_TABLE = 'intake_schedules';
 }
