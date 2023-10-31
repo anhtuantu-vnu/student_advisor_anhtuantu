@@ -1,17 +1,17 @@
 <div class="modal bottom fade" style="overflow-y: scroll;" id="ModelTask" tabindex="-1" role="dialog">
 {{--<div class="modal bottom fade show bg-black" style="overflow-y: scroll; display: block;" id="ModelTask" tabindex="-1"--}}
-{{--     aria-modal="true" role="dialog">--}}
+     aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0">
-            <div class="modal-body d-flex align-items-center bg-none">
+            <div class="modal-body d-flex align-items-center bg-none mb-4">
                 <div class="card shadow-none rounded-0 border-0 w-100">
                     <div class="rounded-0 text-left">
                         {{--title--}}
                         <div class="title_task d-flex">
                             <i class="feather-bookmark text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                             <div class="title_task_text ms-2">
-                                <h2>App development</h2>
-                                <p>in list To Do</p>
+                                <h2 style="margin-bottom: 0">App development</h2>
+                                <p class="mb-3" style="font-size: 14px">in list To Do</p>
                             </div>
                         </div>
                         {{--Member--}}
@@ -20,11 +20,11 @@
                                 <i class="feather-share text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                                 <h2 class="ms-2">Assign to</h2>
                             </div>
-                            <div class="list_member">
+                            <div class="list_member_modal_task">
                                 <select class="p-2 rounded">
-                                    <option value="0">Unassigned</option>
-                                    <option value="1">Nguyễn Quốc Nam</option>
-                                    <option value="2">Nguyễn Văn A</option>
+                                    @foreach($listMember as $member)
+                                        <option value={{$member['email']}}>{{ sprintf("%s %s", $member['first_name'], $member['last_name']) }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -37,15 +37,15 @@
                             <textarea class="form-control input_description mb-0 p-3 h100 bg-greylight lh-16" name="description" rows="5" placeholder="Add a more detailed description..." spellcheck="false" required></textarea>
                         </div>
                         {{--Activity--}}
-                        <div class="activity mt-4">
+                        <div class="activity mt-3">
                             <div class="activity_text d-flex">
                                 <i class="feather-activity text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                                 <h2 class="ms-2">Activity</h2>
                             </div>
                             <div class="activity_comment">
-                                <img src="https://cdn.chanhtuoi.com/uploads/2022/01/hinh-avatar-nam-deo-kinh.jpg" class="" style="height: 20px; width: 20px"/>
+                                <img src="https://cdn.chanhtuoi.com/uploads/2022/01/hinh-avatar-nam-deo-kinh.jpg" />
                                 <div class="activity_comment_input">
-
+                                    <input type="text" class="input_comment" name="comment" row="5" placeholder="Write a comment">
                                 </div>
                             </div>
                         </div>
