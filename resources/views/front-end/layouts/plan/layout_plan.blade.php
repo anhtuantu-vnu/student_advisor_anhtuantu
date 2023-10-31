@@ -62,55 +62,60 @@
                             <div class="row ps-2 pe-1" style="max-height: 60vh; overflow-y: scroll;">
                                 @if(isset($dataPlan['list_plan']))
                                     @foreach($dataPlan['list_plan'] as $plan)
-                                        <div class="projects-section plan mt-3">
-                                            <div class="project-boxes jsListView">
-                                                <div class="project-box-wrapper">
-                                                    <div class="project-box"
-                                                         style="background-color: {{ $plan['settings']['background_color'] }}">
-                                                        <div class="project-box-content-header me-5">
+                                        <a href="{{ route('show_task') }}?id={{ $plan['uuid'] }}">
+                                            <div class="projects-section plan mt-3" onclick="">
+                                                <div class="project-boxes jsListView card_plan">
+                                                    <div class="project-box-wrapper">
+                                                        <div class="project-box"
+                                                             style="background-color: {{ $plan['settings']['background_color'] }}">
+                                                            <div class="project-box-content-header me-5">
                                                         <span class="box-content-header" data-max-width="20vw"
                                                               data-tooltip-title="{{ $plan['name'] }}">
                                                             <p class="overflow-hidden"
                                                                style="text-overflow:ellipsis; white-space: nowrap">{{ $plan['name'] }}</p>
                                                         </span>
-                                                            <p class="box-content-subheader">{{ $plan['status'] }}</p>
-                                                            <p style="font-size: 12px; line-height: 12px">{{ $plan['date_created'] }}</p>
-                                                        </div>
-                                                        <div class="box-progress-wrapper me-5">
-                                                            <p class="box-progress-header">Progress</p>
-                                                            <div class="box-progress-bar">
+                                                                <p class="box-content-subheader status_plan">{{ $plan['status'] }}</p>
+                                                                <p style="font-size: 12px; line-height: 12px">{{ $plan['date_created'] }}</p>
+                                                            </div>
+                                                            <div class="box-progress-wrapper me-5">
+                                                                <p class="box-progress-header">Progress</p>
+                                                                <div class="box-progress-bar">
                                                             <span
                                                                 class="box-progress"
                                                                 style="width: {{ $plan['percent'] }}%; background-color: {{ $plan['settings']['color'] }}"
                                                             ></span>
+                                                                </div>
+                                                                <p class="box-progress-percentage">{{ $plan['percent'] }}%</p>
                                                             </div>
-                                                            <p class="box-progress-percentage">{{ $plan['percent'] }}%</p>
-                                                        </div>
-                                                        <div class="project-box-footer">
-                                                            <div class="participants">
-                                                                @foreach($plan['list_member'] as $member)
-                                                                    <img
-                                                                        src="{{ $member['avatar'] }}"
-                                                                        alt="participant"
-                                                                    />
-                                                                @endforeach
-                                                                <button class="add-participant"
-                                                                        style="color: {{ $plan['settings']['color'] }}">+
-                                                                </button>
-                                                            </div>
-                                                            <div class="days-left"
-                                                                 style="color: {{ $plan['settings']['color'] }}">
-                                                                @if($plan['count_date'])
-                                                                    {{ $plan['count_date'] }} left
-                                                                @else
-                                                                    Today
+                                                            <div class="project-box-footer">
+                                                                @if(count($plan['list_member']))
+                                                                    <div class="participants">
+                                                                        @foreach($plan['list_member'] as $member)
+                                                                            <img
+                                                                                src="{{ $member['avatar'] }}"
+                                                                                alt="participant"
+                                                                            />
+                                                                        @endforeach
+                                                                        <button class="add-participant"
+                                                                                style="color: {{ $plan['settings']['color'] }}">+
+                                                                        </button>
+                                                                    </div>
                                                                 @endif
+
+                                                                <div class="days-left"
+                                                                     style="color: {{ $plan['settings']['color'] }}">
+                                                                    @if($plan['count_date'])
+                                                                        {{ $plan['count_date'] }} day left
+                                                                    @else
+                                                                        Today
+                                                                    @endif
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     @endforeach
                                 @endif
                             </div>
