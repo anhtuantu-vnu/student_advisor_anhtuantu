@@ -23,6 +23,18 @@
     <script type="text/javascript" src="{{ asset('js/app_custom.js') }}"></script>
 
     @yield('header_js_page')
+
+    <style>
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 99;
+        }
+    </style>
 </head>
 
 <body class="color-theme-blue">

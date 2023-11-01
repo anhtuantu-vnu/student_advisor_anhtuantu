@@ -8,7 +8,7 @@ return [
     ],
     'login' => [
       "vi" => 'Đăng Nhập',
-      "en" => "'Login'"
+      "en" => "Login"
     ],
     'logout' => [
       "vi" => 'Đăng xuất',
@@ -40,7 +40,7 @@ return [
     ],
     'plans' => [
       "vi" => 'Kế hoạch',
-      "en" => "'Plans'"
+      "en" => "Plans"
     ],
     'events' => [
       "vi" => 'Sự kiện',
@@ -90,6 +90,45 @@ return [
       "vi" => 'Ngôn ngữ',
       "en" => 'Languages'
     ],
-
+    'full_name' => [
+      "vi" => 'Họ và tên',
+      "en" => 'Full Name'
+    ],
+    'department' => [
+      "vi" => 'Khoa',
+      "en" => 'Department'
+    ],
+    'role' => [
+      "vi" => 'Role',
+      "en" => 'Role'
+    ],
+    'class' => [
+      "vi" => 'Lớp',
+      "en" => 'Class'
+    ],
+    'email' => [
+      "vi" => 'Địa chỉ email',
+      "en" => 'Email address'
+    ],
+    'password' => [
+      "vi" => 'Mật khẩu',
+      "en" => 'Password'
+    ],
+    'phone' => [
+      "vi" => 'Số điện thoại',
+      "en" => 'Phone number'
+    ],
+    'gender' => [
+      "vi" => 'Giới tính',
+      "en" => 'Gender'
+    ],
+    'date_of_birth' => [
+      "vi" => 'Ngày sinh',
+      "en" => 'Date of birth'
+    ],
+    'save' => [
+      "vi" => 'Lưu',
+      "en" => 'Save'
+    ],
   ]
 ];

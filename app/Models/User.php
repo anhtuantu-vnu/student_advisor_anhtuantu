@@ -26,6 +26,12 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = TableConstant::USER_TABLE;
 
+    public const GENDER_MAP = [
+        1 => 'Male',
+        2 => 'Female',
+        3 => 'Other',
+    ];
+
     /*
      * Associate Class Role Relation
      */

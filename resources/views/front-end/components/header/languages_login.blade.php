@@ -1,6 +1,10 @@
-<h4 class="fw-700 font-xss mb-4">
-    {{ __('texts.texts.languages.' . auth()->user()->lang) }}
+<h4 class="fw-700 font-xss">
+    {{ __('texts.texts.languages.' . $lang) }}
 </h4>
+
+<form action="" method="GET" id="loginLangForm">
+    <input type="hidden" name="lang" id="loginLangInput">
+</form>
 
 <div class="card bg-transparent-card w-100 border-0">
     <ul>
@@ -9,19 +13,19 @@
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('assets/imgs/vietnam_flag.png') }}" alt="vietnam_flag" class="languages-choices"
                         data-lang="vi" style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
-                    <div class="p-2 languages-choices" data-lang="vi">
-                        Viêt Nam
+                    <div class="pl-2 languages-choices" data-lang="vi">
+                        &nbsp;Viêt Nam
                     </div>
                 </div>
             </a>
         </li>
         <li>
             <a href="#" class="text-black languages-choices" data-lang="en" id="en_lang_choice">
-                <div class="d-flex align-items-center mt-3">
+                <div class="d-flex align-items-center">
                     <img src="{{ asset('assets/imgs/england_flag.png') }}" alt="vietnam_flag" class="languages-choices"
                         data-lang="en" style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
-                    <div class="p-2 languages-choices" data-lang="en">
-                        English
+                    <div class="pl-2 languages-choices" data-lang="en">
+                        &nbsp;English
                     </div>
                 </div>
             </a>
@@ -35,17 +39,8 @@
         item.addEventListener("click", e => {
             e.preventDefault();
 
-            let formData = "lang=" + e.target.dataset.lang;
-            $.ajax({
-                url: "/update-lang",
-                type: "POST",
-                data: formData,
-                success: function(result) {
-                    if (result.meta.success) {
-                        window.location.reload();
-                    }
-                },
-            });
+            document.getElementById("loginLangInput").value = e.target.dataset.lang;
+            document.getElementById("loginLangForm").submit();
         });
     });
 </script>
