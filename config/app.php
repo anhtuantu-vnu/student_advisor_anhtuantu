@@ -169,6 +169,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryProvider::class,
+        Aws\Laravel\AwsServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -185,6 +186,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'ChatUserMessenger' => App\Facades\ChatMessage::class,
+        'AWS' => Aws\Laravel\AwsFacade::class,
     ])->toArray(),
 
 ];

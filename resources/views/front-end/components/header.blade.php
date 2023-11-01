@@ -1,3 +1,13 @@
+<div id="loadingSpinner" class="loading-spinner d-none">
+    <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="nav-header bg-white shadow-xs border-0" style="width: 100%; display: flex; justify-content: space-between;">
     <div class="nav-top">
         <a href="/home">
@@ -24,10 +34,10 @@
             aria-expanded="false">
             @if (auth()->user()->lang == 'vi')
                 <img src="{{ asset('assets/imgs/vietnam_flag.png') }}" alt="vietnam_flag"
-                    style="height: 32px; width: 32px; object-fit: cover;">
+                    style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
             @else
                 <img src="{{ asset('assets/imgs/england_flag.png') }}" alt="england_flag"
-                    style="height: 32px; width: 32px; object-fit: cover;">
+                    style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
             @endif
 
         </a>
@@ -52,8 +62,8 @@
 
         <a href="#" class="p-0 ms-3 menu-icon" id="dropdownProfile" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <img src="{{ auth()->user()->avatar }}" alt="user" class="w40 mt--1"
-                style="border-radius: 100%; object-fit: cover;">
+            <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1"
+                style="border-radius: 100%; object-fit: cover; width: 40px; height: 40px;">
         </a>
         <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" aria-labelledby="dropdownProfile">
             @include('front-end.components.header.profile')

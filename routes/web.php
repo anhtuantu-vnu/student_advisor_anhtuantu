@@ -34,6 +34,9 @@ Route::middleware(['auth.login'])->group(function() {
 
     Route::post("/update-lang", [AccountController::class, 'updateLang'])->name('app.update.lang');
 
+    Route::get("/my-profile", [AccountController::class, 'showProfile'])->name('app.my.profile');
+    Route::post("/update-avatar", [AccountController::class, 'updateAvatar'])->name('app.update.avatar');
+
     //route plan
     Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
     Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');

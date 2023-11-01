@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,6 +14,11 @@ use App\Services\AccountService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\Storage;
 
 class AccountController extends Controller
 {
@@ -27,9 +33,13 @@ class AccountController extends Controller
     /**
      * @return View
      */
-    public function showLogin(): View
+    public function showLogin(Request $request): View
     {
-        return view('front-end.layouts.login');
+        $lang = $request->lang;
+        if ($lang == null || $lang == '') {
+            $lang = "en";
+        }
+        return view('front-end.layouts.login', ['lang' => $lang]);
     }
 
     public function logout()
@@ -118,6 +128,83 @@ class AccountController extends Controller
 
             return redirect('/login')->withErrors(['error', __('messages.account.login_failed')])->withInput();
         } catch (Exception $e) {
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * @return View
+     */
+    public function showProfile(): View
+    {
+        $thisUser = auth()->user()->load([
+            'department',
+            'intakeMembers' => function ($query) {
+                return $query->with(['intake']);
+            },
+            'classRoles' => function ($query) {
+                return $query->with(['class_']);
+            }
+        ]);
+
+        if ($thisUser->role == _CONST::STUDENT_ROLE && $thisUser->classRoles != null) {
+            $class_ = $thisUser->classRoles->count() > 0 ? $thisUser->classRoles[0]->class_ : null;
+        } else {
+            $class_ = null;
+        }
+
+        $genderMap = User::GENDER_MAP;
+
+        return view('front-end.layouts.user.profile', [
+            'thisUser' => $thisUser,
+            'class_' => $class_,
+            'genderMap' => $genderMap
+        ]);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($request->hasFile('file')) {
+                $basePath = config('aws_.avatar_images.path') . '/' . config('aws_.avatar_images.file_path');
+                $uploadedFile = $request->file('file');
+
+                $name = $request->name;
+                if ($name == null || $name == '') {
+                    $name = $uploadedFile->getClientOriginalName();
+                }
+
+                $fileType = explode('/', $uploadedFile->getClientMimeType())[0];
+                if ($fileType != 'image') {
+                    return $this->failedWithErrors(500, "only image files are supported");
+                }
+
+                $newFileName = Str::uuid() . '_' . $uploadedFile->getClientOriginalName();
+                $orderPopPath = $basePath . '/' . $newFileName;
+                Storage::disk('s3')->put($orderPopPath, file_get_contents($uploadedFile));
+
+                $fullAvatarUrl = config('aws_.aws_url.url') . '/' . $orderPopPath;
+
+                $thisUser = auth()->user();
+                $oldAvatar = $thisUser->avatar;
+                $thisUser->avatar = $fullAvatarUrl;
+                $thisUser->save();
+                DB::commit();
+
+                // delete old avatar
+                $oldAvatar = str_replace(config('aws_.aws_url.url') . '/', '', $oldAvatar);
+                Storage::disk('s3')->delete($oldAvatar);
+
+                return $this->successWithContent($fullAvatarUrl, __("messages.account.update_success"));
+            } else {
+                return $this->failedWithErrors(500, "no files specified");
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            Log::info('Error');
+
             return $this->failedWithErrors(500, $e->getMessage());
         }
     }
