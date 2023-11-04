@@ -88,6 +88,11 @@
             color: #fff;
             cursor: pointer;
         }
+
+        #mainFeedsContainer::-webkit-scrollbar, #rightSideBarEventsContainer::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
     </style>
 @endsection
 
@@ -96,7 +101,6 @@
     <div id="imageModal" class="event-image-modal d-none">
         <span id="closePreviewImageModal" class="close-event-image-modal">&times;</span>
         <img id="previewImage" src="" alt="Modal_Image">
-        aaaaa
     </div>
 
     <div class="main-content right-chat-active">
@@ -131,7 +135,8 @@
                 </div>
                 <!-- loader wrapper -->
                 <div class="row feed-body">
-                    <div class="col-xl-8 col-xxl-9 col-lg-8">
+                    <div class="col-xl-8 col-xxl-9 col-lg-8" id="mainFeedsContainer"
+                        style="height: calc(100vh - 116px); overflow-y: scroll;">
                         {{-- stories --}}
                         {{-- @include('front-end.components.home.stories') --}}
 
@@ -142,14 +147,20 @@
                         {{-- live here --}}
                         {{-- @include('front-end.components.home.live_stream') --}}
 
-                        <div class="card w-100 text-center shadow-xss rounded-xxl border-0 p-4 mb-3 mt-3">
+                        <div class="card w-100 text-center shadow-xss rounded-xxl border-0 p-4 mb-3 mt-3 d-none"
+                            id="mainFeedsLoading">
                             <div class="snippet mt-2 ms-auto me-auto" data-title=".dot-typing">
                                 <div class="stage">
                                     <div class="dot-typing"></div>
                                 </div>
                             </div>
                         </div>
-
+                        <div class="card w-100 text-center shadow-xss rounded-xxl border-0 p-4 mb-3 mt-3 d-none"
+                            id="mainFeedsLoadedText">
+                            <div>
+                                {{ __('texts.texts.loaded_all_events.' . auth()->user()->lang) }}
+                            </div>
+                        </div>
                     </div>
 
                     {{-- right content --}}
@@ -163,12 +174,18 @@
 
 @push('js_page')
     <script>
+        let mainFeedsContainer = document.getElementById('mainFeedsContainer');
+        let mainFeedsLoading = document.getElementById("mainFeedsLoading");
+        let rightSideBarEventsContainer = document.getElementById("rightSideBarEventsContainer");
+
         let homeEventsFeedsContainer = document.getElementById("homeEventsFeedsContainer");
         let homeEvents = [];
         let eventPage = 1;
-        let eventLimit = 1;
+        let eventLimit = 10;
+        let loadedAllEvents = false;
         let eventDepartments = [];
         let updateEventFiles = {};
+        let isLoadedEventFirstTime = false;
 
         let currentLang = "{{ auth()->user()->lang }}";
         let eventValidations = {
@@ -201,6 +218,17 @@
                 en: "Please only upload image files",
             },
         }
+
+        // loaded events first time event
+        const loadedEventFistTime = new Event('loadedEventFistTime', {
+            bubbles: true,
+            cancelable: true,
+            composed: false
+        });
+
+        rightSideBarEventsContainer.addEventListener('loadedEventFistTime', e => {
+            loadEventsRightSideBar();
+        });
 
         function handlePreloader() {
             if ($('.preloader').length > 0) {
@@ -264,29 +292,60 @@
 
         // load events
         function loadEvents() {
-            $.ajax({
-                type: "GET",
-                url: `/events?page=${eventPage}&limit=${eventLimit}`,
-                success: function(data) {
-                    console.log('events', data);
-                    if (data.meta.success) {
-                        events = data.data.events;
-                        homeEvents = homeEvents.concat([...events]);
-                    }
+            if (!mainFeedsContainer.dataset.loading || mainFeedsContainer.dataset.loading == "false") {
+                mainFeedsContainer.dataset.loading == "true";
+                $.ajax({
+                    type: "GET",
+                    url: `/events?page=${eventPage}&limit=${eventLimit}`,
+                    success: function(data) {
+                        console.log('events', data);
+                        if (data.meta.success) {
+                            events = data.data.events;
+                            if (events.length) {
+                                homeEvents = homeEvents.concat([...events]);
+                                populateEventsFeeds();
+                            } else {
+                                loadedAllEvents = true;
+                            }
 
-                    populateEventsFeeds();
-                },
-                complete: function() {
-                    if (!$('body').hasClass('loaded')) {
-                        PageLoad();
-                    }
-                },
-            });
+                            if (!isLoadedEventFirstTime) {
+                                isLoadedEventFirstTime = true;
+                                let event = new Event("loadedEventFistTime", {
+                                    bubbles: true
+                                });
+                                rightSideBarEventsContainer.dispatchEvent(event);
+                            }
+                        }
+                    },
+                    complete: function() {
+                        if (!$('body').hasClass('loaded')) {
+                            PageLoad();
+                        }
+                        mainFeedsLoading.classList.add("d-none");
+                        mainFeedsContainer.dataset.loading == "false";
+                    },
+                });
+            }
         }
 
         loadEvents();
 
+        function formatDateCreatedAt(timestamp) {
+            const date = new Date(timestamp);
+            const months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day} ${month} ${year}`;
+        }
+
         function formatRelativeTime(timestamp) {
+            console.log('timestamp', timestamp);
             const now = new Date();
             const date = new Date(timestamp);
             const secondsAgo = Math.floor((now - date) / 1000);
@@ -301,18 +360,22 @@
                 return hoursAgo + " hour" + (hoursAgo > 1 ? "s" : "") + " ago";
             } else {
                 const daysAgo = Math.floor(secondsAgo / 86400);
+                if (daysAgo >= 7) {
+                    return formatDateCreatedAt(timestamp);
+                }
                 return daysAgo + " day" + (daysAgo > 1 ? "s" : "") + " ago";
             }
         }
 
-        function getEventDescription(event, maxLength = 50) {
+        function getEventDescription(uuid, description, maxLength = 50) {
             let seeMoreText = "{{ auth()->user()->lang }}" == "vi" ? "Xem thêm" : "See more";
-            if (event.description.length > maxLength) {
-                const truncatedText = event.description.slice(0, maxLength) + '...';
-                const seeMoreLink = `<span class="fw-600 text-primary ms-2">${seeMoreText}</span>`;
+            if (description.length > maxLength) {
+                const truncatedText = description.slice(0, maxLength) + '...';
+                const seeMoreLink =
+                    `<span class="cursor-pointer fw-600 text-decoration-underline text-muted ms-2 see-more-event-description" data-content='${description}' data-uuid="${uuid}">${seeMoreText}</span>`;
                 return `${truncatedText} ${seeMoreLink}`;
             } else {
-                return event.description;
+                return description;
             }
         }
 
@@ -378,160 +441,189 @@
         function populateEventsFeeds() {
             let eventsFeedsInnerHTML = homeEventsFeedsContainer.innerHTML;
             homeEvents.forEach(event => {
-                getEventImages(event);
+                if (!event.shown) {
+                    event.shown = true;
+                    let actions = '';
+                    let deleteActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Huỷ sự kiện" : "Cancel event";
+                    let deleteActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
+                        "Huỷ sự kiện này khỏi lịch" :
+                        "Cancel event from calendar";
+                    let updateActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Chỉnh sửa sự kiện" :
+                        "Update event";
+                    let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
+                        "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
 
-                let actions = '';
-                let deleteActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Huỷ sự kiện" : "Cancel event";
-                let deleteActionDescription = "{{ auth()->user()->lang }}" == "vi" ? "Huỷ sự kiện này khỏi lịch" :
-                    "Cancel event from calendar";
-                let updateActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Chỉnh sửa sự kiện" : "Update event";
-                let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
-                    "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
-
-                if ("{{ auth()->user()->uuid }}" == event.created_by.uuid) {
-                    actions = `
-                    <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
-                        aria-labelledby="dropdownMenuEvent_${event.uuid}">
-                        <div class="card-body p-0 d-flex mt-2">
-                            <i class="feather-info text-primary me-3 font-lg"></i>
-                            <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 update-event-button" data-uuid="${event.uuid}">
-                                ${updateActionLabel}
-                                <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500 update-event-button" data-uuid="${event.uuid}">
-                                    ${updateActionDescription}
-                                </span>
-                            </h4>
+                    if ("{{ auth()->user()->uuid }}" == event.created_by.uuid) {
+                        actions = `
+                        <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
+                            aria-labelledby="dropdownMenuEvent_${event.uuid}">
+                            <div class="card-body p-0 d-flex mt-2">
+                                <i class="feather-info text-primary me-3 font-lg"></i>
+                                <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 update-event-button" data-uuid="${event.uuid}">
+                                    ${updateActionLabel}
+                                    <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500 update-event-button" data-uuid="${event.uuid}">
+                                        ${updateActionDescription}
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="card-body p-0 d-flex">
+                                <i class="feather-x-circle text-danger me-3 font-lg"></i>
+                                <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 delete-event-button">
+                                    ${deleteActionLabel}
+                                    <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">
+                                        ${deleteActionDescription}
+                                    </span>
+                                </h4>
+                            </div>
                         </div>
+                        `;
+                    }
+
+                    eventsFeedsInnerHTML += `
+                    <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3" id="feed_event_${event.uuid}">
                         <div class="card-body p-0 d-flex">
-                            <i class="feather-x-circle text-danger me-3 font-lg"></i>
-                            <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 delete-event-button">
-                                ${deleteActionLabel}
-                                <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">
-                                    ${deleteActionDescription}
-                                </span>
-                            </h4>
+                            <figure class="avatar me-3"><img src="${event.created_by.avatar}" alt="${event.created_by.last_name}_avatar"
+                                    class="shadow-sm rounded-circle w45"></figure>
+                            <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by.last_name + ' ' + event.created_by.first_name} <span
+                                    class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${formatRelativeTime(event.created_at)}</span></h4>
+                            ${actions}
+                        </div>
+                        <div class="card-body p-0 mb-3">
+                            <div id="event_information_${event.uuid}">
+                                <div class="d-flex flex-wrap justify-content-between">
+                                    <div>
+                                        <i class="feather-calendar me-3"></i> ${formatDateTimeEvent(event)}
+                                    </div>
+                                    <div>
+                                        <i class="feather-map-pin me-3"></i> ${event.location}
+                                    </div>
+                                </div>
+                                <div class="me-lg-5 mt-2">
+                                    <b class="fw-500 text-black w-100">${event.name}</b>
+                                    <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
+                                </div>    
+                            </div>
+                            <div id="update_event_information_${event.uuid}" class="d-none">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}" 
+                                            placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) }}" data-value="${event.name}" value="${event.name}">
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}" 
+                                            placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) }}" data-value="${event.location}" value="${event.location}">
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control rounded-xxl update-event-department" name="eventDepartments"
+                                                    id="eventDepartmentsInput_${event.uuid}" data-departments="${event.tags}" data-update-departments="${event.tags}"
+                                                    placeholder="{{ __('texts.texts.department.' . auth()->user()->lang) }}">
+                                            </div>
+                                            <div class="position-absolute bg-white p-2 rounded border d-none" id="departmentChoices_${event.uuid}"
+                                                style="min-width: 240px; z-index: 2;">
+                                            </div>
+                                            <div>
+                                                <div class="d-flex flex-wrap" id="chosenDepartmentsContainer_${event.uuid}"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <div class="input-color-container">
+                                                <input type="color"class="input-color" id="eventColor_${event.uuid}" name="eventColor" data-value="${event.color}" value="${event.color}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label for="eventStartTime_${event.uuid}">
+                                                {{ __('texts.texts.event_start_time.' . auth()->user()->lang) }}
+                                            </label>
+                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime" 
+                                            id="eventStartTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "start")}" value="${formdateDateTimeValueEvent(event, "start")}" />
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label for="eventEndTime_${event.uuid}">
+                                                {{ __('texts.texts.event_end_time.' . auth()->user()->lang) }}
+                                            </label>
+                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime" 
+                                            id="eventEndTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "end")}" value="${formdateDateTimeValueEvent(event, "end")}" />
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}" 
+                                            class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg" 
+                                            cols="30" rows="10" placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}" data-value="${event.description}">${event.description}</textarea>
+                                        </div>
+                                        <div class="col-12 mb-2">
+                                            <div class="d-flex">
+                                                <span class="hiddenFileInputEvent rounded-3">
+                                                    <input type="file" name="eventFiles" class="update-event-file" accept="image/*" id="eventFiles_${event.uuid}" multiple />
+                                                </span>
+                                            </div>
+                                            <div class="mt-2 d-flex flex-wrap" id="previewEventImages_${event.uuid}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="btn btn-success text-white save-update-event" id="saveEventButton_${event.uuid}" data-uuid="${event.uuid}" data-id="${event.id}" type="button">
+                                                {{ __('texts.texts.save.' . auth()->user()->lang) }}
+                                            </button>
+                                            <button class="btn btn-secondary text-white cancel-update-event" id="cancelSaveEventButton_${event.uuid}" data-uuid="${event.uuid}" type="button">
+                                                {{ __('texts.texts.cancel.' . auth()->user()->lang) }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        ${getEventImages(event)}
+                        <div class="card-body d-flex p-0 mt-3">
+                            <span class="emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2">
+                                <i class="feather-check-circle text-white bg-success me-1 btn-round-xs font-xss cursor-pointer going-to-event" data-id="${event.id}" data-uuid="${event.uuid}" id="goingToEvent_${event.uuid}"></i>
+                                <span id="eventGoingCounter_${event.uuid}">${event.event_members.filter(item => item.status == 'going').length}</span>&nbsp;Going
+                            </span>
+                            <span class="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss">
+                                <i class="feather-thumbs-up text-white bg-primary-gradiant me-1 btn-round-xs font-xss cursor-pointer interested-in-event" data-id="${event.id}" data-uuid="${event.uuid}" id="interestedInEvent_${event.uuid}"></i>
+                                <span id="eventInterestedCounter_${event.uuid}">${event.event_members.filter(item => item.status == 'interested').length}</span>&nbsp;Interested
+                            </span>
+                            <span class="ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss">
+                                <i class="feather-copy text-grey-900 text-dark btn-round-sm font-lg cursor-pointer copy-event-url" data-uuid="${event.uuid}" id="copyEventUrl_${event.uuid}"></i>
+                            </span>
                         </div>
                     </div>
                     `;
                 }
-
-                eventsFeedsInnerHTML += `
-                <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3" id="feed_event_${event.uuid}">
-                    <div class="card-body p-0 d-flex">
-                        <figure class="avatar me-3"><img src="${event.created_by.avatar}" alt="${event.created_by.last_name}_avatar"
-                                class="shadow-sm rounded-circle w45"></figure>
-                        <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by.last_name + ' ' + event.created_by.first_name} <span
-                                class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${formatRelativeTime(event.created_at)}</span></h4>
-                        ${actions}
-                    </div>
-                    <div class="card-body p-0 mb-3">
-                        <div id="event_information_${event.uuid}">
-                            <div class="d-flex flex-wrap justify-content-between">
-                                <div>
-                                    <i class="feather-calendar me-3"></i> ${formatDateTimeEvent(event)}
-                                </div>
-                                <div>
-                                    <i class="feather-map-pin me-3"></i> ${event.location}
-                                </div>
-                            </div>
-                            <div class="me-lg-5 mt-2">
-                                <b class="fw-500 text-black w-100">${event.name}</b>
-                                <p class="text-grey-500 lh-26 w-100">${getEventDescription(event, 50)}</p>
-                            </div>    
-                        </div>
-                        <div id="update_event_information_${event.uuid}" class="d-none">
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-6 mb-2">
-                                        <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}" 
-                                        placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) }}" data-value="${event.name}" value="${event.name}">
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}" 
-                                        placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) }}" data-value="${event.location}" value="${event.location}">
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <div class="position-relative">
-                                            <input type="text" class="form-control rounded-xxl update-event-department" name="eventDepartments"
-                                                id="eventDepartmentsInput_${event.uuid}" data-departments="${event.tags}" data-update-departments="${event.tags}"
-                                                placeholder="{{ __('texts.texts.department.' . auth()->user()->lang) }}">
-                                        </div>
-                                        <div class="position-absolute bg-white p-2 rounded border d-none" id="departmentChoices_${event.uuid}"
-                                            style="min-width: 240px; z-index: 2;">
-                                        </div>
-                                        <div>
-                                            <div class="d-flex flex-wrap" id="chosenDepartmentsContainer_${event.uuid}"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <div class="input-color-container">
-                                            <input type="color"class="input-color" id="eventColor_${event.uuid}" name="eventColor" data-value="${event.color}" value="${event.color}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label for="eventStartTime_${event.uuid}">
-                                            {{ __('texts.texts.event_start_time.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime" 
-                                        id="eventStartTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "start")}" value="${formdateDateTimeValueEvent(event, "start")}" />
-                                    </div>
-                                    <div class="col-md-6 mb-2">
-                                        <label for="eventEndTime_${event.uuid}">
-                                            {{ __('texts.texts.event_end_time.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime" 
-                                        id="eventEndTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "end")}" value="${formdateDateTimeValueEvent(event, "end")}" />
-                                    </div>
-                                    <div class="col-12 mb-2">
-                                        <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}" 
-                                        class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg" 
-                                        cols="30" rows="10" placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}" data-value="${event.description}">${event.description}</textarea>
-                                    </div>
-                                    <div class="col-12 mb-2">
-                                        <div class="d-flex">
-                                            <span class="hiddenFileInputEvent rounded-3">
-                                                <input type="file" name="eventFiles" class="update-event-file" accept="image/*" id="eventFiles_${event.uuid}" multiple />
-                                            </span>
-                                        </div>
-                                        <div class="mt-2 d-flex flex-wrap" id="previewEventImages_${event.uuid}">
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-success text-white save-update-event" id="saveEventButton_${event.uuid}" data-uuid="${event.uuid}" data-id="${event.id}" type="button">
-                                            {{ __('texts.texts.save.' . auth()->user()->lang) }}
-                                        </button>
-                                        <button class="btn btn-secondary text-white cancel-update-event" id="cancelSaveEventButton_${event.uuid}" data-uuid="${event.uuid}" type="button">
-                                            {{ __('texts.texts.cancel.' . auth()->user()->lang) }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    ${getEventImages(event)}
-                    <div class="card-body d-flex p-0 mt-3">
-                        <a href="#"
-                            class="emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2"><i
-                                class="feather-thumbs-up text-white bg-primary-gradiant me-1 btn-round-xs font-xss"></i>
-                            <i class="feather-heart text-white bg-red-gradiant me-2 btn-round-xs font-xss"></i>2.8K
-                            Like</a>
-                        <a href="#" class="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss"><i
-                                class="feather-message-circle text-dark text-grey-900 btn-round-sm font-lg"></i><span
-                                class="d-none-xss">22 Comment</span></a>
-                        <a href="#" id="dropdownMenu21" data-bs-toggle="dropdown" aria-expanded="false"
-                            class="ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss"><i
-                                class="feather-share-2 text-grey-900 text-dark btn-round-sm font-lg"></i><span
-                                class="d-none-xs">Share</span></a>
-                    </div>
-                </div>
-                `;
             });
 
             homeEventsFeedsContainer.innerHTML = eventsFeedsInnerHTML;
             addImagesOpenModalEvent();
             addOpenUpdateEvent();
+            addSeeMoreOrHideEventDescriptionEvent();
+            addEventGoingInterestedCopyEvent();
+        }
+
+        function addSeeMoreOrHideEventDescriptionEvent() {
+            let seeLessText = currentLang == "vi" ? "Ẩn bớt" : "Show less";
+
+            // see more description
+            let seeMoreDescription = document.querySelectorAll(".see-more-event-description");
+            Array.from(seeMoreDescription).forEach(button => {
+                button.addEventListener("click", e => {
+                    let thisEventDescriptionShow = document.getElementById("eventDescriptionShow_" + e
+                        .target.dataset.uuid);
+                    thisEventDescriptionShow.innerHTML = e.target.dataset.content +
+                        `<br/><span class="cursor-pointer fw-600 text-decoration-underline text-muted see-less-event-description" id="seeLessEventDescription_${e.target.dataset.uuid}" data-uuid="${event.uuid}">${seeLessText}</span>`
+
+                    let seeLessEventDescription = document.getElementById("seeLessEventDescription_" + e
+                        .target
+                        .dataset.uuid);
+                    seeLessEventDescription.addEventListener("click", e2 => {
+                        thisEventDescriptionShow.innerHTML = getEventDescription(e.target
+                            .dataset.uuid, e.target.dataset.content, 50);
+                        addSeeMoreOrHideEventDescriptionEvent();
+                    });
+                });
+            });
+
         }
 
         function addClickEventDepartmentLiUpdate(uuid) {
@@ -601,7 +693,7 @@
             });
         }
 
-        function showUpdateDepartmentChoises(keyword, uuid) {
+        function showUpdateDepartmentChoices(keyword, uuid) {
             let filteredDepartments = [...eventDepartments];
             if (keyword) {
                 filteredDepartments = eventDepartments.filter(item => {
@@ -632,6 +724,145 @@
             });
         }
 
+        function addEventGoingInterestedCopyEvent() {
+            // going to event
+            let goingToEventButtons = document.querySelectorAll(".going-to-event");
+            Array.from(goingToEventButtons).forEach(button => {
+                button.addEventListener("click", e => {
+                    handleGoingToEvent(e, e.target.dataset.id, e.target.dataset.uuid);
+                });
+            });
+
+            // interestd in event
+            let interestedInEventButtons = document.querySelectorAll(".interested-in-event");
+            Array.from(interestedInEventButtons).forEach(button => {
+                button.addEventListener("click", e => {
+                    handleInterestedInEvent(e, e.target.dataset.id, e.target.dataset.uuid);
+                });
+            });
+
+            // copy event
+            let copyEventButtons = document.querySelectorAll(".copy-event-url");
+            Array.from(copyEventButtons).forEach(button => {
+                button.addEventListener("click", e => {
+                    handleCopyEventUrl(e.target.dataset.uuid);
+                });
+            });
+        }
+
+        function handleCopyEventUrl(uuid) {
+            var textArea = document.createElement("textarea");
+            textArea.value = location.origin + `/events/${uuid}`;
+
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            let msg;
+            try {
+                let successful = document.execCommand('copy');
+                msg = successful ? 'Copied event URL' : 'Cannot copy event URL';
+            } catch (err) {
+                msg = 'Fallback: Oops, unable to copy event URL';
+            }
+
+            document.body.removeChild(textArea);
+            alert(msg);
+        }
+
+        function handleGoingToEvent(e, id, uuid) {
+            if (!e.target.dataset.loading || e.target.dataset.loading == "false") {
+                e.target.dataset.loading = "true";
+                $.ajax({
+                    type: "POST",
+                    url: `/events/${id}/going`,
+                    complete: function() {
+                        e.target.dataset.loading = "false";
+                    },
+                    error: function(error) {
+                        alert(error.statusText);
+                    },
+                    success: function(data) {
+                        if (data.meta.success) {
+                            populateEventGoingCounter(uuid, data.data.eventMember);
+                        } else {
+                            let message = currentLang == "vi" ?
+                                "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
+                                "Error happened. Please try again later."
+                            if (data.message) {
+                                message = data.message;
+                            }
+
+                            alert(message);
+                            return;
+                        }
+                    },
+                });
+            }
+        }
+
+        function handleInterestedInEvent(e, id, uuid) {
+            if (!e.target.dataset.loading || e.target.dataset.loading == "false") {
+                e.target.dataset.loading = "true";
+                $.ajax({
+                    type: "POST",
+                    url: `/events/${id}/interested`,
+                    complete: function() {
+                        e.target.dataset.loading = "false";
+                    },
+                    error: function(error) {
+                        alert(error.statusText);
+                    },
+                    success: function(data) {
+                        if (data.meta.success) {
+                            populateEventInterestedCounter(uuid, data.data.eventMember);
+                        } else {
+                            let message = currentLang == "vi" ?
+                                "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
+                                "Error happened. Please try again later."
+                            if (data.message) {
+                                message = data.message;
+                            }
+
+                            alert(message);
+                            return;
+                        }
+                    },
+                });
+            }
+        }
+
+        function populateEventGoingCounter(uuid, eventMember) {
+            let eventGoingCounter = document.getElementById("eventGoingCounter_" + uuid);
+            let currentCounter = eventGoingCounter.textContent ? parseInt(eventGoingCounter.textContent) : 0;
+            if (eventMember) {
+                currentCounter++;
+            } else {
+                if (currentCounter > 0) {
+                    currentCounter--;
+                }
+            }
+            eventGoingCounter.textContent = currentCounter;
+        }
+
+        function populateEventInterestedCounter(uuid, eventMember) {
+            let eventInterestedCounter = document.getElementById("eventInterestedCounter_" + uuid);
+            let currentCounter = eventInterestedCounter.textContent ? parseInt(eventInterestedCounter.textContent) : 0;
+            if (eventMember) {
+                currentCounter++;
+            } else {
+                if (currentCounter > 0) {
+                    currentCounter--;
+                }
+            }
+            eventInterestedCounter.textContent = currentCounter;
+        }
+
         function addOpenUpdateEvent() {
             let updateEventButtons = document.querySelectorAll(".update-event-button");
             Array.from(updateEventButtons).forEach(button => {
@@ -658,11 +889,11 @@
                     addClickEventRemoveDepartmentUpdate(currentUuid);
 
                     currentEventDepartmentsInput.addEventListener("focus", e => {
-                        showUpdateDepartmentChoises(e.target.value, currentUuid);
+                        showUpdateDepartmentChoices(e.target.value, currentUuid);
                     });
 
                     currentEventDepartmentsInput.addEventListener("keyup", e => {
-                        showUpdateDepartmentChoises(e.target.value, currentUuid);
+                        showUpdateDepartmentChoices(e.target.value, currentUuid);
                     });
 
                     // handle upload files
@@ -815,12 +1046,12 @@
                     document.getElementById("loadingSpinner").classList.add("d-none");
                 },
                 error: function(error) {
-                    showPostEventMessages("danger", [error.statusText]);
+                    alert(error.statusText);
                 },
                 success: function(data) {
-                    console.log('data', data);
                     if (data.meta.success) {
                         let event = data.data.event;
+                        populateUpdatedEvent(event);
                     } else {
                         let message = currentLang == "vi" ?
                             "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
@@ -834,6 +1065,159 @@
                     }
                 },
             });
+        }
+
+        function populateUpdatedEvent(event) {
+            let thisEventContainer = document.getElementById("feed_event_" + event.uuid);
+            if (thisEventContainer) {
+                let actions = '';
+                let deleteActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Huỷ sự kiện" : "Cancel event";
+                let deleteActionDescription = "{{ auth()->user()->lang }}" == "vi" ? "Huỷ sự kiện này khỏi lịch" :
+                    "Cancel event from calendar";
+                let updateActionLabel = "{{ auth()->user()->lang }}" == "vi" ? "Chỉnh sửa sự kiện" : "Update event";
+                let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
+                    "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
+
+                if ("{{ auth()->user()->uuid }}" == event.created_by.uuid) {
+                    actions = `
+                    <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg"
+                        aria-labelledby="dropdownMenuEvent_${event.uuid}">
+                        <div class="card-body p-0 d-flex mt-2">
+                            <i class="feather-info text-primary me-3 font-lg"></i>
+                            <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 update-event-button" data-uuid="${event.uuid}">
+                                ${updateActionLabel}
+                                <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500 update-event-button" data-uuid="${event.uuid}">
+                                    ${updateActionDescription}
+                                </span>
+                            </h4>
+                        </div>
+                        <div class="card-body p-0 d-flex">
+                            <i class="feather-x-circle text-danger me-3 font-lg"></i>
+                            <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 delete-event-button">
+                                ${deleteActionLabel}
+                                <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">
+                                    ${deleteActionDescription}
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+                    `;
+                }
+                thisEventContainer.innerHTML = `
+                <div class="card-body p-0 d-flex">
+                    <figure class="avatar me-3"><img src="${event.created_by.avatar}" alt="${event.created_by.last_name}_avatar"
+                            class="shadow-sm rounded-circle w45"></figure>
+                    <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by.last_name + ' ' + event.created_by.first_name} <span
+                            class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${formatRelativeTime(event.created_at)}</span></h4>
+                    ${actions}
+                </div>
+                <div class="card-body p-0 mb-3">
+                    <div id="event_information_${event.uuid}">
+                        <div class="d-flex flex-wrap justify-content-between">
+                            <div>
+                                <i class="feather-calendar me-3"></i> ${formatDateTimeEvent(event)}
+                            </div>
+                            <div>
+                                <i class="feather-map-pin me-3"></i> ${event.location}
+                            </div>
+                        </div>
+                        <div class="me-lg-5 mt-2">
+                            <b class="fw-500 text-black w-100">${event.name}</b>
+                            <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
+                        </div>    
+                    </div>
+                    <div id="update_event_information_${event.uuid}" class="d-none">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}" 
+                                    placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) }}" data-value="${event.name}" value="${event.name}">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}" 
+                                    placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) }}" data-value="${event.location}" value="${event.location}">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control rounded-xxl update-event-department" name="eventDepartments"
+                                            id="eventDepartmentsInput_${event.uuid}" data-departments="${event.tags}" data-update-departments="${event.tags}"
+                                            placeholder="{{ __('texts.texts.department.' . auth()->user()->lang) }}">
+                                    </div>
+                                    <div class="position-absolute bg-white p-2 rounded border d-none" id="departmentChoices_${event.uuid}"
+                                        style="min-width: 240px; z-index: 2;">
+                                    </div>
+                                    <div>
+                                        <div class="d-flex flex-wrap" id="chosenDepartmentsContainer_${event.uuid}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="input-color-container">
+                                        <input type="color"class="input-color" id="eventColor_${event.uuid}" name="eventColor" data-value="${event.color}" value="${event.color}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="eventStartTime_${event.uuid}">
+                                        {{ __('texts.texts.event_start_time.' . auth()->user()->lang) }}
+                                    </label>
+                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime" 
+                                    id="eventStartTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "start")}" value="${formdateDateTimeValueEvent(event, "start")}" />
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label for="eventEndTime_${event.uuid}">
+                                        {{ __('texts.texts.event_end_time.' . auth()->user()->lang) }}
+                                    </label>
+                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime" 
+                                    id="eventEndTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "end")}" value="${formdateDateTimeValueEvent(event, "end")}" />
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}" 
+                                    class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg" 
+                                    cols="30" rows="10" placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}" data-value="${event.description}">${event.description}</textarea>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="d-flex">
+                                        <span class="hiddenFileInputEvent rounded-3">
+                                            <input type="file" name="eventFiles" class="update-event-file" accept="image/*" id="eventFiles_${event.uuid}" multiple />
+                                        </span>
+                                    </div>
+                                    <div class="mt-2 d-flex flex-wrap" id="previewEventImages_${event.uuid}">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-success text-white save-update-event" id="saveEventButton_${event.uuid}" data-uuid="${event.uuid}" data-id="${event.id}" type="button">
+                                        {{ __('texts.texts.save.' . auth()->user()->lang) }}
+                                    </button>
+                                    <button class="btn btn-secondary text-white cancel-update-event" id="cancelSaveEventButton_${event.uuid}" data-uuid="${event.uuid}" type="button">
+                                        {{ __('texts.texts.cancel.' . auth()->user()->lang) }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                ${getEventImages(event)}
+                <div class="card-body d-flex p-0 mt-3">
+                    <span class="emoji-bttn d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-2">
+                        <i class="feather-check-circle text-white bg-success me-1 btn-round-xs font-xss cursor-pointer going-to-event" data-id="${event.id}" data-uuid="${event.uuid}" id="goingToEvent_${event.uuid}"></i>
+                        <span id="eventGoingCounter_${event.uuid}">${event.event_members.filter(item => item.status == 'going').length}</span>&nbsp;Going
+                    </span>
+                    <span class="d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss">
+                        <i class="feather-thumbs-up text-white bg-primary-gradiant me-1 btn-round-xs font-xss cursor-pointer interested-in-event" data-id="${event.id}" data-uuid="${event.uuid}" id="interestedInEvent_${event.uuid}"></i>
+                        <span id="eventInterestedCounter_${event.uuid}">${event.event_members.filter(item => item.status == 'interested').length}</span>&nbsp;Interested
+                    </span>
+                    <span class="ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss">
+                        <i class="feather-copy text-grey-900 text-dark btn-round-sm font-lg cursor-pointer copy-event-url" data-uuid="${event.uuid}" id="copyEventUrl_${event.uuid}"></i>
+                    </span>
+                </div>
+                `;
+
+                addImagesOpenModalEvent();
+                addOpenUpdateEvent();
+                addSeeMoreOrHideEventDescriptionEvent();
+            }
         }
 
         // add event to close image modal
@@ -852,5 +1236,19 @@
                 });
             })
         }
+
+        // load more events
+        mainFeedsContainer.addEventListener('scroll', function() {
+            if (mainFeedsContainer.scrollTop + mainFeedsContainer.clientHeight >= (mainFeedsContainer.scrollHeight -
+                    1)) {
+                if (!loadedAllEvents) {
+                    mainFeedsLoading.classList.remove("d-none");
+                    eventPage++;
+                    loadEvents();
+                } else {
+                    document.getElementById("mainFeedsLoadedText").classList.remove("d-none");
+                }
+            }
+        });
     </script>
 @endpush

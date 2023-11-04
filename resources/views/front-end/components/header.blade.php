@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
         <div class="text-center">
             <div class="spinner-border" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only"></span>
             </div>
         </div>
     </div>
