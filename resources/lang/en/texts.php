@@ -170,5 +170,13 @@ return [
       "vi" => 'Huỷ',
       "en" => 'Cancel'
     ],
+    'loaded_all_events' => [
+      "vi" => 'Không tìm thấy sự kiện khác',
+      "en" => 'All events are loaded'
+    ],
+    'no_events_found' => [
+      "vi" => 'Không tìm thấy sự kiện nào',
+      "en" => 'No events found'
+    ],
   ]
 ];

@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Traits\ResponseTrait;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Event;
+use App\Models\EventMember;
 
 class EventController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * Returning the view of the app with the required data.
      *
@@ -24,10 +29,10 @@ class EventController extends Controller
             $limit = 10;
             $page = 1;
             if (isset($request->limit)) {
-                $limit = $request->limit;
+                $limit = intval($request->limit);
             }
             if (isset($request->page)) {
-                $page = $request->page;
+                $page = intval($request->page);
             }
             $skip = $limit * $page - $limit;
 
@@ -38,7 +43,7 @@ class EventController extends Controller
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
-            return $this->failedWithError(500, $exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
         }
     }
 
@@ -113,7 +118,7 @@ class EventController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error($exception->getMessage());
-            return $this->failedWithError(500, $exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
         }
     }
 
@@ -191,8 +196,6 @@ class EventController extends Controller
             $thisEvent->save();
             DB::commit();
 
-            return $this->successWithContent($thisEvent);
-
             $data = [
                 'event' => Event::with(['createdBy', 'updatedBy', 'eventMembers'])->find($id),
             ];
@@ -200,7 +203,113 @@ class EventController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             Log::error($exception->getMessage());
-            return $this->failedWithError(500, $exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    /**
+     * Returning the view of the app with the required data.
+     *
+     * @param int $id
+     */
+    public function goingToEvent($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent == null) {
+                return $this->failedWithErrors(404, 'Event not found');
+            }
+
+            $findExistedGoingEventMember = EventMember::where([
+                ['user_id', '=', $user->uuid],
+                ['event_id', '=', $thisEvent->uuid],
+                ['status', '=', EventMember::STATUS_GOING],
+            ])->first();
+
+            if ($findExistedGoingEventMember == null) {
+                $newEventMember = [
+                    'user_id' => $user->uuid,
+                    'event_id' => $thisEvent->uuid,
+                    'status' => EventMember::STATUS_GOING,
+                    'uuid' => Str::uuid(),
+                ];
+                $insertedEventMember = EventMember::create($newEventMember);
+
+                $data = [
+                    'status' => EventMember::STATUS_GOING,
+                    'eventMember' => $insertedEventMember,
+                ];
+            } else {
+                $findExistedGoingEventMember->delete();
+                $data = [
+                    'status' => 'undo ' . EventMember::STATUS_GOING,
+                    'eventMember' => null,
+                ];
+            }
+            DB::commit();
+
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    /**
+     * Returning the view of the app with the required data.
+     *
+     * @param int $id
+     */
+    public function interestedInEvent($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent == null) {
+                return $this->failedWithErrors(404, 'Event not found');
+            }
+
+            $findExistedInterestedEventMember = EventMember::where([
+                ['user_id', '=', $user->uuid],
+                ['event_id', '=', $thisEvent->uuid],
+                ['status', '=', EventMember::STATUS_INTERESTED],
+            ])->first();
+
+            if ($findExistedInterestedEventMember == null) {
+                $newEventMember = [
+                    'user_id' => $user->uuid,
+                    'event_id' => $thisEvent->uuid,
+                    'status' => EventMember::STATUS_INTERESTED,
+                    'uuid' => Str::uuid(),
+                ];
+                $insertedEventMember = EventMember::create($newEventMember);
+
+                $data = [
+                    'status' => EventMember::STATUS_INTERESTED,
+                    'eventMember' => $insertedEventMember,
+                ];
+            } else {
+                $findExistedInterestedEventMember->delete();
+                $data = [
+                    'status' => 'undo ' . EventMember::STATUS_INTERESTED,
+                    'eventMember' => null,
+                ];
+            }
+            DB::commit();
+
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
         }
     }
 }

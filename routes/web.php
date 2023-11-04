@@ -42,6 +42,8 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
     Route::get("/events", [EventController::class, 'getEvents'])->name('event.get');
     Route::post("/events/{id}", [EventController::class, 'updateEvent'])->name('event.update');
+    Route::post("/events/{id}/going", [EventController::class, 'goingToEvent'])->name('event.going.to');
+    Route::post("/events/{id}/interested", [EventController::class, 'interestedInEvent'])->name('event.interested.in');
 
     //route plan
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');

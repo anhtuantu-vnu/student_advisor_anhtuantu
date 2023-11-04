@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -10,6 +11,8 @@ use Illuminate\Contracts\View\View;
 
 class CalendarController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * Returning the view of the app with the required data.
      *
