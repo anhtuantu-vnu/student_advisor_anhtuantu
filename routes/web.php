@@ -144,9 +144,6 @@ Route::middleware(['auth.login'])->group(function () {
     Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
 });
 
-//route view
-Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
-
 Route::get('chat', [ChatController::class, 'index'])->name('app.login');
 Route::post('/broadcast', [ChatController::class, 'broadcast']);
 Route::post('/receive', [ChatController::class, 'receive']);

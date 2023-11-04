@@ -136,7 +136,7 @@
                             <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
                                 <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                     <div class="p-3 border-top-lg border-size-lg border-primary p-0">
-                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">To Do </span>
+                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">{{ __('texts.texts.to_do.' . auth()->user()->lang) }}</span>
                                             <button class="float-right btn-round-sm bg-greylight btn_create_task"
                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
                                     </div>
@@ -150,7 +150,7 @@
 {{--                                            <button class="btn_post_task"><i class="feather-paperclip icon_create_plan"></i></button>--}}
                                             <textarea
                                                 id="input_create_task" class="form_create_plan mb-0 rounded-3 p-2"
-                                                placeholder="What needs to be done?"
+                                                placeholder="{{ __('texts.texts.what_needs_to_be_done.' . auth()->user()->lang)}}"
                                                 onfocusout="handleFocusoutTextarea()"
                                                 maxlength="255"></textarea>
                                         </div>
@@ -162,7 +162,7 @@
                             <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
                                 <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                     <div class="p-3 border-top-lg border-size-lg border-warning p-0">
-                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">In process </span>
+                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">{{ __('texts.texts.in_process.' . auth()->user()->lang) }}</span>
                                         </h4>
                                     </div>
                                     @if(count($tasks['tasks_in_process']))
@@ -175,7 +175,7 @@
                             <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
                                 <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                     <div class="p-3 border-top-lg border-size-lg border-secondary p-0">
-                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">Review</span>
+                                        <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">{{ __('texts.texts.review.' . auth()->user()->lang) }}</span>
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_review']))
@@ -189,7 +189,7 @@
                                 <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                     <div class="p-3 border-top-lg border-size-lg border-success p-0">
                                         <h4>
-                                            <span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">Done </span>
+                                            <span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">{{ __('texts.texts.done.' . auth()->user()->lang) }}</span>
                                         </h4>
                                     </div>
                                     @if(count($tasks['task_done']))
@@ -198,7 +198,7 @@
                                 </div>
                             </div>
 
-                            {{--ALERT CREATE TASK--}}
+                            {{--PAGE EMPTY TASK--}}
                             @if(!count($tasks['tasks_to_do']) && !count($tasks['tasks_in_process'])
                                 && !count($tasks['task_review']) && !count($tasks['task_done']))
                                 <div class="alert_create_task" style="height: 76vh;
@@ -302,10 +302,9 @@
                                         </svg>
                                     </div>
                                     <div class="text_create_task">
-                                        <h2>Visualize your work with a board</h2>
-                                        <p>Track, organize and prioritize your team’s work. Get started by creating an
-                                            item for your team.</p>
-                                        <button onclick="showInputCreateTask()">Create an task</button>
+                                        <h2>{{ __('texts.texts.visualize.' . auth()->user()->lang) }}</h2>
+                                        <p>{{ __('texts.texts.track_organize.' . auth()->user()->lang) }}</p>
+                                        <button onclick="showInputCreateTask()">{{ __('texts.texts.create_an_task.' . auth()->user()->lang) }}</button>
                                     </div>
                                 </div>
                             @endif
@@ -315,8 +314,11 @@
             </div>
         </div>
     </div>
+    <div class="position-relative card">
+        @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])
+    </div>
 @endsection
 
-@section('modal')
-    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])
-@endsection
+{{--@section('modal')--}}
+{{--    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])--}}
+{{--@endsection--}}

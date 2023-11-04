@@ -36,26 +36,26 @@
                                         <div class="item-status">
                                                 <span
                                                     class="status-number">{{ $dataPlan['data']['in_progress'] ?? 0 }}</span>
-                                            <span class="status-type">In Progress</span>
+                                            <span class="status-type">{{ __('texts.texts.active.' . auth()->user()->lang) }}</span>
                                         </div>
                                         <div class="item-status">
                                             <span class="status-number">{{ $dataPlan['data']['in_active'] ?? 0}}</span>
-                                            <span class="status-type">In Active</span>
+                                            <span class="status-type">{{ __('texts.texts.in_active.' . auth()->user()->lang) }}</span>
                                         </div>
                                         <div class="item-status">
                                             <span class="status-number">{{ $dataPlan['data']['complete'] ?? 0}}</span>
-                                            <span class="status-type">Complete</span>
+                                            <span class="status-type">{{ __('texts.texts.complete.' . auth()->user()->lang) }}</span>
                                         </div>
                                         <div class="item-status">
                                             <span class="status-number">{{ $dataPlan['data']['total_plan'] ?? 0}}</span>
-                                            <span class="status-type">Total Plans</span>
+                                            <span class="status-type">{{ __('texts.texts.total_plan.' . auth()->user()->lang) }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="search-form-2 ms-auto">
                                     <a href="{{ route("ui_create_plan") }}"
                                        style="padding: 10px; color: white; display:flex; align-items: center; font-size: 14px; font-weight: 500"
-                                       class="ms-2 bg-current theme-dark-bg rounded-3">Create plan</a>
+                                       class="ms-2 bg-current theme-dark-bg rounded-3">{{ __('texts.texts.create_plan.' . auth()->user()->lang) }}</a>
                                 </div>
                             </div>
 

@@ -66,7 +66,7 @@
                     <div class="card w-100 border-0 bg-white shadow-xs p-0 mb-4">
                         <div class="card-body p-4 w-100 bg-current border-0 d-flex rounded-3">
                             <a href=" {{ route("plan") }} " class="d-inline-block mt-2"><i class="ti-arrow-left font-sm text-white"></i></a>
-                            <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">Create Plan</h4>
+                            <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">{{ __('texts.texts.create_plan.' . auth()->user()->lang) }}</h4>
                         </div>
                         <div class="card-body p-lg-5 p-4 w-100 border-0 ">
                             <form method="POST" action="/create-plan">
@@ -74,7 +74,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-group">
-                                            <label class="mont-font fw-600 font-xsss">Name Plan *</label>
+                                            <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }} *</label>
                                             <input type="text" class="form-control input_name" name="name" required>
 {{--                                            @error('name')--}}
 {{--                                                <div class="alert alert-danger">{{ $message }}</div>--}}
@@ -86,7 +86,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div tabindex="0" onblur="clickOutSide()">
                                             <div class="form-group select_add_customer">
-                                                <label class="mont-font fw-600 font-xsss">Add Member</label>
+                                                <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
                                                 <div class="input_add_member position-relative" onclick="clickSearchMember()">
                                                     <input type="text" class="form-control list_member" style="color:transparent" name="list_member">
                                                     {{-- Show list member selected --}}
@@ -115,14 +115,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12 mb-3">
-                                        <label class="mont-font fw-600 font-xsss">Description *</label>
+                                        <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }} *</label>
 {{--                                        @error('name')--}}
 {{--                                            <div class="alert alert-danger">{{ $message }}</div>--}}
 {{--                                        @enderror--}}
-                                        <textarea class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16" name="description" rows="5" placeholder="Description for plan..." spellcheck="false" required></textarea>
+                                        <textarea class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16" name="description" rows="5" placeholder="{{ __('texts.texts.description_for_plan.' . auth()->user()->lang) }}" spellcheck="false" required></textarea>
                                     </div>
                                 </div>
-                                <input type="submit" value="Save" class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
+                                <input type="submit" value="{{ __('texts.texts.save.' . auth()->user()->lang) }}" class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
                             </form>
                         </div>
                     </div>

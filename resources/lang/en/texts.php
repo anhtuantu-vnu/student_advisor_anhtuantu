@@ -42,6 +42,74 @@ return [
       "vi" => 'Kế hoạch',
       "en" => "Plans"
     ],
+      'active' => [
+          "vi" => 'Đang hoạt động',
+          "en" => "Active"
+      ],
+      'in_active' => [
+          'vi' => 'Không hoạt động',
+          'en' => 'In Active'
+      ],
+      'complete' => [
+          'vi' => 'Hoàn thành',
+          'en' => 'Complete'
+      ],
+      'total_plan' => [
+          'vi' => 'Tổng số kế hoạch',
+          'en' => 'Total plan'
+      ],
+      'create_plan' => [
+          'vi' => 'Tạo kế hoạch',
+          'en' => 'Create plan'
+      ],
+      'name_plan' => [
+          'vi' => 'Tên kế hoạch',
+          'en' => 'Name Plan'
+      ],
+      'add_member' => [
+        'vi' => 'Thêm thành viên',
+        'en' => 'Add Member'
+      ],
+      'description' => [
+          'vi' => 'Mô tả',
+          'en' => 'Description'
+      ],
+      'description_for_plan' => [
+        'vi' =>   'Miêu tả cho kế hoạch...',
+          'en' => 'Description for plan...'
+      ],
+      'to_do' => [
+          'vi' => 'Chuẩn bị',
+          'en' => 'To do'
+      ],
+      'in_process' => [
+          'vi' => 'Đang làm',
+          'en' => 'In process'
+      ],
+      'review' => [
+          'vi' => 'Xem xét',
+          'en' => 'Review'
+      ],
+      'done' => [
+          'vi' => 'Hoàn thành',
+          'en' => 'done'
+      ],
+      'create_an_task' => [
+          'vi' => 'Tạo nhiệm vụ',
+          'en' => 'Create an task'
+      ],
+      'what_needs_to_be_done' => [
+          'vi' => "Những gì cần phải được thực hiện?",
+          'en' => 'What needs to be done?'
+      ],
+      'visualize' => [
+          'vi' => 'Trực quan hóa công việc của bạn bằng bảng',
+          'en' => 'Visualize your work with a board'
+      ],
+      'track_organize' => [
+          'vi' => 'Theo dõi, sắp xếp và ưu tiên công việc của nhóm bạn. Bắt đầu bằng cách tạo một mục cho nhóm của bạn.',
+          'en' => 'Track, organize and prioritize your team’s work. Get started by creating an item for your team.'
+      ],
     'events' => [
       "vi" => 'Sự kiện',
       "en" => 'Events'
