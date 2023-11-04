@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthContoller as ApiAuthContoller;
 use App\Http\Controllers\Api\UserController as UserController;
+use App\Http\Controllers\Api\DepartmentController as DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,4 @@ Route::controller(ApiAuthContoller::class)->group(function () {
 });
 
 Route::get('/student-intakes', [UserController::class, 'studentIntakes']);
+Route::get('/departments', [DepartmentController::class, 'actionDepartments']);

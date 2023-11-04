@@ -130,5 +130,45 @@ return [
       "vi" => 'Lưu',
       "en" => 'Save'
     ],
+    'create_event' => [
+      "vi" => 'Tạo sự kiện',
+      "en" => 'Create event'
+    ],
+    'event_description' => [
+      "vi" => 'Mô tả sự kiện',
+      "en" => 'Event description'
+    ],
+    'event_name' => [
+      "vi" => 'Tên sự kiện',
+      "en" => 'Event name'
+    ],
+    'event_start_time' => [
+      "vi" => 'Thời gian bắt đầu',
+      "en" => 'Event start time'
+    ],
+    'event_end_time' => [
+      "vi" => 'Thời gian kết thúc',
+      "en" => 'Event end time'
+    ],
+    'photos_videos' => [
+      "vi" => 'Ảnh/Videos',
+      "en" => 'Photos/Videos'
+    ],
+    'remove_confirm' => [
+      "vi" => 'Bạn muốn xoá bỏ chứ?',
+      "en" => 'Are you sure to remove this?'
+    ],
+    'no_result_found' => [
+      "vi" => 'Không tìm thấy kết quả',
+      "en" => 'No results found.'
+    ],
+    'location' => [
+      "vi" => 'Vị trí',
+      "en" => 'Location'
+    ],
+    'cancel' => [
+      "vi" => 'Huỷ',
+      "en" => 'Cancel'
+    ],
   ]
 ];

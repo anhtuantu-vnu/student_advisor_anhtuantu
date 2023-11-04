@@ -13,7 +13,7 @@ class CalendarController extends Controller
     /**
      * Returning the view of the app with the required data.
      *
-     * @param int|null $id
+     * @param Request $request
      */
     public function index(Request $request)
     {

@@ -24,6 +24,10 @@
 
     @yield('header_js_page')
 
+    <script src="{{ asset('js/plugin.js') }}"></script>
+    <script src="{{ asset('js/lightbox.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
+
     <style>
         .loading-spinner {
             position: fixed;
@@ -68,7 +72,4 @@
     {{--  End Modal  --}}
 
     @stack('js_page')
-    <script src="{{ asset('js/plugin.js') }}"></script>
-    <script src="{{ asset('js/lightbox.js') }}"></script>
-    <script src="{{ asset('js/scripts.js') }}"></script>
 </body>

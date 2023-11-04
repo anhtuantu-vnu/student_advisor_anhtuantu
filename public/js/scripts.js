@@ -3,29 +3,6 @@ $(document).ready(function() {
 
     PageScroll();
 
-
-    // Loading Box (Preloader)
-    function handlePreloader() {
-        if ($('.preloader').length > 0) {
-            $('.preloader').delay(200).fadeOut(500);
-        }
-    }
-
-    function PageLoad() {
-      $( window ).on( "load", function() {
-            setInterval(function(){
-                $('.preloader-wrap').fadeOut(300);
-            }, 400);
-            setInterval(function(){
-                $('body').addClass('loaded');
-            }, 600);
-      });
-    }
-
-
-    handlePreloader();
-    PageLoad();
-
     $('.carousel-card').owlCarousel({
         loop:false,
         margin:10,

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,14 +22,14 @@ use App\Http\Controllers\CalendarController;
 */
 
 //authentication socialite
-Route::get('/auth/redirect', [AccountController::class , 'redirectToGoogle'])->name('login.google');
-Route::get('/auth/callback',[AccountController::class , 'handleGoogleCallback']);
-Route::post('/login', [AccountController::class , 'login'])->name('login');
-Route::post('/logout', [AccountController::class , 'logout'])->name('logout');
-Route::post('/register', [AccountController::class , 'register']);
+Route::get('/auth/redirect', [AccountController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/callback', [AccountController::class, 'handleGoogleCallback']);
+Route::post('/login', [AccountController::class, 'login'])->name('login');
+Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
+Route::post('/register', [AccountController::class, 'register']);
 Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
-Route::middleware(['auth.login'])->group(function() {
+Route::middleware(['auth.login'])->group(function () {
     Route::get("/", [HomeController::class, 'showHome'])->name('app.home');
     Route::get("/home", [HomeController::class, 'showHome'])->name('app.home');
 
@@ -37,10 +38,15 @@ Route::middleware(['auth.login'])->group(function() {
     Route::get("/my-profile", [AccountController::class, 'showProfile'])->name('app.my.profile');
     Route::post("/update-avatar", [AccountController::class, 'updateAvatar'])->name('app.update.avatar');
 
+    // route event
+    Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
+    Route::get("/events", [EventController::class, 'getEvents'])->name('event.get');
+    Route::post("/events/{id}", [EventController::class, 'updateEvent'])->name('event.update');
+
     //route plan
-    Route::get("/plan",[PlanController::class , 'showPlan'])->name('plan');
-    Route::get("/create-plan", [PlanController::class , 'formCreatePlan'])->name('ui_create_plan');
-    Route::post('/create-plan', [PlanController::class , 'createPlan'])->name('create_plan');
+    Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
+    Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
+    Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
 
     //route task
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
@@ -134,7 +140,6 @@ Route::middleware(['auth.login'])->group(function() {
      */
     Route::post('/student-chat/setActiveStatus', [MessageController::class, 'setActiveStatus'])->name('activeStatus.set');
     Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
-
 });
 
 //route view
