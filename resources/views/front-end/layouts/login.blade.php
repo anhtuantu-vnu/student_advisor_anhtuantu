@@ -113,6 +113,30 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
 
     <script>
+        // Loading Box (Preloader)
+        function handlePreloader() {
+            if ($('.preloader').length > 0) {
+                $('.preloader').delay(200).fadeOut(500);
+            }
+        }
+
+        function PageLoad() {
+            $(window).on("load", function() {
+                setInterval(function() {
+                    $('.preloader-wrap').fadeOut(300);
+                }, 400);
+                setInterval(function() {
+                    $('body').addClass('loaded');
+                }, 600);
+            });
+        }
+
+
+        handlePreloader();
+        PageLoad();
+    </script>
+
+    <script>
         let loginForm = document.getElementById("loginForm");
         let loginButton = document.getElementById("loginButton");
 

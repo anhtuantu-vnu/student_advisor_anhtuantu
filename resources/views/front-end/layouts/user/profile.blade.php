@@ -84,8 +84,6 @@
                     document.getElementById("loadingSpinner").classList.remove("d-none");
                 },
                 success: function(data) {
-                    console.log('data', data);
-
                     let newAvatar = data.data;
                     let headerUserAvatar = document.getElementById("headerUserAvatar");
                     headerUserAvatar.setAttribute("src", newAvatar);
@@ -96,7 +94,6 @@
                     showProfileMessage("success", data.meta.message);
                 },
                 error: function(error) {
-                    console.log('error', error);
                     showProfileMessage("danger", error.statusText);
                 },
                 complete: function(data) {

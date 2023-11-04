@@ -2,6 +2,10 @@
     {{ __('texts.texts.profile.' . auth()->user()->lang) }}
 </h4>
 
+<small class="text-info">
+    {{ '@' . auth()->user()->last_name . ' ' . auth()->user()->first_name }}
+</small>
+
 <form action="/logout" method="POST" class="d-none" id="logoutForm">
     @csrf
 </form>
