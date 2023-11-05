@@ -16,7 +16,6 @@
                 clearInterval(setPerCentForProcess);
             }
         })
-
     </script>
 @endpush
 
@@ -60,7 +59,7 @@
                             </div>
 
                             {{--UI list plan--}}
-                            <div class="row ps-2 pe-1" style="max-height: 60vh; overflow-y: scroll;">
+                            <div class="row ps-2 pe-1 pb-2" style="max-height: 60vh; overflow-y: scroll;">
                                 @if(isset($dataPlan['list_plan']))
                                     @foreach($dataPlan['list_plan'] as $plan)
                                         <a href="{{ route('show_task') }}?id={{ $plan['uuid'] }}">

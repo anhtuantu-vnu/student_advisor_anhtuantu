@@ -265,6 +265,26 @@ return [
     'not_found_member' => [
         'vi' => 'Không tìm thấy thành viên có email trên',
         'en' => 'No members found with the above email'
+    ],
+    'assign_to' => [
+        'vi' => 'Giao cho',
+        'en' => 'Assign to'
+    ],
+    'write_a_comment' => [
+        'vi' => 'Viết bình luận',
+        'en' => 'Write a comment'
+    ],
+    'close' => [
+        'vi' => 'Đóng',
+        'en' => 'Close'
+    ],
+    'update' => [
+        'vi' => 'Cập nhật',
+        'en' => 'Update'
+    ],
+    'activity' => [
+        'vi' => 'Hoạt động',
+        'en' => 'Activity'
     ]
   ]
 ];

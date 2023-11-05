@@ -10,4 +10,15 @@ class PlanMemberRepository extends AbstractRepository
     {
         parent::__construct($model);
     }
+
+    /**
+     * @param $idPlan
+     * @return mixed
+     */
+    public function getMemberByPlanId($idPlan): mixed
+    {
+        return $this->model->where('plan_id' , $idPlan)->with('userByPlan')->get()->map(function($member) {
+            return $member['userByPlan'];
+        })->toArray();
+    }
 }

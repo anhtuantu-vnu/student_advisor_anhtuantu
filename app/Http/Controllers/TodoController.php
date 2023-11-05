@@ -26,13 +26,21 @@ class TodoController extends Controller
 
     /**
      * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        return $this->taskServices->getDataTask($request->input('idPlan'));
+    }
+
+    /**
      * @return View
      */
-    public function showTasks(Request $request): View
+    public function showTasks(): View
     {
-        $tasks = $this->taskServices->getDataTask($request->input('id'));
-        $tasks['id_plan'] = $request->input('id');
-        return view('front-end.layouts.task.layout_todo', compact('tasks'));
+//        $tasks = $this->taskServices->getDataTask($request->input('id'));
+//        $tasks['id_plan'] = $request->input('id');
+        return view('front-end.layouts.task.layout_todo');
     }
 
 

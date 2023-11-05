@@ -2,6 +2,8 @@
 
 @section('style_page')
     <link rel="stylesheet" href="{{ asset("css/layout_custom.css") }}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 @endsection
 
 @push('js_page')
@@ -14,7 +16,7 @@
 
         //Get list member
         function getListMember() {
-            let dataSearch = $("#list_member").val();
+            let dataSearch = $("#list_member_search").val();
             if (dataSearch) {
                 $.ajax({
                     url: '/list-member',
@@ -26,16 +28,16 @@
                         document.getElementById("loadingSpinner").classList.remove("d-none");
                     },
                     success: function (data) {
-                        listUser = data;
                         let listUserUI = document.querySelector('#selected');
                         let members = '';
                         if (data.data.length) {
+                            listUser = data.data;
                             data.data.forEach((user) => {
                                 let uuid = user.uuid;
                                 members += `
                                     <li class="list-item">
                                         <input type="checkbox" class="hidden-box member_item" id="${uuid}" />
-                                        <label class="check-label" for="${uuid}">
+                                        <label class="check-label" for="${uuid}" onclick="clickSelectedUser('${uuid}')">
                                             <span class="check-label-box"></span>
                                             <span class="check-label-text">${user.email}</span>
                                         </label>
@@ -60,6 +62,11 @@
             }
         }
 
+        //call api create plan
+        function createPlan() {
+
+        }
+
         function showAlertNotFoundMember() {
             $('.alert_list_member').removeClass('d-none');
             setTimeout(() => {
@@ -77,12 +84,11 @@
             return addClassNone(listUser);
         }
 
-        function clickSelectedUser(user) {
-            console.log(user);
+        function clickSelectedUser(userId) {
+            let data = listUser.filter(user => user.uuid === userId)[0];
             let flagCheck = true;
-            let inputCheckbox = document.querySelector('.list_member');
             for (let i = 0; i < listUserSelected.length; i++) {
-                if (listUserSelected[i].email === user['email']) {
+                if (listUserSelected[i].email === data['email']) {
                     listUserSelected.splice(i, 1);
                     idUserSelected.splice(i, 1);
                     flagCheck = false;
@@ -91,21 +97,22 @@
             }
 
             if (flagCheck) {
-                listUserSelected.push(user);
-                idUserSelected.push(user.uuid);
+                listUserSelected.push(data);
+                idUserSelected.push(data.uuid);
             }
-            inputCheckbox.value = JSON.stringify(idUserSelected);
+            $('#list_member').val(JSON.stringify(idUserSelected));
+            $('#list_member_search').val("");
+            clickOutSide();
             renderListMemberSelected();
             return true;
         }
 
         //function render UI
         function renderListMemberSelected() {
-            console.log(49);
             let listSelect = document.querySelector('.list_member_selected');
-            console.log(listSelect);
             removeAllElementChild(listSelect);
             listUserSelected.forEach(function (user) {
+                console.log(user);
                 let itemUser = initElement('p');
                 itemUser.classList = 'm-0 fs-5 ms-1 p-1';
                 itemUser.style.cssText = "border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px";
@@ -149,16 +156,14 @@
                                                      style="padding: 4px !important;">
                                                     {{-- Show list member selected --}}
                                                     <div class="list_member_selected">
-                                                        {{--                                                        <p class="m-0 fs-5 ms-1 p-1" style="border: 1px solid #c9cccd; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px;">--}}
-                                                        {{--                                                            nam@gmail.com--}}
-                                                        {{--                                                        </p>--}}
                                                     </div>
 
                                                     <div class="position-relative w-100 ms-1">
+                                                        <input type="text" class="d-none" name="list_member" id="list_member" />
                                                         <input type="text"
-                                                               class="list_member w-100 position-absolute top-0"
+                                                               class="list_member_search w-100 position-absolute top-0"
                                                                style="line-height: 40px"
-                                                               name="list_member" id="list_member" />
+                                                               name="list_member_search" id="list_member_search" />
                                                         <i class="feather-search font-xss fw-700 position-absolute"
                                                            style="margin-top: 6px; right: 26px"
                                                            onclick="getListMember()"></i>

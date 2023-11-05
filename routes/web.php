@@ -53,6 +53,7 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
 
     //route task
+    Route::get('/task', [TodoController::class, 'index'])->name('data_task');
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
     Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
 

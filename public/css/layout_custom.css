@@ -415,7 +415,7 @@
     padding: 4px 0;
     min-height: 100%;
 }
-.list_member {
+.list_member_search {
     border: none;
     background-color: unset;
 }
@@ -432,8 +432,7 @@
 }
 .card_plan:hover {
     cursor: pointer;
-    box-shadow: 0 8px 4px rgba(0,0,0,0.12), 0 4px 5px rgba(0,0,0,0.24);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 2px 2px 2px 2px #959595;
     border-radius: 9px;
 }
 
@@ -493,6 +492,20 @@
 .create_task {
     position: relative;
 }
+.to_do .description_task {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    max-height: calc(1.2em * 3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .btn_post_task {
     position: absolute;
     bottom: 16px;
