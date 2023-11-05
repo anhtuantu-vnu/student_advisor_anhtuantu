@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Repositories;
-use App\Repositories\Contracts\RepositoryInterface;
 use App\Models\EventMember;
 
 class EventMemberRepository extends AbstractRepository

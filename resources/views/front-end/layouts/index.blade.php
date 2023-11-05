@@ -63,7 +63,7 @@
         <!--  End Right Chat  -->
 
         {{-- Footer --}}
-        @include('front-end.components.footer');
+        @include('front-end.components.footer')
         {{-- End Footer --}}
     </div>
 

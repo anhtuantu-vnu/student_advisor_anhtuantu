@@ -47,12 +47,14 @@
                 </div>
                 <ul class="mb-1">
                     <li class="logo d-none d-xl-block d-lg-block"></li>
-                    <li>
-                        <a href="default-settings.html" class="nav-content-bttn open-font h-auto pt-2 pb-2">
-                            <i class="font-sm feather-settings me-3 text-grey-500"></i>
-                            <span>{{ __('texts.texts.settings.' . auth()->user()->lang) }}</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->role === "admin")
+                        <li>
+                            <a href="{{ route('view_import') }}" class="nav-content-bttn open-font h-auto pt-2 pb-2">
+                                <i class="font-sm feather-settings me-3 text-grey-500"></i>
+                                <span>{{ __('texts.texts.import.' . auth()->user()->lang) }}</span>
+                            </a>
+                        </li>
+                    @endif
                     <li>
                         <a href="default-email-box.html" class="nav-content-bttn open-font">
                             <i class="font-sm feather-message-square me-3 text-grey-500">

@@ -92,7 +92,7 @@ return [
       ],
       'done' => [
           'vi' => 'Hoàn thành',
-          'en' => 'done'
+          'en' => 'Done'
       ],
       'create_an_task' => [
           'vi' => 'Tạo nhiệm vụ',
@@ -246,5 +246,25 @@ return [
       "vi" => 'Không tìm thấy sự kiện nào',
       "en" => 'No events found'
     ],
+    'import' => [
+        'vi' => 'Import',
+        'en' => 'Import'
+    ],
+    'title_page_import' => [
+        'vi' => 'Nhập dữ liệu tập tin sinh viên',
+        'en' => 'Import file data student'
+    ],
+    'title_page_import_schedule' => [
+        'vi' => 'Nhập dữ liệu tập tin lịch học của sinh viên',
+        'en' => 'Import student class schedule file data'
+    ],
+    'upload_file' => [
+        'vi' => 'Tải file',
+        'en' => 'Upload file'
+    ],
+    'not_found_member' => [
+        'vi' => 'Không tìm thấy thành viên có email trên',
+        'en' => 'No members found with the above email'
+    ]
   ]
 ];

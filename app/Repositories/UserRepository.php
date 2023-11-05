@@ -10,4 +10,15 @@ class UserRepository extends AbstractRepository
     {
         parent::__construct($model);
     }
+
+    /**
+     * @param $search
+     * @return mixed
+     */
+    public function searchMemberByCondition($search): mixed
+    {
+        return $this->model->where('email', 'LIKE' , "%$search%")
+            ->orWhere('last_name', 'LIKE' , "%$search%")
+            ->orWhere('first_name', 'LIKE' , "%$search%")->get();
+    }
 }

@@ -7,7 +7,7 @@
     <style>
         .hiddenFileInputEvent>input {
             height: 100%;
-            width: 100;
+            width: 100%;
             opacity: 0;
             cursor: pointer;
         }
@@ -399,7 +399,7 @@
                     } else {
                         res += `
                         <div class="col-xs-4 col-sm-4 p-1">
-                            <img src="${item.url}" class="cursor-pointer border rounded-3 w-100 feed-images" data-source="${item.url}" style="object-fit: cover; aspect-ratio: 1/1;" 
+                            <img src="${item.url}" class="cursor-pointer border rounded-3 w-100 feed-images" data-source="${item.url}" style="object-fit: cover; aspect-ratio: 1/1;"
                                 alt="${item.name}">
                         </div>
                         `;
@@ -504,17 +504,17 @@
                                 <div class="me-lg-5 mt-2">
                                     <b class="fw-500 text-black w-100">${event.name}</b>
                                     <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
-                                </div>    
+                                </div>
                             </div>
                             <div id="update_event_information_${event.uuid}" class="d-none">
                                 <form>
                                     <div class="row">
                                         <div class="col-md-6 mb-2">
-                                            <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}" 
+                                            <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}"
                                             placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) }}" data-value="${event.name}" value="${event.name}">
                                         </div>
                                         <div class="col-md-6 mb-2">
-                                            <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}" 
+                                            <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}"
                                             placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) }}" data-value="${event.location}" value="${event.location}">
                                         </div>
                                         <div class="col-md-6 mb-2">
@@ -539,19 +539,19 @@
                                             <label for="eventStartTime_${event.uuid}">
                                                 {{ __('texts.texts.event_start_time.' . auth()->user()->lang) }}
                                             </label>
-                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime" 
+                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime"
                                             id="eventStartTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "start")}" value="${formdateDateTimeValueEvent(event, "start")}" />
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <label for="eventEndTime_${event.uuid}">
                                                 {{ __('texts.texts.event_end_time.' . auth()->user()->lang) }}
                                             </label>
-                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime" 
+                                            <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime"
                                             id="eventEndTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "end")}" value="${formdateDateTimeValueEvent(event, "end")}" />
                                         </div>
                                         <div class="col-12 mb-2">
-                                            <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}" 
-                                            class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg" 
+                                            <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}"
+                                            class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg"
                                             cols="30" rows="10" placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}" data-value="${event.description}">${event.description}</textarea>
                                         </div>
                                         <div class="col-12 mb-2">
@@ -1127,17 +1127,17 @@
                         <div class="me-lg-5 mt-2">
                             <b class="fw-500 text-black w-100">${event.name}</b>
                             <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
-                        </div>    
+                        </div>
                     </div>
                     <div id="update_event_information_${event.uuid}" class="d-none">
                         <form>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
-                                    <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}" 
+                                    <input type="text" class="form-control rounded-xxl" name="eventName" id="eventName_${event.uuid}"
                                     placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) }}" data-value="${event.name}" value="${event.name}">
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}" 
+                                    <input type="text" class="form-control rounded-xxl" name="eventLocation" id="eventLocation_${event.uuid}"
                                     placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) }}" data-value="${event.location}" value="${event.location}">
                                 </div>
                                 <div class="col-md-6 mb-2">
@@ -1162,19 +1162,19 @@
                                     <label for="eventStartTime_${event.uuid}">
                                         {{ __('texts.texts.event_start_time.' . auth()->user()->lang) }}
                                     </label>
-                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime" 
+                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventStartTime"
                                     id="eventStartTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "start")}" value="${formdateDateTimeValueEvent(event, "start")}" />
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <label for="eventEndTime_${event.uuid}">
                                         {{ __('texts.texts.event_end_time.' . auth()->user()->lang) }}
                                     </label>
-                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime" 
+                                    <input type="datetime-local" class="form-control rounded-xxl" name="eventEndTime"
                                     id="eventEndTime_${event.uuid}" data-value="${formdateDateTimeValueEvent(event, "end")}" value="${formdateDateTimeValueEvent(event, "end")}" />
                                 </div>
                                 <div class="col-12 mb-2">
-                                    <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}" 
-                                    class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg" 
+                                    <textarea name="eventDescription_${event.uuid}" id="eventDescription_${event.uuid}"
+                                    class="h100 bor-0 w-100 rounded-xxl p-2 font-xssss text-grey-600 fw-500 border-light-md theme-dark-bg"
                                     cols="30" rows="10" placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}" data-value="${event.description}">${event.description}</textarea>
                                 </div>
                                 <div class="col-12 mb-2">
