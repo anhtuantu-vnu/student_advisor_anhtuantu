@@ -16,7 +16,10 @@
     position: absolute;
     top: 50%;
     font-size: 26px !important;
-    right: 10px;
+}
+.layout_add_plan .select_add_customer i:hover{
+    cursor: pointer;
+    color: var(--theme-color);
 }
 .layout_add_plan #selected {
     /* Remove default list styling */
@@ -408,10 +411,13 @@
 .list_member_selected {
     display: flex;
     max-width: 100%;
-    width: 100%;
     align-items: center;
-    padding: 0 8px;
+    padding: 4px 0;
     min-height: 100%;
+}
+.list_member {
+    border: none;
+    background-color: unset;
 }
 
 .plan_wrapper p {

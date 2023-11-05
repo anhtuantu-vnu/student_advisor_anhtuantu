@@ -16,8 +16,6 @@ use App\Models\EventMember;
 
 class EventController extends Controller
 {
-    use ResponseTrait;
-
     /**
      * Returning the view of the app with the required data.
      *
@@ -195,6 +193,8 @@ class EventController extends Controller
             $thisEvent->fill($event);
             $thisEvent->save();
             DB::commit();
+
+            return $this->successWithContent($thisEvent);
 
             $data = [
                 'event' => Event::with(['createdBy', 'updatedBy', 'eventMembers'])->find($id),

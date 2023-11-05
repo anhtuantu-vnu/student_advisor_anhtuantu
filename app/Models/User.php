@@ -26,6 +26,19 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = TableConstant::USER_TABLE;
 
+    const ROLE_STUDENT = 'student';
+    const CONFIG_GENDER = [
+        'Nam' => 1,
+        'nam' => 1,
+        'Nữ'  => 2,
+        'nữ'  => 2,
+        'Khác' => 3,
+        'khác' => 3
+    ];
+    const LINK_AVA = 'https://d1u9p2kirbqyfc.cloudfront.net/images/user_image/default_avatar.png';
+    const DEFAULT_STATUS_ACTIVE = 0;
+    const DEFAULT_DARK_MODE = 0;
+    const DEFAULT_LANG = 'vi';
     public const GENDER_MAP = [
         1 => 'Male',
         2 => 'Female',

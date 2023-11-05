@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Services\PlanService;
@@ -59,6 +60,15 @@ class PlanController extends Controller
         return view('front-end.layouts.plan.layout_create_plan', compact('listUser'));
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getListMember(Request $request): JsonResponse
+    {
+        $data = $this->userRepository->searchMemberByCondition($request->input('search'));
+        return $this->successWithContent($data);
+    }
 
     /**
      * @param Request $request
@@ -72,5 +82,4 @@ class PlanController extends Controller
         }
         return redirect("/to-do?id=".$plan['uuid']);
     }
-
 }

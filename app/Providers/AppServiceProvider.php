@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Facades\ChatUserMessenger;
+use App\Facades\FileUpload as UploadFileStudent;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
     {
         app()->bind('ChatUserMessenger', function () {
             return new ChatUserMessenger();
+        });
+        app()->bind('UploadFileStudent', function () {
+            return new UploadFileStudent();
         });
     }
 
