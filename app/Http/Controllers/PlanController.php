@@ -56,8 +56,7 @@ class PlanController extends Controller
      */
     public function formCreatePlan(): View
     {
-        $listUser = $this->userRepository->find([['uuid' , '<>' , Auth::user()->uuid]]);
-        return view('front-end.layouts.plan.layout_create_plan', compact('listUser'));
+        return view('front-end.layouts.plan.layout_create_plan');
     }
 
     /**

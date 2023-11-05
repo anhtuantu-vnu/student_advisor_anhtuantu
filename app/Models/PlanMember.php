@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PlanMember extends Model
 {
@@ -12,4 +13,11 @@ class PlanMember extends Model
     protected $guarded = ['id'];
     protected $table = TableConstant::PLAN_MEMBER_TABLE;
 
+    /**
+     * @return BelongsTo
+     */
+    public function userByPlan(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'uuid');
+    }
 }
