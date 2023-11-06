@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Repositories\TaskRepository;
 use App\Services\TaskServices;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TodoController extends Controller
 {
@@ -13,15 +16,21 @@ class TodoController extends Controller
      * @var TaskServices
      */
     protected TaskServices $taskServices;
+    /**
+     * @var TaskRepository
+     */
+    protected TaskRepository $taskRepository;
 
     /**
      * @param TaskServices $taskServices
      */
     public function __construct(
-        TaskServices $taskServices
+        TaskServices $taskServices,
+        TaskRepository $taskRepository
     )
     {
         $this->taskServices = $taskServices;
+        $this->taskRepository = $taskRepository;
     }
 
     /**
@@ -34,12 +43,50 @@ class TodoController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateTask(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->taskRepository->updateByCondition(
+                [
+                    'assigned_to' => $request->input('task.member_selected'),
+                    'description' => $request->input('task.description')
+                ],
+                ['id' => $request->input('task.id')]
+            );
+            DB::commit();
+            return $this->successWithNoContent('Update success');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $this->failedWithErrors($th->getMessage());
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteTask(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+//            $this->taskRepository->destroy($request->input('id'));
+            DB::commit();
+            return $this->successWithNoContent('Delete success');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $this->failedWithErrors($th->getMessage());
+        }
+    }
+
+    /**
      * @return View
      */
     public function showTasks(): View
     {
-//        $tasks = $this->taskServices->getDataTask($request->input('id'));
-//        $tasks['id_plan'] = $request->input('id');
         return view('front-end.layouts.task.layout_todo');
     }
 

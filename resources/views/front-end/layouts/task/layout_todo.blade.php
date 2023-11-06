@@ -8,23 +8,25 @@
 
 @push('js_page')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         //get list task by plan
         function getDataTask() {
             let idPlan = window.location.search.slice(4);
+            $('.list_task').empty()
             $.ajax({
                 type: "GET",
                 url: "/task",
-                data: { idPlan },
+                data: {idPlan},
                 cache: false,
                 contentType: false,
                 processData: true,
-                beforeSend: function() {
+                beforeSend: function () {
                     document.getElementById("loadingSpinner").classList.remove("d-none");
                 },
-                success:  function(data) {
+                success: function (data) {
                     for (const [key, listTaskByType] of Object.entries(data.data)) {
-                        if(key === 'is_task') continue;
+                        if (['is_task' , 'author'].includes(key)) continue;
                         let typeTask = `
                         <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
                             <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
@@ -34,39 +36,42 @@
                                                 onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
                                 </div>`;
 
-                        if(data.data.is_task) {
+                        if (data.data.is_task) {
                             typeTask += `<div class="${key}">`;
                             // append ui task
                             for (const [keyTask, task] of Object.entries(listTaskByType)) {
-                                if(Object.keys(task).length && keyTask !== 'config') {
+                                if (Object.keys(task).length && keyTask !== 'config') {
                                     typeTask += `
                                         <div
                                             class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target ${task['id']}"
-                                            id="cart_task">
+                                            onclick="handleClickTask(${task["id"]})">
                                             <div class="d-flex justify-content-between align-content-center">
                                                 <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${task['name']}</h4>
-                                                <i class="feather-trash-2" style="font-size: 18px"></i>
+                                                <i class="feather-trash-2" onclick="handleClickIconDelete(event, ${task['id']})" style="font-size: 18px"></i>
                                             </div>`;
 
-                                            if(task['description']) {
-                                                typeTask += `<p class="description_task font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${task['description']}</p>`;
-                                            }
+                                    if (task['description']) {
+                                        typeTask += `<p class="description_task font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${task['description']}</p>`;
+                                    }
 
-                                            typeTask += `<span class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
+                                    typeTask += `<span class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
                                                     style="color: white; background-color: ${listTaskByType['config']['backgroundTag']}"
                                             >{{ __("texts.texts.task." . auth()->user()->lang) }} ${listTaskByType['config']['type']}</span>
                                     `;
-                                    if(Object.keys(task['user_assign']).length) {
+                                    if (Object.keys(task['user_assign']).length) {
                                         typeTask += `<ul class="memberlist mt-4 mb-2 ms-0">
                                                                 <li><a href="#"><img src="${task['user_assign']['avatar']}" alt="user"
                                                                  class="d-inline-block" style="border-radius: 50%; width: 24px; height: 24px"></a></li>
                                             <li class="ps-2 w-auto"><a href="#"
-                                                                       class="fw-500 text-grey-500 font-xssss">${task['user_assign']['first_name']} ${task['user_assign']['last_name'] } assigned</a>
+                                                                       class="fw-500 text-grey-500 font-xssss">${task['user_assign']['first_name']} {{ __("texts.texts.assigned." . auth()->user()->lang) }}</a>
                                             </li>
                                         </ul>`
                                     }
                                     typeTask += '</div>';
-                                    clickTaskDetail()
+
+                                    //init ui task modal
+                                    renderUiModal(task, listTaskByType.config.type, data);
+                                    renderUiModalDeleteTask(task);
                                 }
                             }
                             typeTask += '</div>';
@@ -75,7 +80,7 @@
                     }
 
                     // UI not found task
-                    if(!data.data.is_task) {
+                    if (!data.data.is_task) {
                         let uiEmptyTask = `
                         <div class="alert_create_task" style="height: 76vh;
                                         display: flex; text-align: center; justify-content: center;
@@ -189,11 +194,12 @@
                     //init drop drag
                     initDropDrag();
                 },
-                complete: function(data) {
+                complete: function (data) {
                     document.getElementById("loadingSpinner").classList.add("d-none");
                 }
             });
         }
+
         getDataTask()
 
         //logic drag drop
@@ -217,6 +223,7 @@
         }
 
         function boxEnter() {
+            console.log('boxEnter');
             this.classList.add("dragstart");
             this.classList.add("hide");
             currentTarget = this;
@@ -227,14 +234,17 @@
         }
 
         function dragEnter(event) {
+            console.log('dragEnter');
             event.preventDefault();
         }
 
         function dragOver(event) {
+            console.log('dragOver');
             event.preventDefault();
         }
 
         function dropBox() {
+            console.log('dropBox');
             this.append(currentTarget);
         }
 
@@ -263,8 +273,8 @@
         //Create task
         let url = new URL(window.location.href);
         let idPlan = url.searchParams.get("id");
-        $("#input_create_task").keydown(function(e) {
-            if(e.keyCode == 13) {
+        $("#input_create_task").keydown(function (e) {
+            if (e.keyCode == 13) {
                 let data = {
                     _token: '{{csrf_token()}}',
                     task: {
@@ -277,7 +287,7 @@
                     url: "/to-do",
                     method: "post",
                     data: data
-                }).done(function(res) {
+                }).done(function (res) {
                     let data = res.data;
                     let taskHtml = `<div
                                 class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
@@ -302,23 +312,224 @@
                     $(".tasks_to_do").append(taskHtml);
                     $(".alert_create_task").addClass('d-none')
                     handleFocusoutTextarea();
-                    initDropDrag();
-                }).fail(function(xhr, status, error) {
+
+                }).fail(function (xhr, status, error) {
                     console.log(error);
+                }).complete(function() {
+                    initDropDrag();
                 });
             }
         });
 
         //init event click in task
-        function clickTaskDetail() {
-            $('.cart_task').on('click' , function(e) {
-                $('.ui_modal_detail_task').removeClass('d-none');
-                $('#btn_close_modal').on('click', function(e) {
-                    $('.ui_modal_detail_task').addClass('d-none');
-                })
-            });
+        function showModal(modal) {
+            modal.removeClass('d-none');
+            modal.addClass('ui_modal_detail_task_show');
+            $('.main-wrapper').addClass('disable_ui');
+        }
+        function removeClassModal(modal) {
+            modal.addClass('d-none');
+            modal.removeClass('ui_modal_detail_task_show');
+            $('.main-wrapper').removeClass('disable_ui');
         }
 
+        function hideModal(taskId) {
+            let modal = $(`#modal_task_${taskId}`);
+            removeClassModal(modal);
+        }
+
+        function handleClickTask(taskId) {
+            let modal = $(`#modal_task_${taskId}`);
+            showModal(modal);
+        }
+
+        function handleClickIconDelete(e, taskId) {
+            e.stopPropagation();
+            let modal = $(`#modal_task_delete_${taskId}`);
+            showModal(modal);
+        }
+        function hideModalDelete(taskId) {
+            let modal = $(`#modal_task_delete_${taskId}`);
+            removeClassModal(modal);
+        }
+
+        function renderUiModal(task, typeTask, data) {
+            let UIModal = `<div class="ui_modal_detail_task d-none" id="modal_task_${task['id']}">
+                            <div class="modal_customer" tabindex="-1">
+                                <div class="modal-content pt-3 ps-3 pe-3">
+                                    <div class="rounded-0 text-left">
+                                        <div class="title_task d-flex">
+                                            <i class="feather-bookmark text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
+                                            <div class="title_task_text ms-2">
+                                                <h2 style="margin-bottom: 0">${task['name']}</h2>
+                                                <p class="mb-3" style="font-size: 14px">{{ __('texts.texts.in_list.' . auth()->user()->lang) }}
+                                                    ${typeTask}
+                                            </div>
+                                        </div>
+                                        <div class="assign_to mt-1">
+                                            <div class="assign_to_text d-flex">
+                                                <i class="feather-share text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
+                                                <h2 class="ms-2">{{ __('texts.texts.assign_to.' . auth()->user()->lang) }}</h2>
+                                            </div>
+                                            <div class="list_member_modal_task">
+                                                <select class="p-2 rounded" id="selected_${task['id']}" value=${task['assigned_to']}>`;
+            if (data.data_attach.length) {
+                data.data_attach.forEach(member => {
+                    UIModal += `<option value="${member['uuid']}" ${member['uuid'] === task['assigned_to'] ? 'selected' : ''}>${member['first_name']} ${member['last_name']}</option>`;
+                })
+            }
+            UIModal += `</select>
+                            </div>
+                        </div>
+                        <div class="description mt-4">
+                        <div class="description_text d-flex">
+                            <i class="feather-book-open text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
+                            <h2 class="ms-2">{{ __('texts.texts.description.' . auth()->user()->lang) }}</h2>
+                        </div>`;
+            if("{{auth()->user()->uuid}}" == data.data['author']) {
+                UIModal += `<textarea id="description_${task['id']}" class="description_modal p-3 lh-16" name="description" rows="5">${task['description'] || "{{ __('texts.texts.description_task.' . auth()->user()->lang)}}"}</textarea>`
+            } else {
+                UIModal += `<p id="description_${task['id']}" >${task['description'] || "{{ __('texts.texts.description_member.' . auth()->user()->lang)}}"}</p>`
+            }
+
+            UIModal +=  `</div>
+                        <div class="activity mt-3">
+                            <div class="activity_text d-flex">
+                                <i class="feather-activity text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
+                                <h2 class="ms-2">{{ __('texts.texts.activity.' . auth()->user()->lang) }}</h2>
+                            </div>
+                            <div class="activity_comment">
+                                <img src="{{auth()->user()->avatar}}" />
+                                <div class="activity_comment_input">
+                                    <input type="text" class="input_comment" name="comment" row="5"
+                                        placeholder="{{ __('texts.texts.write_a_comment.' . auth()->user()->lang) }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list_comment">
+
+                        </div>
+
+                        <div class="modal-footer" style="border:none; padding: 0.75rem 0 !important;">
+                            <button type="button" onclick="hideModal(${task["id"]})" id="btn_cancel_${task['id']}" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{{ __('texts.texts.close.' . auth()->user()->lang) }}</button>
+                            <button type="button" class="btn btn-success" id="btn_save_${task['id']}" style="color: white" onclick="updateDataTask(${task['id']})"
+                                style="margin-right: 0 !important;"> <i class="fa fa-circle-o-notch fa-spin d-none" id="loading_btn_modal_${task['id']}" style="margin-right: 4px"></i>
+                                {{ __('texts.texts.update.' . auth()->user()->lang) }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>`;
+            $('#ui_modal').append(UIModal);
+        }
+
+        function renderUiModalDeleteTask(task) {
+            let UIModal = `<div class="ui_modal_detail_task d-none" id="modal_task_delete_${task['id']}">
+                        <div class="modal_customer" tabindex="-1">
+                            <div class="modal-content pt-4 ps-4 pe-4 pb-2">
+                                <div class="rounded-0 text-left">
+                                    <div class="title_task">
+                                        <div class="title_task_text ms-2">
+                                            <h3 style="margin-bottom: 0">{{ __("texts.texts.delete_task." . auth()->user()->lang) }} <b>${task['name']}</b> ?</h3>
+                                        </div>
+                                        <div class="modal-footer" style="border:none; padding: 0.75rem 0 !important;">
+                                            <button type="button" onclick="hideModalDelete(${task["id"]})" id="btn_cancel_delete_${task['id']}"
+                                                class="btn"
+                                                data-bs-dismiss="modal">{{ __('texts.texts.close.' . auth()->user()->lang) }}</button>
+                                            <button type="button" class="btn btn-danger" id="btn_save_delete_${task['id']}" style="color: white"
+                                                onclick="deleteTask(${task['id']})" style="margin-right: 0 !important;"> <i
+                                                    class="fa fa-circle-o-notch fa-spin d-none" id="loading_btn_modal_delete_${task['id']}"
+                                                    style="margin-right: 4px"></i>
+                                                {{ __('texts.texts.delete.' . auth()->user()->lang) }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            $('#ui_modal').append(UIModal);
+        }
+
+        //Logic update data task
+        function showLoadingBtn(idTask) {
+            $(`#loading_btn_modal_${idTask}`).removeClass("d-none");
+            $(`#btn_cancel_${idTask}`).addClass('disable_ui');
+            $(`#btn_save_${idTask}`).addClass('disable_ui');
+        }
+
+        function removeLoadingBtn(idTask) {
+            setTimeout(() => {
+                $(`#loading_btn_modal_${idTask}`).addClass("d-none");
+                $(`#btn_cancel_${idTask}`).removeClass('disable_ui');
+                $(`#btn_save_${idTask}`).removeClass('disable_ui');
+                hideModal(idTask)
+            }, 1000)
+        }
+
+        function updateDataTask(idTask) {
+            let data = {
+                _token: '{{csrf_token()}}',
+                task: {
+                    'id': idTask,
+                    'member_selected': $(`#selected_${idTask} option:selected`).val(),
+                    'description': $(`#description_${idTask}`).val(),
+                }
+            };
+            $.ajax({
+                url: "/task",
+                method: "post",
+                data: data,
+                beforeSend: function() {
+                    showLoadingBtn(idTask)
+                },
+                success: async function(data) {
+                    await getDataTask();
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+                complete: function(data) {
+                    removeLoadingBtn(idTask)
+                }
+            })
+        }
+
+
+        function showLoadingBtnModalDelete(idTask) {
+            $(`#loading_btn_modal_delete_${idTask}`).removeClass("d-none");
+            $(`#btn_cancel_delete_${idTask}`).addClass('disable_ui');
+            $(`#btn_save_delete_${idTask}`).addClass('disable_ui');
+        }
+
+        function removeLoadingBtnModalDelete(idTask) {
+            setTimeout(() => {
+                console.log(idTask)
+                $(`#loading_btn_modal_delete_${idTask}`).addClass("d-none");
+                $(`#btn_cancel_delete_${idTask}`).removeClass('disable_ui');
+                $(`#btn_save_${idTask}`).removeClass('disable_ui');
+                hideModalDelete(idTask)
+            }, 1000)
+        }
+        function deleteTask(idTask) {
+            $.ajax({
+                url: "/task",
+                method: "delete",
+                data: {id : idTask},
+                beforeSend: function() {
+                    showLoadingBtnModalDelete(idTask)
+                },
+                success: async function(data) {
+                    await getDataTask();
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+                complete: function(data) {
+                    removeLoadingBtnModalDelete(idTask)
+                }
+            })
+        }
     </script>
 @endpush
 
@@ -338,7 +549,6 @@
 @endsection
 
 @section('modal')
-    <div class="ui_modal_detail_task d-none">
-        @include('front-end.layouts.task.modal_detail_task')
+    <div id="ui_modal">
     </div>
 @endsection

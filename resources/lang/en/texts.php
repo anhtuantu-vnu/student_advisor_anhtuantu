@@ -289,6 +289,30 @@ return [
     'task' => [
         'vi' => 'Nhiệm vụ',
         'en' => 'Task'
+    ],
+    'in_list' => [
+        'vi' => 'loại task',
+        'en' => 'in list'
+    ],
+    'description_task' => [
+        'vi' => 'Thêm mô tả chi tiết hơn...',
+        'en' => 'Add a more detailed description...'
+    ],
+    'description_member' => [
+        'vi' => 'Chưa có mô tả nào',
+        'en' => 'No descriptions'
+    ],
+    'assigned' => [
+        'vi' => 'được giao',
+        'en' => 'assigned'
+    ],
+    'delete_task' => [
+        'vi' => 'Bạn có chắc chắn muốn xoá task ',
+        'en' => 'Are you sure you want to delete task'
+    ],
+    'delete' => [
+        'vi' => 'Xoá',
+        'en' => 'Delete'
     ]
   ]
 ];

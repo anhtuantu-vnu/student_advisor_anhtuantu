@@ -34,7 +34,6 @@ class ClassRepository extends AbstractRepository
             $dataFind['end_year'] = $data['end_year'];
             $class = $this->model->insert($dataFind);
         }
-        dd($class);
         return $class;
     }
 }
