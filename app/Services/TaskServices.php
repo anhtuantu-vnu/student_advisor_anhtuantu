@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\Plan;
 use App\Models\Task;
 use App\Repositories\PlanMemberRepository;
+use App\Repositories\PlanRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\TaskRepository;
 use App\Traits\ResponseTrait;
@@ -29,6 +30,11 @@ class TaskServices
     protected PlanMemberRepository $planMemberRepository;
 
     /**
+     * @var PlanRepository
+     */
+    protected PlanRepository $planRepository;
+
+    /**
      * @param UserRepository $userRepository
      * @param TaskRepository $taskRepository
      * @param PlanMemberRepository $planMemberRepository
@@ -36,11 +42,13 @@ class TaskServices
     public function __construct(
         UserRepository $userRepository,
         TaskRepository $taskRepository,
-        PlanMemberRepository $planMemberRepository
+        PlanMemberRepository $planMemberRepository,
+        PlanRepository $planRepository
     ) {
         $this->taskRepository = $taskRepository;
         $this->userRepository = $userRepository;
         $this->planMemberRepository = $planMemberRepository;
+        $this->planRepository = $planRepository;
     }
 
     /**
@@ -51,6 +59,8 @@ class TaskServices
     {
         $listTask = $this->taskRepository->getListTaskByPlan($idPlan);
         $listMember = $this->planMemberRepository->getMemberByPlanId($idPlan);
+        $author = $this->planRepository->findOne(['uuid' => $idPlan]);
+        $listTask['author'] = $author['create_by'];
         return $this->successWithContentAttach($listTask, $listMember);
     }
 

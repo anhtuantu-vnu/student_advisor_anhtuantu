@@ -28,7 +28,7 @@ class FileController extends Controller
      */
     public function uploadFile(Request $request): JsonResponse
     {
-        Excel::queueImport(new StudentImport, $request->file('file'));
+        Excel::import(new StudentImport, $request->file('file'));
         return $this->successWithContent('Import success');
     }
 }

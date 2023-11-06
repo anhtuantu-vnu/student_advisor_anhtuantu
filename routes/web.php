@@ -54,6 +54,8 @@ Route::middleware(['auth.login'])->group(function () {
 
     //route task
     Route::get('/task', [TodoController::class, 'index'])->name('data_task');
+    Route::post('/task', [TodoController::class, 'updateTask'])->name('update_data_task');
+    Route::delete('/task', [TodoController::class, 'deleteTask'])->name('delete_task');
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
     Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
 

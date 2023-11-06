@@ -32,7 +32,7 @@ class ClassRepository extends AbstractRepository
             $dataFind['updated_at'] = Carbon::today();
             $dataFind['start_year'] = $data['start_year'];
             $dataFind['end_year'] = $data['end_year'];
-            $class = $this->create($dataFind);
+            $class = $this->model->insert($dataFind);
         }
         return $class;
     }
