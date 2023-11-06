@@ -16,7 +16,7 @@ class TableConstant
     const TASK_TABLE = 'task';
     const USER_TABLE = 'user';
     const DEPARTMENTS_TABLE = 'departments';
-    const CLASS__TABLE = 'class_';
+    const CLASS__TABLE = 'class';
     const CLASS_ROLES_TABLE = 'class_roles';
     const SUBJECTS_TABLE = 'subjects';
     const INTAKES_TABLE = 'intakes';

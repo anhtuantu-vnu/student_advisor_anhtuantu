@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Imports;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use App\Models\Class_;
 use App\Services\FileServices;
-class StudentImport implements ToModel, WithChunkReading, ShouldQueue, WithHeadingRow
+class StudentImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     use Importable;
     /**
@@ -16,8 +19,8 @@ class StudentImport implements ToModel, WithChunkReading, ShouldQueue, WithHeadi
      */
     public function model(array $row)
     {
-        $fileServer = app()->make(FileServices::class);
-        $fileServer->importFileStudent($row);
+       $fileServer = app()->make(FileServices::class);
+       $fileServer->importFileStudent($row);
         return true;
     }
 

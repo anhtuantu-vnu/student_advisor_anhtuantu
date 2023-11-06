@@ -25,8 +25,8 @@ class TaskRepository extends AbstractRepository
         return $this->transferDataMember([
             'tasks_to_do' => $taskToDo,
             'tasks_in_process' => $taskInProcess,
-            'task_done' => $taskDone,
             'task_review' => $taskReview,
+            'task_done' => $taskDone,
             'is_task' => $checkTask,
         ]);
     }

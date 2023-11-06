@@ -22,7 +22,7 @@
                 beforeSend: function() {
                     document.getElementById("loadingSpinner").classList.remove("d-none");
                 },
-                success: function(data) {
+                success:  function(data) {
                     for (const [key, listTaskByType] of Object.entries(data.data)) {
                         if(key === 'is_task') continue;
                         let typeTask = `
@@ -39,26 +39,23 @@
                             // append ui task
                             for (const [keyTask, task] of Object.entries(listTaskByType)) {
                                 if(Object.keys(task).length && keyTask !== 'config') {
-                                    console.log(task);
                                     typeTask += `
-                                <div
-                                    class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                    id="cart_task"
-                                    data-bs-toggle="modal" data-bs-target="#${key}_${keyTask}"
-                                    draggable="true">
-                                    <div class="d-flex justify-content-between align-content-center">
-                                        <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${task['name']}</h4>
-                                        <i class="feather-trash-2" style="font-size: 18px"></i>
-                                    </div>`;
+                                        <div
+                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target ${task['id']}"
+                                            id="cart_task">
+                                            <div class="d-flex justify-content-between align-content-center">
+                                                <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${task['name']}</h4>
+                                                <i class="feather-trash-2" style="font-size: 18px"></i>
+                                            </div>`;
 
-                                    if(task['description']) {
-                                        typeTask += `<p class="description_task font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${task['description']}</p>`;
-                                    }
+                                            if(task['description']) {
+                                                typeTask += `<p class="description_task font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${task['description']}</p>`;
+                                            }
 
-                                    typeTask += `<span class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
-                                              style="color: white; background-color: ${listTaskByType['config']['backgroundTag']}"
-                                    >${listTaskByType['config']['type']}</span>
-                                 `;
+                                            typeTask += `<span class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
+                                                    style="color: white; background-color: ${listTaskByType['config']['backgroundTag']}"
+                                            >{{ __("texts.texts.task." . auth()->user()->lang) }} ${listTaskByType['config']['type']}</span>
+                                    `;
                                     if(Object.keys(task['user_assign']).length) {
                                         typeTask += `<ul class="memberlist mt-4 mb-2 ms-0">
                                                                 <li><a href="#"><img src="${task['user_assign']['avatar']}" alt="user"
@@ -69,8 +66,8 @@
                                         </ul>`
                                     }
                                     typeTask += '</div>';
+                                    clickTaskDetail()
                                 }
-                                //append ui modal
                             }
                             typeTask += '</div>';
                         }
@@ -188,6 +185,9 @@
                                 </div>`;
                         $('.list_task').append(uiEmptyTask);
                     }
+
+                    //init drop drag
+                    initDropDrag();
                 },
                 complete: function(data) {
                     document.getElementById("loadingSpinner").classList.add("d-none");
@@ -240,13 +240,13 @@
 
         //set height for draggable_item
         function setHeightForDraggableItem() {
-            let heightDraggable = document.querySelector('.to_do_task').offsetHeight;
+            let heightDraggable = document.querySelector('.tasks_to_do').offsetHeight;
             document.querySelectorAll('.draggable_item').forEach(function (draggable) {
                 draggable.style.minHeight = `${heightDraggable + 70}px`;
             })
             document.querySelector('.middle-sidebar-left').style.maxWidth = '1240px';
         }
-        initDropDrag();
+
         //logic show hide create task
         function showInputCreateTask() {
             document.querySelector('.btn_create_task').setAttribute("disable", "");
@@ -299,7 +299,7 @@
                                     </ul>
                                 ` : ''}
                             </div>`;
-                    $(".to_do_task").append(taskHtml);
+                    $(".tasks_to_do").append(taskHtml);
                     $(".alert_create_task").addClass('d-none')
                     handleFocusoutTextarea();
                     initDropDrag();
@@ -308,6 +308,16 @@
                 });
             }
         });
+
+        //init event click in task
+        function clickTaskDetail() {
+            $('.cart_task').on('click' , function(e) {
+                $('.ui_modal_detail_task').removeClass('d-none');
+                $('#btn_close_modal').on('click', function(e) {
+                    $('.ui_modal_detail_task').addClass('d-none');
+                })
+            });
+        }
 
     </script>
 @endpush
@@ -325,11 +335,10 @@
             </div>
         </div>
     </div>
-    <div class="position-relative card">
-{{--        @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])--}}
-    </div>
 @endsection
 
-{{--@section('modal')--}}
-{{--    @include('front-end.layouts.task.modal_detail_task', ['listMember' => $tasks['members'], "tasks" => $tasks])--}}
-{{--@endsection--}}
+@section('modal')
+    <div class="ui_modal_detail_task d-none">
+        @include('front-end.layouts.task.modal_detail_task')
+    </div>
+@endsection

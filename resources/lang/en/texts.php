@@ -285,6 +285,10 @@ return [
     'activity' => [
         'vi' => 'Hoạt động',
         'en' => 'Activity'
+    ],
+    'task' => [
+        'vi' => 'Nhiệm vụ',
+        'en' => 'Task'
     ]
   ]
 ];

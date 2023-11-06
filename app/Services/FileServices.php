@@ -44,7 +44,7 @@ class FileServices
 
     public function importFileStudent ($data) {
         try {
-            DB::beginTransaction();
+//            DB::beginTransaction();
             $class = $this->classRepository->checkClassInFileUpload($data);
             $users = $this->userRepository->create([
                 'first_name' => $data['first_name'],
@@ -70,10 +70,10 @@ class FileServices
                 'updated_at' => Carbon::today(),
                 'class_id' => $class['department_id']
             ]);
-            DB::commit();
+//            DB::commit();
             return true;
         } catch (\Throwable $th){
-            DB::rollBack();
+//            DB::rollBack();
             return $th;
         }
     }
