@@ -30,8 +30,7 @@
     {{--    <a href="shop-2.html" class="p-2 text-center ms-0 menu-icon center-menu-icon"><i class="feather-shopping-bag font-lg bg-greylight btn-round-lg theme-dark-bg text-grey-500 "></i></a> --}}
 
     <div style="display: flex; align-items: center;">
-        <a href="#" class="p-2 text-center menu-icon" id="dropDownLanguages" data-bs-toggle="dropdown"
-            aria-expanded="false">
+        <span class="p-2 text-center menu-icon" id="dropDownLanguages" data-bs-toggle="dropdown" aria-expanded="false">
             @if (auth()->user()->lang == 'vi')
                 <img src="{{ asset('assets/imgs/vietnam_flag.png') }}" alt="vietnam_flag"
                     style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
@@ -40,16 +39,18 @@
                     style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
             @endif
 
-        </a>
+        </span>
         <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg"
             aria-labelledby="dropDownLanguages">
             @include('front-end.components.header.languages')
         </div>
 
-        <a href="#" class="p-2 ms-3 text-center menu-icon" id="dropdownNotifications" data-bs-toggle="dropdown"
-            aria-expanded="false"><span class="dot-count bg-warning"></span><i
-                class="feather-bell font-xl text-current"></i></a>
-        <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg"
+        <span class="p-2 ms-3 text-center menu-icon" id="dropdownNotifications" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <span class="dot-count bg-warning d-none" id="headerHasNotificationDot"></span>
+            <i class="feather-bell font-xl text-current" id="dropdownNotificationsI"></i>
+        </span>
+        <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" id="headerNotificationsWrapper"
             aria-labelledby="dropdownNotifications">
             @include('front-end.components.header.notifications')
         </div>
@@ -60,11 +61,10 @@
         {{-- settings here if needed --}}
         {{-- @include('front-end.components.header.settings') --}}
 
-        <a href="#" class="p-0 ms-3 menu-icon" id="dropdownProfile" data-bs-toggle="dropdown"
-            aria-expanded="false">
+        <span class="p-0 ms-3 menu-icon" id="dropdownProfile" data-bs-toggle="dropdown" aria-expanded="false">
             <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1"
                 style="border-radius: 100%; object-fit: cover; width: 40px; height: 40px;">
-        </a>
+        </span>
         <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" aria-labelledby="dropdownProfile">
             @include('front-end.components.header.profile')
         </div>

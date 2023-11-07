@@ -27,6 +27,26 @@ class IntakeMember extends Model
                 'end_minute',
                 'week_days',
                 'subject_id',
+                'location',
+            ]);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'uuid')
+            ->select([
+                'uuid',
+                'first_name',
+                'last_name',
+                'email',
+                'phone',
+                'avatar',
+                'unique_id',
+                'role',
+                'date_of_birth',
+                'lang',
+                'department_id',
+                'gender',
             ]);
     }
 }

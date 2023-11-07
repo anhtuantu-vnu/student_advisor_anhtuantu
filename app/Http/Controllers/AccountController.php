@@ -139,9 +139,6 @@ class AccountController extends Controller
     {
         $thisUser = auth()->user()->load([
             'department',
-            'intakeMembers' => function ($query) {
-                return $query->with(['intake']);
-            },
             'classRoles' => function ($query) {
                 return $query->with(['class_']);
             }
@@ -155,7 +152,34 @@ class AccountController extends Controller
 
         $genderMap = User::GENDER_MAP;
 
-        return view('front-end.layouts.user.profile', [
+        return view('front-end.layouts.user.detail', [
+            'thisUser' => $thisUser,
+            'class_' => $class_,
+            'genderMap' => $genderMap
+        ]);
+    }
+
+    /**
+     * @return View
+     */
+    public function showUserDetail($uuid): View
+    {
+        $thisUser = User::where('uuid', '=', $uuid)->with([
+            'department',
+            'classRoles' => function ($query) {
+                return $query->with(['class_']);
+            }
+        ])->first();
+
+        if ($thisUser->role == _CONST::STUDENT_ROLE && $thisUser->classRoles != null) {
+            $class_ = $thisUser->classRoles->count() > 0 ? $thisUser->classRoles[0]->class_ : null;
+        } else {
+            $class_ = null;
+        }
+
+        $genderMap = User::GENDER_MAP;
+
+        return view('front-end.layouts.user.detail', [
             'thisUser' => $thisUser,
             'class_' => $class_,
             'genderMap' => $genderMap

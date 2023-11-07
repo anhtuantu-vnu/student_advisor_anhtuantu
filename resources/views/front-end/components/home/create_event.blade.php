@@ -351,7 +351,6 @@
                 showPostEventMessages("danger", [error.statusText]);
             },
             success: function(data) {
-                console.log('data', data);
                 if (data.meta.success) {
                     let message = currentLang == "vi" ? "Tạo sự kiện thành công." :
                         "Event created successfully.";

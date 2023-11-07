@@ -1,4 +1,4 @@
-<div class="col-xl-4 col-xxl-3 col-lg-4 ps-lg-0">
+<div class="col-xl-4 col-xxl-3 col-lg-4 ps-lg-0" style="mex-height: 64vh; overflow-y: scroll;">
     <div class="card w-100 shadow-xss rounded-xxl border-0 mb-3">
         <div class="card-body d-flex align-items-center p-4">
             <h4 class="fw-700 mb-0 font-xssss text-grey-900">
@@ -25,4 +25,7 @@
 
     {{-- events preview --}}
     @include('front-end.components.home.right_content_events')
+
+    {{-- intakes preview --}}
+    @include('front-end.components.home.right_content_intakes')
 </div>
