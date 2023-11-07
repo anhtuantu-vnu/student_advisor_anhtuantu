@@ -89,7 +89,8 @@
             cursor: pointer;
         }
 
-        #mainFeedsContainer::-webkit-scrollbar, #rightSideBarEventsContainer::-webkit-scrollbar {
+        #mainFeedsContainer::-webkit-scrollbar,
+        #rightSideBarEventsContainer::-webkit-scrollbar {
             display: none;
             /* Safari and Chrome */
         }
@@ -298,7 +299,6 @@
                     type: "GET",
                     url: `/events?page=${eventPage}&limit=${eventLimit}`,
                     success: function(data) {
-                        console.log('events', data);
                         if (data.meta.success) {
                             events = data.data.events;
                             if (events.length) {
@@ -344,29 +344,6 @@
             return `${day} ${month} ${year}`;
         }
 
-        function formatRelativeTime(timestamp) {
-            console.log('timestamp', timestamp);
-            const now = new Date();
-            const date = new Date(timestamp);
-            const secondsAgo = Math.floor((now - date) / 1000);
-
-            if (secondsAgo < 60) {
-                return secondsAgo + " seconds ago";
-            } else if (secondsAgo < 3600) {
-                const minutesAgo = Math.floor(secondsAgo / 60);
-                return minutesAgo + " minute" + (minutesAgo > 1 ? "s" : "") + " ago";
-            } else if (secondsAgo < 86400) {
-                const hoursAgo = Math.floor(secondsAgo / 3600);
-                return hoursAgo + " hour" + (hoursAgo > 1 ? "s" : "") + " ago";
-            } else {
-                const daysAgo = Math.floor(secondsAgo / 86400);
-                if (daysAgo >= 7) {
-                    return formatDateCreatedAt(timestamp);
-                }
-                return daysAgo + " day" + (daysAgo > 1 ? "s" : "") + " ago";
-            }
-        }
-
         function getEventDescription(uuid, description, maxLength = 50) {
             let seeMoreText = "{{ auth()->user()->lang }}" == "vi" ? "Xem thêm" : "See more";
             if (description.length > maxLength) {
@@ -379,6 +356,22 @@
             }
         }
 
+        function getEventDepartmentTags(event) {
+            let eDepartments = event.tags.split(',');
+            let res = '';
+            eDepartments.forEach(item => {
+                let findDeparment = eventDepartments.find(dep => {
+                    return dep.uuid == item;
+                });
+                if (findDeparment) {
+                    res += `
+                    <span class="badge badge-primary">${JSON.parse(findDeparment.name)[currentLang]}</span>
+                    `;
+                }
+            });
+            return res;
+        }
+
         function getEventImages(event) {
             let files = [];
             try {
@@ -389,21 +382,16 @@
 
             if (files.length) {
                 let res = '';
-                let isMoreThanThreeImages = files.siz3 > 3;
                 files.map((item, index) => {
                     item.url =
                         "{{ config('aws_.aws_url.url') . '/' . config('aws_.event_images.path') . '/' . config('aws_.event_images.file_path') }}" +
                         '/' + item.url;
-                    if (isMoreThanThreeImages) {
-
-                    } else {
-                        res += `
+                    res += `
                         <div class="col-xs-4 col-sm-4 p-1">
                             <img src="${item.url}" class="cursor-pointer border rounded-3 w-100 feed-images" data-source="${item.url}" style="object-fit: cover; aspect-ratio: 1/1;"
                                 alt="${item.name}">
                         </div>
                         `;
-                    }
                 });
 
                 return `
@@ -453,7 +441,7 @@
                     let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
                         "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
 
-                    if ("{{ auth()->user()->uuid }}" == event.created_by.uuid) {
+                    if ("{{ auth()->user()->uuid }}" == event.created_by_user.uuid) {
                         actions = `
                         <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
@@ -485,9 +473,9 @@
                     eventsFeedsInnerHTML += `
                     <div class="card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3" id="feed_event_${event.uuid}">
                         <div class="card-body p-0 d-flex">
-                            <figure class="avatar me-3"><img src="${event.created_by.avatar}" alt="${event.created_by.last_name}_avatar"
+                            <figure class="avatar me-3"><img src="${event.created_by_user.avatar}" alt="${event.created_by_user.last_name}_avatar"
                                     class="shadow-sm rounded-circle w45"></figure>
-                            <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by.last_name + ' ' + event.created_by.first_name} <span
+                            <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by_user.last_name + ' ' + event.created_by_user.first_name} <span
                                     class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${formatRelativeTime(event.created_at)}</span></h4>
                             ${actions}
                         </div>
@@ -502,7 +490,10 @@
                                     </div>
                                 </div>
                                 <div class="me-lg-5 mt-2">
-                                    <b class="fw-500 text-black w-100">${event.name}</b>
+                                    ${getEventDepartmentTags(event)}
+                                </div>
+                                <div class="me-lg-5 mt-2">
+                                    <a href="/events/${event.uuid}"><b class="fw-500 text-black w-100">${event.name}</b></a>
                                     <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
                                 </div>
                             </div>
@@ -532,7 +523,7 @@
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <div class="input-color-container">
-                                                <input type="color"class="input-color" id="eventColor_${event.uuid}" name="eventColor" data-value="${event.color}" value="${event.color}">
+                                                <input type="color" class="input-color" id="eventColor_${event.uuid}" name="eventColor" data-value="${event.color}" value="${event.color}">
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-2">
@@ -1078,7 +1069,7 @@
                 let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
                     "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
 
-                if ("{{ auth()->user()->uuid }}" == event.created_by.uuid) {
+                if ("{{ auth()->user()->uuid }}" == event.created_by_user.uuid) {
                     actions = `
                     <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>
@@ -1108,9 +1099,9 @@
                 }
                 thisEventContainer.innerHTML = `
                 <div class="card-body p-0 d-flex">
-                    <figure class="avatar me-3"><img src="${event.created_by.avatar}" alt="${event.created_by.last_name}_avatar"
+                    <figure class="avatar me-3"><img src="${event.created_by_user.avatar}" alt="${event.created_by_user.last_name}_avatar"
                             class="shadow-sm rounded-circle w45"></figure>
-                    <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by.last_name + ' ' + event.created_by.first_name} <span
+                    <h4 class="fw-700 text-grey-900 font-xssss mt-1">${event.created_by_user.last_name + ' ' + event.created_by_user.first_name} <span
                             class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">${formatRelativeTime(event.created_at)}</span></h4>
                     ${actions}
                 </div>
@@ -1125,7 +1116,10 @@
                             </div>
                         </div>
                         <div class="me-lg-5 mt-2">
-                            <b class="fw-500 text-black w-100">${event.name}</b>
+                            ${getEventDepartmentTags(event)}
+                        </div>
+                        <div class="me-lg-5 mt-2">
+                            <a href="/events/${event.uuid}"><b class="fw-500 text-black w-100">${event.name}</b></a>
                             <p class="text-grey-500 lh-26 w-100" id="eventDescriptionShow_${event.uuid}">${getEventDescription(event.uuid, event.description, 50)}</p>
                         </div>
                     </div>

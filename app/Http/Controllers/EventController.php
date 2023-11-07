@@ -7,15 +7,73 @@ use Illuminate\Http\Request;
 
 use App\Traits\ResponseTrait;
 
+use Illuminate\View\View;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Event;
 use App\Models\EventMember;
+use App\Models\Notification;
 
 class EventController extends Controller
 {
+    /**
+     * @return View
+     */
+    public function showEventDetail($uuid): View
+    {
+        $thisEvent = Event::where('uuid', '=', $uuid)->with(['createdByUser', 'updatedByUser', 'eventMembers'])->first();
+        $targetEventMembers = EventMember::where([
+            ['event_id', '=', $uuid],
+            ['user_id', '=', auth()->user()->uuid],
+        ])->get();
+
+        $going = false;
+        $interested = false;
+        $goingCount = 0;
+        $interestedCount = 0;
+
+        foreach ($targetEventMembers as $eventMember) {
+            if ($eventMember->status == EventMember::STATUS_GOING) {
+                $going = true;
+            }
+            if ($eventMember->status == EventMember::STATUS_INTERESTED) {
+                $interested = true;
+            }
+        }
+        foreach ($thisEvent->eventMembers as $eventMember) {
+            if ($eventMember->status == EventMember::STATUS_GOING) {
+                $goingCount++;
+            }
+            if ($eventMember->status == EventMember::STATUS_INTERESTED) {
+                $interestedCount++;
+            }
+        }
+
+        return view('front-end.layouts.event.detail', [
+            'event' => $thisEvent,
+            'targetEventMembers' => $targetEventMembers,
+            'going' => $going,
+            'interested' => $interested,
+            'goingCount' => $goingCount,
+            'interestedCount' => $interestedCount,
+        ]);
+    }
+
+    /**
+     * @return View
+     */
+    public function updateEventDetail($uuid): View
+    {
+        $thisEvent = Event::where('uuid', '=', $uuid)->with(['createdByUser', 'updatedByUser', 'eventMembers'])->first();
+
+        return view('front-end.layouts.event.update', [
+            'event' => $thisEvent,
+        ]);
+    }
+
     /**
      * Returning the view of the app with the required data.
      *
@@ -36,7 +94,7 @@ class EventController extends Controller
 
             $data = [
                 'events' => Event::skip($skip)->take($limit)
-                    ->with(['createdBy', 'updatedBy', 'eventMembers'])->get(),
+                    ->with(['createdByUser', 'updatedByUser', 'eventMembers'])->get(),
             ];
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
@@ -110,7 +168,49 @@ class EventController extends Controller
             DB::commit();
 
             $data = [
-                'event' => Event::with(['createdBy', 'updatedBy', 'eventMembers'])->find($insertedEvent->id),
+                'event' => Event::with(['createdByUser', 'updatedByUser', 'eventMembers'])->find($insertedEvent->id),
+            ];
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    /**
+     * Returning the view of the app with the required data.
+     *
+     * @param Request $request
+     */
+    public function removeEventImages(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+
+            $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent->created_by != $user->uuid) {
+                return $this->failedWithErrors(400, 'this is not your event');
+            }
+
+            // delete old files
+            foreach (json_decode($thisEvent->files, true) as $file) {
+                Storage::disk('s3')->delete($file["url"]);
+            }
+
+            $event = [
+                "files" => json_encode([]),
+            ];
+
+            $thisEvent->fill($event);
+            $thisEvent->save();
+            DB::commit();
+
+            $data = [
+                'event' => Event::with(['createdByUser', 'updatedByUser', 'eventMembers'])->find($id),
             ];
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
@@ -133,6 +233,10 @@ class EventController extends Controller
             $user = auth()->user();
 
             $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent->created_by != $user->uuid) {
+                return $this->failedWithErrors(400, 'this is not your event');
+            }
 
             $name = $request->event_name;
             $description = $request->event_description;
@@ -197,7 +301,7 @@ class EventController extends Controller
             return $this->successWithContent($thisEvent);
 
             $data = [
-                'event' => Event::with(['createdBy', 'updatedBy', 'eventMembers'])->find($id),
+                'event' => Event::with(['createdByUser', 'updatedByUser', 'eventMembers'])->find($id),
             ];
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
@@ -243,6 +347,18 @@ class EventController extends Controller
                     'status' => EventMember::STATUS_GOING,
                     'eventMember' => $insertedEventMember,
                 ];
+
+                // create going to event notification
+                if ($thisEvent->created_by != $user->uuid) {
+                    $notiData = [
+                        'target_url' => '/events' . '/' . $thisEvent->uuid,
+                        'origin_user' => $user->uuid,
+                        'target_user' => $thisEvent->created_by,
+                        'event_id' => $thisEvent->uuid,
+                        'type' => Notification::EVENT_TYPES['GOING_TO_EVENT'],
+                    ];
+                    Notification::create($notiData);
+                }
             } else {
                 $findExistedGoingEventMember->delete();
                 $data = [
@@ -296,6 +412,18 @@ class EventController extends Controller
                     'status' => EventMember::STATUS_INTERESTED,
                     'eventMember' => $insertedEventMember,
                 ];
+
+                // create going to event notification
+                if ($thisEvent->created_by != $user->uuid) {
+                    $notiData = [
+                        'target_url' => '/events' . '/' . $thisEvent->uuid,
+                        'origin_user' => $user->uuid,
+                        'target_user' => $thisEvent->created_by,
+                        'event_id' => $thisEvent->uuid,
+                        'type' => Notification::EVENT_TYPES['INTERESTED_IN_EVENT'],
+                    ];
+                    Notification::create($notiData);
+                }
             } else {
                 $findExistedInterestedEventMember->delete();
                 $data = [

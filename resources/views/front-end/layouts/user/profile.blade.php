@@ -23,7 +23,7 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
-            background-image: url({{ $thisUser->avatar }});
+            background-image: url({{ auth()->user()->avatar }});
         }
     </style>
 @endsection
@@ -145,12 +145,14 @@
                                                 <b>{{ __('texts.texts.department.' . $thisUser->lang) }}</b>:
                                                 {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
                                             </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.class.' . $thisUser->lang) }}</b>:
-                                                @if ($class_ != null)
-                                                    {{ $class_->name }}
-                                                @endif
-                                            </div>
+                                            @if (auth()->user()->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.class.' . $thisUser->lang) }}</b>:
+                                                    @if ($class_ != null)
+                                                        {{ $class_->name }}
+                                                    @endif
+                                                </div>
+                                            @endif
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.email.' . $thisUser->lang) }}</b>:
                                                 {{ $thisUser->email }}

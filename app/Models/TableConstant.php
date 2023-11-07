@@ -22,4 +22,6 @@ class TableConstant
     const INTAKES_TABLE = 'intakes';
     const INTAKE_MEMBERS_TABLE = 'intake_members';
     const INTAKE_SCHEDULES_TABLE = 'intake_schedules';
+    const NOTIFICATION_TABLE = 'notifications';
+    const EVENT_INVITATION_TABLE = 'event_notifications';
 }
