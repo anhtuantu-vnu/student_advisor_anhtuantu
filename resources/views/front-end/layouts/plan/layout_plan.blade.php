@@ -88,7 +88,7 @@
                             }
                             uiPlan += `</div>
                                             </div>`
-                            if("{{auth()->user()->uuid}}" == plan['create_by']) {
+                            if("{{auth()->user()->uuid}}" == plan['created_by']) {
                                 uiPlan += `<div class="action_plan">
                                     <a class="feather-edit text-grey-900 icon_edit_plan" onclick="handleClickEditPlan('${plan['uuid']}')" style="margin-top: 2px; font-size: 20px;"></a>
                                     <i class="feather-trash-2 text-grey-900 icon_delete_plan" onclick="handleClickDeleteTask('${plan['name']}', '${plan['uuid']}')" style="margin-top: 2px; font-size: 20px;"></i>

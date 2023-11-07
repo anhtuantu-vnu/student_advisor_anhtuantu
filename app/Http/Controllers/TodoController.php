@@ -83,6 +83,25 @@ class TodoController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateStatusTask(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+//            $this->taskRepository->updateByCondition(
+//                ['status' => substr($request->input('status'), 6)],
+//                ['id' => $request->input('idTask')]
+//            );
+            $this->taskServices->sendMailWhenUpdateStatusTask($request->input('idTask'));
+            DB::commit();
+            return $this->successWithNoContent('Update success');
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            return $this->failedWithErrors(500, $throwable->getMessage());
+        }}
+    /**
      * @return View
      */
     public function showTasks(): View

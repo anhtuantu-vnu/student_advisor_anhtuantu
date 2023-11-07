@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Mail\CustomEmail;
 use App\Models\Plan;
 use App\Models\Task;
 use App\Repositories\PlanMemberRepository;
@@ -11,6 +12,7 @@ use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class TaskServices
@@ -60,7 +62,7 @@ class TaskServices
         $listTask = $this->taskRepository->getListTaskByPlan($idPlan);
         $listMember = $this->planMemberRepository->getMemberByPlanId($idPlan);
         $author = $this->planRepository->findOne(['uuid' => $idPlan]);
-        $listTask['author'] = $author['create_by'];
+        $listTask['author'] = $author['created_by'];
         return $this->successWithContentAttach($listTask, $listMember);
     }
 
@@ -78,5 +80,11 @@ class TaskServices
         $task['status'] = Task::STATUS_TASK_TO_DO;
         $result = $this->taskRepository->create($task);
         return $this->successWithContent($result);
+    }
+
+    public function sendMailWhenUpdateStatusTask($idTask) {
+        $task = $this->taskRepository->getDataUserSendMail($idTask);
+        Mail::to("leminhquan59@gmail.com")->cc($task['mail_user_created_by'])->send(new CustomEmail($subject, $content, $fromName, $toName));
+        dd($task);
     }
 }
