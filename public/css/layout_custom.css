@@ -101,6 +101,7 @@
 .plan .project-boxes.jsListView .project-box-content-header {
     order: 1;
     max-width: 120px;
+    color: black;
 }
 
 .plan .project-boxes.jsListView .project-box-header {
@@ -137,6 +138,14 @@
 .project-boxes.jsListView .box-progress-wrapper {
     order: 3;
     flex: 1;
+}
+.action_plan {
+    order: 3;
+    position: relative;
+}
+.icon_edit_plan:hover, .icon_delete_plan:hover {
+    color: var(--theme-color) !important;
+    cursor: pointer;
 }
 
 .project-box {
@@ -431,7 +440,7 @@
     border-radius: 4px;
 }
 .card_plan:hover {
-    cursor: pointer;
+    /*cursor: pointer;*/
     box-shadow: 2px 2px 2px 2px #959595;
     border-radius: 9px;
 }

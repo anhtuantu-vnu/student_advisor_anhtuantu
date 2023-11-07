@@ -47,7 +47,11 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post("/events/{id}/interested", [EventController::class, 'interestedInEvent'])->name('event.interested.in');
 
     //route plan
+    Route::get('/get-plan' , [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
+    Route::get('/plan/{id}', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
+    Route::put('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
+    Route::delete("/plan/{id}" , [PlanController::class, 'deletePlan'])->name('delete_plan');
     Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
     Route::get('/list-member', [PlanController::class, 'getListMember']);
     Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');

@@ -4,11 +4,11 @@
     <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
     <link rel="stylesheet" href="{{ asset("css/layout_custom.css") }}"/>
     <link rel="stylesheet" href="{{ asset("css/model_detail_task.css") }}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @endsection
 
 @push('js_page')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         //get list task by plan
         function getDataTask() {
@@ -21,9 +21,9 @@
                 cache: false,
                 contentType: false,
                 processData: true,
-                beforeSend: function () {
-                    document.getElementById("loadingSpinner").classList.remove("d-none");
-                },
+                // beforeSend: function () {
+                //     document.getElementById("loadingSpinner").classList.remove("d-none");
+                // },
                 success: function (data) {
                     for (const [key, listTaskByType] of Object.entries(data.data)) {
                         if (['is_task' , 'author'].includes(key)) continue;
