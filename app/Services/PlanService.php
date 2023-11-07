@@ -58,7 +58,7 @@ class PlanService
         $plan['uuid'] = Str::uuid();
         $plan['created_at'] = Carbon::today();
         $plan['updated_at'] = Carbon::today();
-        $plan['create_by'] = $userId;
+        $plan['created_by'] = $userId;
         $plan['settings'] = Plan::SETTING_DEFAULT[rand(0, 5)];
         return $this->planRepository->create($plan);
     }
@@ -91,7 +91,7 @@ class PlanService
      */
     public function getPlans($userId): array
     {
-        return $this->planRepository->find(['create_by' => $userId])->map(function($plan) {
+        return $this->planRepository->find(['created_by' => $userId])->map(function($plan) {
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $plan['created_at']);
             $plan['date_created'] = $date->format('F d, Y');
             $plan['count_date'] = $date->diffInDays(now());

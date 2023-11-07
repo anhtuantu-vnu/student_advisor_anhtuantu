@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->string('name');
             $table->string('description');
-            $table->string('create_by');
+            $table->string('created_by');
             $table->text('settings')->nullable();
             $table->timestamps();
         });

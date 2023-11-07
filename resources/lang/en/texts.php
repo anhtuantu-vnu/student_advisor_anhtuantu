@@ -454,5 +454,9 @@ return [
         'vi' => 'Bạn có chắc chắn muốn xoá kế hoạch ',
         'en' => 'Are you sure you want to delete plan'
     ],
+    'select_default' => [
+        'vi' => 'Chưa được chỉ định',
+        'en' => 'Unassigned'
+    ]
   ]
 ];

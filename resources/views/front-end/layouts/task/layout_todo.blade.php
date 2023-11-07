@@ -29,11 +29,12 @@
                         if (['is_task' , 'author'].includes(key)) continue;
                         let typeTask = `
                         <div class="col-lg-3 col-xl-3 col-md-6 mb-2 mt-2 box_draggable">
-                            <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
+                            <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item" id="${key}">
                                 <div class="p-3 border-top-lg border-size-lg p-0 ${listTaskByType['config']['border']}">
                                     <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">${listTaskByType.config.type}</span>
-                                        <button class="float-right btn-round-sm bg-greylight btn_create_task"
-                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
+                                        ${key == "tasks_to_do" ? `<button class="float-right btn-round-sm bg-greylight btn_create_task"
+                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button>` : ''}
+                                    </h4>
                                 </div>`;
 
                         if (data.data.is_task) {
@@ -43,8 +44,8 @@
                                 if (Object.keys(task).length && keyTask !== 'config') {
                                     typeTask += `
                                         <div
-                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target ${task['id']}"
-                                            onclick="handleClickTask(${task["id"]})">
+                                            class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target" draggable="true"
+                                            onclick="handleClickTask(${task["id"]})" id='${task["id"]}'>
                                             <div class="d-flex justify-content-between align-content-center">
                                                 <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${task['name']}</h4>
                                                 <i class="feather-trash-2" onclick="handleClickIconDelete(event, ${task['id']})" style="font-size: 18px"></i>
@@ -58,7 +59,7 @@
                                                     style="color: white; background-color: ${listTaskByType['config']['backgroundTag']}"
                                             >{{ __("texts.texts.task." . auth()->user()->lang) }} ${listTaskByType['config']['type']}</span>
                                     `;
-                                    if (Object.keys(task['user_assign']).length) {
+                                    if (task['user_assign'] && Object.keys(task['user_assign']).length) {
                                         typeTask += `<ul class="memberlist mt-4 mb-2 ms-0">
                                                                 <li><a href="#"><img src="${task['user_assign']['avatar']}" alt="user"
                                                                  class="d-inline-block" style="border-radius: 50%; width: 24px; height: 24px"></a></li>
@@ -75,6 +76,17 @@
                                 }
                             }
                             typeTask += '</div>';
+                        }
+                        if(key === "tasks_to_do") {
+                            typeTask += `<div class="rounded-3 create_task pb-3 ps-3 pe-3 d-none">
+                                        <div class="input_create_task rounded-3">
+                                        <textarea
+                                            id="input_create_task" class="form_create_plan mb-0 rounded-3 p-2"
+                                            placeholder="{{ __('texts.texts.what_needs_to_be_done.' . auth()->user()->lang)}}"
+                                            onfocusout="handleFocusoutTextarea()"
+                                            maxlength="255"></textarea>
+                                        </div>
+                                </div>`;
                         }
                         $('.list_task').append(typeTask);
                     }
@@ -190,11 +202,10 @@
                                 </div>`;
                         $('.list_task').append(uiEmptyTask);
                     }
-
-                    //init drop drag
-                    initDropDrag();
                 },
                 complete: function (data) {
+                    //init drop drag
+                    initDropDrag();
                     document.getElementById("loadingSpinner").classList.add("d-none");
                 }
             });
@@ -204,6 +215,7 @@
 
         //logic drag drop
         let currentTarget = null;
+        let currentBox = null;
 
         function initDropDrag() {
             let boxDraggebles = document.querySelectorAll(".draggable_item");
@@ -223,7 +235,6 @@
         }
 
         function boxEnter() {
-            console.log('boxEnter');
             this.classList.add("dragstart");
             this.classList.add("hide");
             currentTarget = this;
@@ -234,31 +245,56 @@
         }
 
         function dragEnter(event) {
-            console.log('dragEnter');
+            if(['task_done' , 'task_review', 'tasks_in_process', 'tasks_to_do'].includes(event.target.id)) {
+                currentBox = event.target.id;
+            }
             event.preventDefault();
         }
 
         function dragOver(event) {
-            console.log('dragOver');
             event.preventDefault();
         }
 
         function dropBox() {
-            console.log('dropBox');
+            updateStatusTask(currentBox, currentTarget.id)
             this.append(currentTarget);
+        }
+
+        function updateStatusTask(status, idTask) {
+            $.ajax({
+                url: "/task/update-status",
+                method: "put",
+                data: {status, idTask},
+                beforeSend: function() {
+                    showLoadingBtnModalDelete(idTask)
+                },
+                success: async function(data) {
+                    await getDataTask();
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+                complete: function(data) {
+                    removeLoadingBtnModalDelete(idTask)
+                }
+            })
+            console.log(status, idTask)
         }
 
         //set height for draggable_item
         function setHeightForDraggableItem() {
-            let heightDraggable = document.querySelector('.tasks_to_do').offsetHeight;
-            document.querySelectorAll('.draggable_item').forEach(function (draggable) {
-                draggable.style.minHeight = `${heightDraggable + 70}px`;
-            })
-            document.querySelector('.middle-sidebar-left').style.maxWidth = '1240px';
+            if(document.querySelector('.tasks_to_do')) {
+                let heightDraggable = document.querySelector('.tasks_to_do').offsetHeight;
+                document.querySelectorAll('.draggable_item').forEach(function (draggable) {
+                    draggable.style.minHeight = `${heightDraggable + 70}px`;
+                })
+                document.querySelector('.middle-sidebar-left').style.maxWidth = '1240px';
+            }
         }
 
         //logic show hide create task
         function showInputCreateTask() {
+            initFunctionCreateTask();
             document.querySelector('.btn_create_task').setAttribute("disable", "");
             document.querySelector('.create_task').classList.remove('d-none');
             document.querySelector('.form_create_plan').focus();
@@ -266,60 +302,39 @@
 
         function handleFocusoutTextarea() {
             document.querySelector('.create_task').classList.add('d-none');
-            document.querySelector('#input_create_task').value = '';
             document.querySelector('.btn_create_task').removeAttribute("disable");
         }
 
         //Create task
         let url = new URL(window.location.href);
         let idPlan = url.searchParams.get("id");
-        $("#input_create_task").keydown(function (e) {
-            if (e.keyCode == 13) {
-                let data = {
-                    _token: '{{csrf_token()}}',
-                    task: {
-                        'plan_id': idPlan,
-                        'name': $("#input_create_task").val()
-                    }
-                };
+        function initFunctionCreateTask() {
+            $("#input_create_task").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    let data = {
+                        _token: '{{csrf_token()}}',
+                        task: {
+                            'plan_id': idPlan,
+                            'name': $("#input_create_task").val()
+                        }
+                    };
 
-                $.ajax({
-                    url: "/to-do",
-                    method: "post",
-                    data: data
-                }).done(function (res) {
-                    let data = res.data;
-                    let taskHtml = `<div
-                                class="p-3 bg-lightblue cart_task theme-dark-bg mt-0 mb-3 ms-3 me-3 rounded-3 target"
-                                data-bs-toggle="modal" data-bs-target="#ModelTask"
-                                draggable="true">
-                                <div class="d-flex justify-content-between align-content-center">
-                                    <h4 class="font-xsss fw-700 text-grey-900 mb-2 d-block">${data.name}</h4>
-                                    <i class="feather-trash-2" style="font-size: 18px"></i>
-                                </div>
-                                ${data.description ? `<p class="font-xssss lh-24 fw-500 text-grey-500 mt-2 d-block mb-3">${data.description}</p>` : ''}
-                                <span
-                                    class="font-xsssss fw-700 ps-3 pe-3 lh-32 text-uppercase rounded-3 ls-2 alert-success d-inline-block me-1"
-                                    style="color: white; background-color: #1e74fd"
-                                >${data.type}</span>
-                                ${data.user_assign ? `
-                                    <ul class="memberlist mt-4 mb-2 ms-0">
-                                        <li><a href="#"><img src="${data.user_assign.avatar}" alt="user" class="d-inline-block" style="border-radius: 50%; width: 24px; height: 24px"></a></li>
-                                        <li class="ps-2 w-auto"><a href="#" class="fw-500 text-grey-500 font-xssss">${data.user_assign.first_name + data.user_assign.last_name} assigned</a></li>
-                                    </ul>
-                                ` : ''}
-                            </div>`;
-                    $(".tasks_to_do").append(taskHtml);
-                    $(".alert_create_task").addClass('d-none')
-                    handleFocusoutTextarea();
+                    $.ajax({
+                        url: "/to-do",
+                        method: "post",
+                        data: data,
+                        success: function(res) {
+                            getDataTask()
+                            $(".alert_create_task").addClass('d-none')
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                }
+            });
+        }
 
-                }).fail(function (xhr, status, error) {
-                    console.log(error);
-                }).complete(function() {
-                    initDropDrag();
-                });
-            }
-        });
 
         //init event click in task
         function showModal(modal) {
@@ -374,6 +389,7 @@
                                             <div class="list_member_modal_task">
                                                 <select class="p-2 rounded" id="selected_${task['id']}" value=${task['assigned_to']}>`;
             if (data.data_attach.length) {
+                UIModal += `${!task['assigned_to'] ? "<option value='' selected}>{{ __('texts.texts.select_default.' . auth()->user()->lang) }}</option>" : ""}`;
                 data.data_attach.forEach(member => {
                     UIModal += `<option value="${member['uuid']}" ${member['uuid'] === task['assigned_to'] ? 'selected' : ''}>${member['first_name']} ${member['last_name']}</option>`;
                 })
@@ -504,7 +520,6 @@
 
         function removeLoadingBtnModalDelete(idTask) {
             setTimeout(() => {
-                console.log(idTask)
                 $(`#loading_btn_modal_delete_${idTask}`).addClass("d-none");
                 $(`#btn_cancel_delete_${idTask}`).removeClass('disable_ui');
                 $(`#btn_save_${idTask}`).removeClass('disable_ui');
