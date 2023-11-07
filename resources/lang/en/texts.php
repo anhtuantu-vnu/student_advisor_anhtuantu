@@ -178,5 +178,133 @@ return [
       "vi" => 'Không tìm thấy sự kiện nào',
       "en" => 'No events found'
     ],
+    'intakes' => [
+      "vi" => 'Tiết học',
+      "en" => 'Intakes'
+    ],
+    'no_intakes_found' => [
+      "vi" => 'Không tìm thấy tiết học nào',
+      "en" => 'No intakes found'
+    ],
+    'student' => [
+      "vi" => 'Sinh viên',
+      "en" => 'Student'
+    ],
+    'points' => [
+      "vi" => 'Điểm',
+      "en" => 'Points'
+    ],
+    'action' => [
+      "vi" => 'Thao tác',
+      "en" => 'Action'
+    ],
+    'attendance_points' => [
+      "vi" => 'Điểm chuyên cần',
+      "en" => 'Attendance points'
+    ],
+    'attendance_points' => [
+      "vi" => 'Điểm chuyên cần',
+      "en" => 'Attendance points'
+    ],
+    'mid_term_points' => [
+      "vi" => 'Điểm giữa kì',
+      "en" => 'Mid-term points'
+    ],
+    'last_term_points' => [
+      "vi" => 'Điểm cuối kì',
+      "en" => 'Last-term points'
+    ],
+    'schedule_meeting' => [
+      "vi" => 'Tạo lịch hẹn',
+      "en" => 'Schedule a meeting'
+    ],
+    'check_all' => [
+      "vi" => 'Chọn tất cả',
+      "en" => 'Check all'
+    ],
+    'uncheck_all' => [
+      "vi" => 'Bỏ chọn tất cả',
+      "en" => 'Uncheck all'
+    ],
+    'hosted_by' => [
+      "vi" => 'Tổ chức bởi',
+      "en" => 'Hosted by'
+    ],
+    'user_info' => [
+      "vi" => 'Thông tin người dùng',
+      "en" => 'User information'
+    ],
+    'update' => [
+      "vi" => 'Chỉnh sửa',
+      "en" => 'Update'
+    ],
+    'update_event_short_description' => [
+      "vi" => 'Chỉnh sửa thông tin sự kiện',
+      "en" => 'Update event information'
+    ],
+    'delete' => [
+      "vi" => 'Xoá',
+      "en" => 'Delete'
+    ],
+    'delete_event_short_description' => [
+      "vi" => 'Xoá sự kiện khỏi lịch',
+      "en" => 'Delete event from your calendar'
+    ],
+    'images' => [
+      "vi" => 'Ảnh',
+      "en" => 'Images'
+    ],
+    'back' => [
+      "vi" => 'Quay lại',
+      "en" => 'Back'
+    ],
+    'no_images_found' => [
+      "vi" => 'Không có ảnh nào.',
+      "en" => 'No images found.'
+    ],
+    'remove_all_images' => [
+      "vi" => 'Xoá hết ảnh',
+      "en" => 'Remove all images'
+    ],
+    'teacher' => [
+      "vi" => 'Giảng viên',
+      "en" => 'Teacher'
+    ],
+    'send' => [
+      "vi" => 'Gửi',
+      "en" => 'Send'
+    ],
+    'content' => [
+      "vi" => 'Nội dung',
+      "en" => 'Content'
+    ],
+    'cc_email' => [
+      "vi" => 'CC Email',
+      "en" => 'CC Email'
+    ],
+    'send_email_to' => [
+      "vi" => 'Gửi email tới',
+      "en" => 'Send email to'
+    ],
+    'subject' => [
+      "vi" => 'Tiêu đề email',
+      "en" => 'Subject'
+    ],
+    'no_notifications_found' => [
+      "vi" => 'Không có thông báo nào',
+      "en" => 'No notifications found'
+    ],
+    'load_more' => [
+      "vi" => 'Tải thêm...',
+      "en" => 'Load more...'
+    ],
+    'going_to_event_notification' => [
+      "vi" => 'đánh dấu sẽ tham gia sự kiện của bạn.',
+      "en" => 'marked going to your event.'
+    ],
+    'interested_in_event_notification' => [
+      "vi" => 'đánh dấu quan tâm sự kiện của bạn.',
+      "en" => 'marked interested in your event.'
+    ],
   ]
 ];

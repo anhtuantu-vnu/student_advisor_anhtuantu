@@ -12,12 +12,12 @@ class Event extends Model
     protected $guarded = ['id'];
     protected $table = TableConstant::EVENT_TABLE;
 
-    public function createdBy()
+    public function createdByUser()
     {
         return $this->belongsTo(User::class, 'created_by', 'uuid');
     }
 
-    public function updatedBy()
+    public function updatedByUser()
     {
         return $this->belongsTo(User::class, 'updated_by', 'uuid');
     }

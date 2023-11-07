@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthContoller as ApiAuthContoller;
 use App\Http\Controllers\Api\UserController as UserController;
 use App\Http\Controllers\Api\DepartmentController as DepartmentController;
+use App\Http\Controllers\Api\IntakeController as IntakeController;
+use App\Http\Controllers\Api\EventController as EventController;
+use App\Http\Controllers\Api\NotificationController as NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +32,9 @@ Route::controller(ApiAuthContoller::class)->group(function () {
 });
 
 Route::get('/student-intakes', [UserController::class, 'studentIntakes']);
+Route::get('/student-intakes/{uuid}/teacher-info', [IntakeController::class, 'getIntakeTeacherInfo']);
 Route::get('/departments', [DepartmentController::class, 'actionDepartments']);
+
+Route::get('/user-events', [EventController::class, 'getUserEvents']);
+Route::get("/user-notifications", [NotificationController::class, 'getuserNotifications']);
+Route::post("/notifications/{id}/read", [NotificationController::class, 'markNotificationAsRead']);

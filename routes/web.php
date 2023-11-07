@@ -9,6 +9,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\IntakeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,15 +36,23 @@ Route::middleware(['auth.login'])->group(function () {
 
     Route::post("/update-lang", [AccountController::class, 'updateLang'])->name('app.update.lang');
 
+    Route::get("/users/{uuid}", [AccountController::class, 'showUserDetail'])->name('user.show.detail');
     Route::get("/my-profile", [AccountController::class, 'showProfile'])->name('app.my.profile');
     Route::post("/update-avatar", [AccountController::class, 'updateAvatar'])->name('app.update.avatar');
 
     // route event
     Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
     Route::get("/events", [EventController::class, 'getEvents'])->name('event.get');
+    Route::get("/events/{uuid}", [EventController::class, 'showEventDetail'])->name('event.show.detail');
+    Route::get("/events/{uuid}/update", [EventController::class, 'updateEventDetail'])->name('event.update.detail');
     Route::post("/events/{id}", [EventController::class, 'updateEvent'])->name('event.update');
     Route::post("/events/{id}/going", [EventController::class, 'goingToEvent'])->name('event.going.to');
     Route::post("/events/{id}/interested", [EventController::class, 'interestedInEvent'])->name('event.interested.in');
+    Route::post("/events/{id}/remove-images", [EventController::class, 'removeEventImages'])->name('event.remove.images');
+
+    // route intakes
+    Route::get("/intakes/{uuid}", [IntakeController::class, 'showIntakeDetails'])->name('intake.show.detail');
+    Route::post("/send-custom-email", [IntakeController::class, 'sendCustomEmail'])->name('intake.send.custom.email');
 
     //route plan
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');

@@ -12,6 +12,17 @@
 </div>
 
 <script>
+    function getEventMonthRightSide(event) {
+        let eventDate = new Date(event.start_date);
+        let monthsArr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        return monthsArr[eventDate.getMonth()];
+    }
+
+    function getEventdateRightSide(event) {
+        let eventDate = new Date(event.start_date);
+        return eventDate.getDate();
+    }
+
     function loadEventsRightSideBar() {
         if (homeEvents && homeEvents.length) {
             rightSideBarEventsContainer.innerHTML = '';
@@ -19,11 +30,11 @@
             firstThreeEvents.forEach(event => {
                 rightSideBarEventsContainer.innerHTML += `
                 <div class="card-body d-flex pt-0 ps-4 pe-4 pb-3 overflow-hidden">
-                  <div class="bg-success me-2 p-3 rounded-xxl">
+                  <div class="me-2 p-3 rounded-xxl" style="background-color: ${event.color};">
                     <h4 class="fw-700 font-lg ls-3 lh-1 text-white mb-0">
-                      <span class="ls-1 d-block font-xsss text-white fw-600">
-                        FEB
-                      </span>22
+                      <span class="ls-1 d-block font-xsss text-white fw-600 text-uppercase">
+                        ${getEventMonthRightSide(event)}
+                      </span>${getEventdateRightSide(event)}
                     </h4>
                   </div>
                   <h4 class="fw-700 text-grey-900 font-xssss mt-2">

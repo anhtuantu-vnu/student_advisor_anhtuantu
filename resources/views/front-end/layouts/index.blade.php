@@ -22,6 +22,30 @@
     {{--  Script custom --}}
     <script type="text/javascript" src="{{ asset('js/app_custom.js') }}"></script>
 
+    <script>
+        function formatRelativeTime(timestamp) {
+            const now = new Date();
+            const date = new Date(timestamp);
+            const secondsAgo = Math.floor((now - date) / 1000);
+
+            if (secondsAgo < 60) {
+                return secondsAgo + " seconds ago";
+            } else if (secondsAgo < 3600) {
+                const minutesAgo = Math.floor(secondsAgo / 60);
+                return minutesAgo + " minute" + (minutesAgo > 1 ? "s" : "") + " ago";
+            } else if (secondsAgo < 86400) {
+                const hoursAgo = Math.floor(secondsAgo / 3600);
+                return hoursAgo + " hour" + (hoursAgo > 1 ? "s" : "") + " ago";
+            } else {
+                const daysAgo = Math.floor(secondsAgo / 86400);
+                if (daysAgo >= 7) {
+                    return formatDateCreatedAt(timestamp);
+                }
+                return daysAgo + " day" + (daysAgo > 1 ? "s" : "") + " ago";
+            }
+        }
+    </script>
+
     @yield('header_js_page')
 
     <script src="{{ asset('js/plugin.js') }}"></script>
@@ -36,7 +60,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
-            z-index: 99;
+            z-index: 1069;
         }
     </style>
 </head>
@@ -59,11 +83,11 @@
         {{--  End Content  --}}
 
         <!--  Right Chat  -->
-        @include('front-end.components.right_chat')
+        {{-- @include('front-end.components.right_chat') --}}
         <!--  End Right Chat  -->
 
         {{-- Footer --}}
-        @include('front-end.components.footer');
+        @include('front-end.components.footer')
         {{-- End Footer --}}
     </div>
 
