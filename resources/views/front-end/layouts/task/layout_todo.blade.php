@@ -32,8 +32,9 @@
                             <div class="card p-0 bg-white rounded-3 shadow-xs border-0 draggable_item">
                                 <div class="p-3 border-top-lg border-size-lg p-0 ${listTaskByType['config']['border']}">
                                     <h4><span class="font-xsss fw-700 text-grey-900 mt-2 d-inline-block text-dark">${listTaskByType.config.type}</span>
-                                        <button class="float-right btn-round-sm bg-greylight btn_create_task"
-                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button></h4>
+                                        ${key == "tasks_to_do" ? `<button class="float-right btn-round-sm bg-greylight btn_create_task"
+                                                onclick="showInputCreateTask()" style="border: none"><i class="feather-plus font-xss text-grey-900"></i></button>` : ''}
+                                    </h4>
                                 </div>`;
 
                         if (data.data.is_task) {
