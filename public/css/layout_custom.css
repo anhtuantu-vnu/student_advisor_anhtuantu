@@ -16,7 +16,10 @@
     position: absolute;
     top: 50%;
     font-size: 26px !important;
-    right: 10px;
+}
+.layout_add_plan .select_add_customer i:hover{
+    cursor: pointer;
+    color: var(--theme-color);
 }
 .layout_add_plan #selected {
     /* Remove default list styling */
@@ -98,6 +101,7 @@
 .plan .project-boxes.jsListView .project-box-content-header {
     order: 1;
     max-width: 120px;
+    color: black;
 }
 
 .plan .project-boxes.jsListView .project-box-header {
@@ -134,6 +138,14 @@
 .project-boxes.jsListView .box-progress-wrapper {
     order: 3;
     flex: 1;
+}
+.action_plan {
+    order: 3;
+    position: relative;
+}
+.icon_edit_plan:hover, .icon_delete_plan:hover {
+    color: var(--theme-color) !important;
+    cursor: pointer;
 }
 
 .project-box {
@@ -408,10 +420,13 @@
 .list_member_selected {
     display: flex;
     max-width: 100%;
-    width: 100%;
     align-items: center;
-    padding: 0 8px;
+    padding: 4px 0;
     min-height: 100%;
+}
+.list_member_search {
+    border: none;
+    background-color: unset;
 }
 
 .plan_wrapper p {
@@ -425,9 +440,8 @@
     border-radius: 4px;
 }
 .card_plan:hover {
-    cursor: pointer;
-    box-shadow: 0 8px 4px rgba(0,0,0,0.12), 0 4px 5px rgba(0,0,0,0.24);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    /*cursor: pointer;*/
+    box-shadow: 2px 2px 2px 2px #959595;
     border-radius: 9px;
 }
 
@@ -487,6 +501,20 @@
 .create_task {
     position: relative;
 }
+.to_do .description_task {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    max-height: calc(1.2em * 3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .btn_post_task {
     position: absolute;
     bottom: 16px;

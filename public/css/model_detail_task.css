@@ -34,3 +34,34 @@
     width: 100%;
     resize: none;
 }
+
+.ui_modal_detail_task {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9;
+    pointer-events: none;
+    opacity: 0; /* Bắt đầu với độ mờ là 0 */
+    transform: scale(0.8); /* Thu nhỏ phần tử */
+    transition: opacity 1s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.ui_modal_detail_task_show {
+    opacity: 1; /* Khi class .show được thêm vào, phần tử sẽ hiển thị */
+    transform: scale(1); /* Kích thước phần tử trở về bình thường */
+}
+
+.modal_customer {
+    width: 500px;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+.disable_ui {
+    pointer-events: none;
+}

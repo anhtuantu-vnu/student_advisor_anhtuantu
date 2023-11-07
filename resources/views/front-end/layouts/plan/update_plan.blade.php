@@ -6,12 +6,6 @@
 
 @push('js_page')
     <script>
-        const listUserSelected = [];
-        const idUserSelected = [];
-        let listUser = [];
-        const listUserShow = listUser;
-        let isShowListMember = false;
-
         //Get list member
         function getListMember() {
             let dataSearch = $("#list_member_search").val();
@@ -59,62 +53,6 @@
                 clickOutSide()
             }
         }
-
-        //call api create plan
-
-        function showAlertNotFoundMember() {
-            $('.alert_list_member').removeClass('d-none');
-            setTimeout(() => {
-                $('.alert_list_member').addClass('d-none');
-            }, 2000)
-        }
-
-        function clickSearchMember() {
-            let listUser = document.querySelector('.list_customer');
-            return removeClassNone(listUser);
-        }
-
-        function clickOutSide() {
-            let listUser = document.querySelector('.list_customer');
-            return addClassNone(listUser);
-        }
-
-        function clickSelectedUser(userId) {
-            let data = listUser.filter(user => user.uuid === userId)[0];
-            let flagCheck = true;
-            for (let i = 0; i < listUserSelected.length; i++) {
-                if (listUserSelected[i].email === data['email']) {
-                    listUserSelected.splice(i, 1);
-                    idUserSelected.splice(i, 1);
-                    flagCheck = false;
-                    break; // Exit the loop when the condition is met
-                }
-            }
-
-            if (flagCheck) {
-                listUserSelected.push(data);
-                idUserSelected.push(data.uuid);
-            }
-            $('#list_member').val(JSON.stringify(idUserSelected));
-            $('#list_member_search').val("");
-            clickOutSide();
-            renderListMemberSelected();
-            return true;
-        }
-
-        //function render UI
-        function renderListMemberSelected() {
-            let listSelect = document.querySelector('.list_member_selected');
-            removeAllElementChild(listSelect);
-            listUserSelected.forEach(function (user) {
-                let itemUser = initElement('p');
-                itemUser.classList = 'm-0 fs-5 ms-1 p-1';
-                itemUser.style.cssText = "border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px";
-                itemUser.innerText = user.email;
-                listSelect.appendChild(itemUser);
-            });
-            return listSelect;
-        }
     </script>
 @endpush
 
@@ -127,17 +65,17 @@
                         <div class="card-body p-4 w-100 bg-current border-0 d-flex rounded-3">
                             <a href=" {{ route("plan") }} " class="d-inline-block mt-2"><i
                                         class="ti-arrow-left font-sm text-white"></i></a>
-                            <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">{{ __('texts.texts.create_plan.' . auth()->user()->lang) }}</h4>
+                            <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">{{ __('texts.texts.update_plan.' . auth()->user()->lang) }}</h4>
                         </div>
                         <div class="card-body p-lg-5 p-4 w-100 border-0 ">
-                            <form method="POST" action="/create-plan">
+                            <form method="PUT" action="/update-plan">
                                 @csrf
                                 <div class="row">
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-group">
                                             <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
                                                 *</label>
-                                            <input type="text" class="form-control input_name" name="name" required />
+                                            <input type="text" class="form-control input_name" name="name" value="{{$plan['name']}}" required />
                                         </div>
                                     </div>
                                 </div>
@@ -147,9 +85,19 @@
                                             <div class="form-group select_add_customer">
                                                 <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
                                                 <div class="input_add_member form-control position-relative d-flex"
-                                                     style="padding: 4px !important;">
+                                                     style="padding: 4px !important; ">
                                                     {{-- Show list member selected --}}
-                                                    <div class="list_member_selected" style="overflow-x: scroll; height: 40px">
+                                                    <div class="list_member_selected w-100" style="overflow-x: scroll; height: 40px">
+                                                        @if(count($plan['listMember']))
+                                                            @foreach($plan['listMember'] as $memberPlan)
+                                                                <p class="m-0 fs-5 ms-1 p-1" style="border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
+                                                                    {{$memberPlan['email']}}
+                                                                </p>
+                                                                <p class="m-0 fs-5 ms-1 p-1" style="border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
+                                                                    {{$memberPlan['email']}}
+                                                                </p>
+                                                            @endforeach
+                                                        @endif
                                                     </div>
 
                                                     <div class="position-relative w-100 ms-1">
@@ -179,17 +127,13 @@
                                     <div class="col-lg-12 mb-3">
                                         <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
                                             *</label>
-                                        {{--                                        @error('name')--}}
-                                        {{--                                            <div class="alert alert-danger">{{ $message }}</div>--}}
-                                        {{--                                        @enderror--}}
                                         <textarea
                                                 class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
                                                 name="description" rows="5"
-                                                placeholder="{{ __('texts.texts.description_for_plan.' . auth()->user()->lang) }}"
-                                                spellcheck="false" required></textarea>
+                                                spellcheck="false" required>{{$plan['description'] ?? __('texts.texts.description_for_plan.' . auth()->user()->lang)}}</textarea>
                                     </div>
                                 </div>
-                                <input type="submit" value="{{ __('texts.texts.save.' . auth()->user()->lang) }}"
+                                <input type="submit" value="{{ __('texts.texts.update.' . auth()->user()->lang) }}"
                                        class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
                             </form>
                         </div>

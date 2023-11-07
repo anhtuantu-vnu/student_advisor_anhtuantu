@@ -10,6 +10,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IntakeController;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,13 +56,31 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post("/send-custom-email", [IntakeController::class, 'sendCustomEmail'])->name('intake.send.custom.email');
 
     //route plan
+    Route::get('/get-plan' , [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
+    Route::get('/plan/{id}', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
+    Route::put('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
+    Route::delete("/plan/{id}" , [PlanController::class, 'deletePlan'])->name('delete_plan');
     Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
+    Route::get('/list-member', [PlanController::class, 'getListMember']);
     Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
 
     //route task
+    Route::get('/task', [TodoController::class, 'index'])->name('data_task');
+    Route::post('/task', [TodoController::class, 'updateTask'])->name('update_data_task');
+    Route::delete('/task', [TodoController::class, 'deleteTask'])->name('delete_task');
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
     Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
+
+    //Route import
+    Route::get("/import", [FileController::class, 'index'])->name('view_import');
+    Route::post("/import" , [FileController::class, 'uploadFile'])->name('upload_filed');
+    Route::middleware(['auth.role_admin'])->group(function() {
+        Route::get('/export', function () {
+            $path = storage_path('export/data_student_example.xlsx');
+            return response()->download($path);
+        })->name('export');
+    });
 
     /**
      *  Fetch calendar events for a user
@@ -152,9 +171,6 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post('/student-chat/setActiveStatus', [MessageController::class, 'setActiveStatus'])->name('activeStatus.set');
     Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
 });
-
-//route view
-Route::get('/login', [AccountController::class, 'showLogin'])->name('app.login');
 
 Route::get('chat', [ChatController::class, 'index'])->name('app.login');
 Route::post('/broadcast', [ChatController::class, 'broadcast']);

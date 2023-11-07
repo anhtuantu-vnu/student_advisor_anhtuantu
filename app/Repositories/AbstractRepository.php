@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Repositories\Contracts\RepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -65,7 +66,7 @@ class AbstractRepository implements RepositoryInterface
      */
     public function updateByCondition(array $attributes = [], array $condition = [])
     {
-        $attributes['updated_at'] = now()->timestamp;
+        $attributes['updated_at'] = Carbon::today();
         return $this->model->where($condition)->update($attributes);
     }
 

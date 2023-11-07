@@ -19,8 +19,6 @@ use App\Models\Notification;
 
 class EventController extends Controller
 {
-    use ResponseTrait;
-
     /**
      * @return View
      */
@@ -299,6 +297,8 @@ class EventController extends Controller
             $thisEvent->fill($event);
             $thisEvent->save();
             DB::commit();
+
+            return $this->successWithContent($thisEvent);
 
             $data = [
                 'event' => Event::with(['createdByUser', 'updatedByUser', 'eventMembers'])->find($id),

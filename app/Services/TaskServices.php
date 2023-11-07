@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Services;
+use App\Models\Plan;
 use App\Models\Task;
+use App\Repositories\PlanMemberRepository;
+use App\Repositories\PlanRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\TaskRepository;
 use App\Traits\ResponseTrait;
@@ -21,29 +24,44 @@ class TaskServices
      * @var TaskRepository
      */
     protected TaskRepository $taskRepository;
+    /**
+     * @var PlanMemberRepository
+     */
+    protected PlanMemberRepository $planMemberRepository;
+
+    /**
+     * @var PlanRepository
+     */
+    protected PlanRepository $planRepository;
 
     /**
      * @param UserRepository $userRepository
      * @param TaskRepository $taskRepository
+     * @param PlanMemberRepository $planMemberRepository
      */
     public function __construct(
         UserRepository $userRepository,
-        TaskRepository $taskRepository
+        TaskRepository $taskRepository,
+        PlanMemberRepository $planMemberRepository,
+        PlanRepository $planRepository
     ) {
         $this->taskRepository = $taskRepository;
         $this->userRepository = $userRepository;
+        $this->planMemberRepository = $planMemberRepository;
+        $this->planRepository = $planRepository;
     }
 
     /**
-     * @param $idTask
-     * @return array
+     * @param $idPlan
+     * @return JsonResponse
      */
-    public function getDataTask($idTask): array
+    public function getDataTask($idPlan): JsonResponse
     {
-        $listMember = $this->userRepository->find()->toArray();
-        $listTask = $this->taskRepository->getListTaskByPlan($idTask);
-        $listTask['members'] = $listMember;
-        return $listTask;
+        $listTask = $this->taskRepository->getListTaskByPlan($idPlan);
+        $listMember = $this->planMemberRepository->getMemberByPlanId($idPlan);
+        $author = $this->planRepository->findOne(['uuid' => $idPlan]);
+        $listTask['author'] = $author['create_by'];
+        return $this->successWithContentAttach($listTask, $listMember);
     }
 
     /**

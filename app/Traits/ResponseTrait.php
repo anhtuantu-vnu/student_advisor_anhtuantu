@@ -41,6 +41,25 @@ trait ResponseTrait
         ], $status);
     }
 
+    /**
+     * @param $data
+     * @param array $dataAttach
+     * @param string $message
+     * @param int $status
+     * @return JsonResponse
+     */
+    protected function successWithContentAttach($data, $dataAttach = [], string $message = '', int $status = 200) : JsonResponse
+    {
+        return response()->json([
+            'meta'  => [
+                'success' => true,
+                'message' => $message
+            ],
+            'data' => $data,
+            'data_attach' => $dataAttach,
+            'errors' => null,
+        ], $status);
+    }
 
     /**
      * @param int $errorCode
