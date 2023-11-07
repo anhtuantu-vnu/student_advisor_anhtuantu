@@ -62,6 +62,10 @@ return [
           'vi' => 'Tạo kế hoạch',
           'en' => 'Create plan'
       ],
+      'update_plan' => [
+          'vi' => 'Cập nhật kế hoạch',
+          'en' => 'Update plan'
+      ],
       'name_plan' => [
           'vi' => 'Tên kế hoạch',
           'en' => 'Name Plan'
@@ -313,6 +317,15 @@ return [
     'delete' => [
         'vi' => 'Xoá',
         'en' => 'Delete'
-    ]
+    ],
+    'edit' => [
+        'vi' => 'Chỉnh sửa',
+        'en' => 'Edit'
+    ],
+    'delete_plan' => [
+        'vi' => 'Bạn có chắc chắn muốn xoá kế hoạch ',
+        'en' => 'Are you sure you want to delete plan'
+    ],
+
   ]
 ];

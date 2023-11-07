@@ -20,6 +20,7 @@ class StudentImport implements ToModel, WithChunkReading, WithHeadingRow
     public function model(array $row)
     {
        $fileServer = app()->make(FileServices::class);
+
        $fileServer->importFileStudent($row);
         return true;
     }

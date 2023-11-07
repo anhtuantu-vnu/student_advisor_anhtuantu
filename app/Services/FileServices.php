@@ -63,6 +63,7 @@ class FileServices
                 'created_at' => Carbon::today(),
                 'updated_at' => Carbon::today()
             ]);
+            dd($users);
             $this->classRepository->create([
                 'uuid' => Str::uuid(),
                 'user_id' => $users['department_id'],
