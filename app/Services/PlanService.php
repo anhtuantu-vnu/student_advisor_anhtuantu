@@ -8,6 +8,7 @@ use App\Repositories\PlanMemberRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PlanService
@@ -127,5 +128,30 @@ class PlanService
             $plan['status_key'] = 'complete';
         }
         return $plan->toArray();
+    }
+
+    public function updateDataPlan($data) {
+        try {
+            DB::beginTransaction();
+            $this->planRepository->updateByCondition(
+                [
+                    'name' => $data['name'],
+                    'description' => $data['description']
+                ],
+                ['uuid' => $data['id_plan']]
+            );
+            $plan = $this->planRepository->findOne(['uuid' => $data['id_plan']]);
+            $listOldMember = $this->planMemberRepository->selectColumnByCondition(
+                ['user_id'],
+                ['plan_id' => $data['id_plan']]
+            );
+            dd($listOldMember);
+            DB::commit();
+            return $this->successWithNoContent("Update success");
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            return $this->failedWithErrors(500, 'Update failed');
+        }
+
     }
 }

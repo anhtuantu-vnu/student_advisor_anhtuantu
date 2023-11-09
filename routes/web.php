@@ -58,8 +58,9 @@ Route::middleware(['auth.login'])->group(function () {
     //route plan
     Route::get('/get-plan' , [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
-    Route::get('/plan/{id}', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
-    Route::put('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
+    Route::get('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('show_update_plan');
+    Route::get('/get-data-plan', [PlanController::class, 'getDataPlanUpdate'])->name('get_data_update_plan');
+    Route::post('/update-plan', [PlanController::class , 'updateDataPlan'])->name('update_plan');
     Route::delete("/plan/{id}" , [PlanController::class, 'deletePlan'])->name('delete_plan');
     Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
     Route::get('/list-member', [PlanController::class, 'getListMember']);

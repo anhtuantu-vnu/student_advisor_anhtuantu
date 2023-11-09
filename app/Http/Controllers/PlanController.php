@@ -65,13 +65,23 @@ class PlanController extends Controller
     }
 
     /**
-     * @return Application|Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     * @return View
      */
-    public function showPlanUpdate($id): \Illuminate\Foundation\Application|\Illuminate\Contracts\View\View|Factory|Application
+    public function showPlanUpdate(): View
     {
+        return view('front-end.layouts.plan.update_plan');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getDataPlanUpdate(Request $request): JsonResponse
+    {
+        $id = $request->input('id');
         $plan = $this->planRepository->findOne(['uuid' => $id])->toArray();
         $plan['listMember'] = $this->planMemberRepository->getMemberByPlanId($id);
-        return view('front-end.layouts.plan.update_plan', compact('plan'));
+        return $this->successWithContent($plan);
     }
     /**
      * @return JsonResponse
@@ -85,6 +95,10 @@ class PlanController extends Controller
         }
         $dataPlan['data']['total_plan'] = $listPlanGroup->sum();
         return $this->successWithContent($dataPlan);
+    }
+
+    public function updateDataPlan(Request $request) {
+        return $this->planService->updateDataPlan($request->input());
     }
 
     /**
@@ -101,7 +115,7 @@ class PlanController extends Controller
      */
     public function getListMember(Request $request): JsonResponse
     {
-        $data = $this->userRepository->searchMemberByCondition($request->input('search'));
+        $data = $this->userRepository->searchMemberByCondition($request->only('search', 'member_selected'));
         return $this->successWithContent($data);
     }
 

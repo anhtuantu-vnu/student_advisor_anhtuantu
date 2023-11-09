@@ -419,6 +419,7 @@
 
 .list_member_selected {
     display: flex;
+    flex-wrap: wrap;
     max-width: 100%;
     align-items: center;
     padding: 4px 0;
@@ -427,6 +428,19 @@
 .list_member_search {
     border: none;
     background-color: unset;
+}
+.icon_remove_member {
+    padding: 0 6px 2px;
+}
+
+.icon_remove_member:hover {
+    cursor: pointer;
+    background-color: rgba(171, 177, 186, 1);
+    border-radius: 50%;
+}
+.alert_custom {
+    color: red;
+    font-size: 14px;
 }
 
 .plan_wrapper p {

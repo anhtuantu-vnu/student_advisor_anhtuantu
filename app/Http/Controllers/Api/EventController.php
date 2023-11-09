@@ -51,7 +51,7 @@ class EventController extends Controller
             return $this->successWithContent($data);
         } catch (\Exception $e) {
             report($e);
-            return $this->failedWithError(500, 'Error getting user events: ' . $e->getMessage());
+            return $this->failedWithErrors(500, 'Error getting user events: ' . $e->getMessage());
         }
     }
 }
