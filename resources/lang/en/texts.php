@@ -457,6 +457,6 @@ return [
     'select_default' => [
         'vi' => 'Chưa được chỉ định',
         'en' => 'Unassigned'
-    ]
+    ],
   ]
 ];

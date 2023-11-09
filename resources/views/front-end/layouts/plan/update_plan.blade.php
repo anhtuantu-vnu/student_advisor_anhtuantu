@@ -6,6 +6,36 @@
 
 @push('js_page')
     <script>
+        let listMember = [];
+        //render list member
+        function getDataPlan() {
+            let idPlan = window.location.search.slice(4);
+            $.ajax({
+                url: "/get-data-plan",
+                type: 'GET',
+                data: {"id": idPlan},
+                processData: true,
+                contentType: false,
+                beforeSend: function () {
+                    $('#loadingSpinner').removeClass("d-none");
+                },
+                success: function (data) {
+                    let dataShow = data.data;
+                    listMember = dataShow['listMember'];
+                    $('.input_name').val(dataShow['name']);
+                    renderListMember(dataShow['listMember']);
+                    $('.input_description').val(dataShow['description'] ?? "{{__('texts.texts.description_for_plan.' . auth()->user()->lang)}}");
+                },
+                error: function (error) {
+                    showProfileMessage("danger", error.statusText);
+                },
+                complete: function () {
+                    $('#loadingSpinner').addClass("d-none");
+                }
+            })
+        }
+        getDataPlan();
+
         //Get list member
         function getListMember() {
             let dataSearch = $("#list_member_search").val();
@@ -13,17 +43,16 @@
                 $.ajax({
                     url: '/list-member',
                     type: 'GET',
-                    data: {"search": dataSearch},
+                    data: {"search": dataSearch, "member_selected" : listMember},
                     processData: true,
                     contentType: false,
                     beforeSend: function () {
-                        document.getElementById("loadingSpinner").classList.remove("d-none");
+                        $('#loadingSpinner').removeClass('d-none')
                     },
                     success: function (data) {
-                        let listUserUI = document.querySelector('#selected');
-                        let members = '';
                         if (data.data.length) {
                             listUser = data.data;
+                            let members = '';
                             data.data.forEach((user) => {
                                 let uuid = user.uuid;
                                 members += `
@@ -37,21 +66,77 @@
                                 `;
                             });
 
-                            listUserUI.innerHTML = members;
+                            $('#selected').append(members);
                             document.getElementById("loadingSpinner").classList.add("d-none");
                             clickSearchMember();
                         } else {
                             document.getElementById("loadingSpinner").classList.add("d-none");
-                            showAlertNotFoundMember();
+                            showError();
                         }
                     },
                     error: function (error) {
-                        showProfileMessage("danger", error.statusText);
+                        console.log(error)
                     },
+                    complete: function() {
+                        $('#loadingSpinner').addClass('d-none')
+                    }
                 });
-            } else {
-                clickOutSide()
             }
+        }
+        function showError() {
+            $("#error-profile").removeClass("d-none");
+        }
+
+        function handleRemoveMember(idMember) {
+            listMember = listMember.filter(member => {
+                return member['id'] !== idMember;
+            })
+            renderListMember(listMember);
+        }
+
+        function renderListMember(members) {
+            $('.list_member_selected').empty();
+            let uiMember = "";
+            members.forEach(member => {
+                let idMember = member['id'];
+                uiMember += `
+                <p class="m-0 fs-5 me-1 mt-1" style="border: 1px solid #c9cccd; padding: 2px 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
+                    ${member['email']} <span class="icon_remove_member" onclick="handleRemoveMember(${idMember})">x</span>
+                </p>
+                `;
+            });
+            $('.list_member_selected').append(uiMember);
+        }
+
+        function handleClickUpdate() {
+            const formData = new FormData();
+            formData.append('name', $('.input_name').val());
+            formData.append('description', $('.input_description').val());
+            formData.append('list_member', JSON.stringify(listMember));
+            formData.append('id_plan', window.location.search.slice(4));
+            $.ajax({
+                url: '/update-plan',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#loadingSpinner').removeClass('d-none')
+                },
+                success: function (data) {
+                    getListMember();
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+                complete: function() {
+                    $('#loadingSpinner').addClass('d-none')
+                }
+            });
+        }
+
+        function handleChangeInputMember() {
+            $("#error-profile").addClass("d-none");
         }
     </script>
 @endpush
@@ -68,74 +153,64 @@
                             <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">{{ __('texts.texts.update_plan.' . auth()->user()->lang) }}</h4>
                         </div>
                         <div class="card-body p-lg-5 p-4 w-100 border-0 ">
-                            <form method="PUT" action="/update-plan">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <div class="form-group">
-                                            <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
-                                                *</label>
-                                            <input type="text" class="form-control input_name" name="name" value="{{$plan['name']}}" required />
-                                        </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div class="form-group">
+                                        <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
+                                            *</label>
+                                        <input type="text" class="form-control input_name" name="name" value="" required />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <div tabindex="0">
-                                            <div class="form-group select_add_customer">
-                                                <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
-                                                <div class="input_add_member form-control position-relative d-flex"
-                                                     style="padding: 4px !important; ">
-                                                    {{-- Show list member selected --}}
-                                                    <div class="list_member_selected w-100" style="overflow-x: scroll; height: 40px">
-                                                        @if(count($plan['listMember']))
-                                                            @foreach($plan['listMember'] as $memberPlan)
-                                                                <p class="m-0 fs-5 ms-1 p-1" style="border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
-                                                                    {{$memberPlan['email']}}
-                                                                </p>
-                                                                <p class="m-0 fs-5 ms-1 p-1" style="border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
-                                                                    {{$memberPlan['email']}}
-                                                                </p>
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-
-                                                    <div class="position-relative w-100 ms-1">
-                                                        <input type="text" class="d-none" name="list_member" id="list_member" />
-                                                        <input type="text"
-                                                               class="list_member_search w-100 position-absolute top-0"
-                                                               style="line-height: 40px"
-                                                               name="list_member_search" id="list_member_search" />
-                                                        <i class="feather-search font-xss fw-700 position-absolute"
-                                                           style="margin-top: 6px; right: 26px"
-                                                           onclick="getListMember()"></i>
-                                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div tabindex="0">
+                                        <div class="form-group select_add_customer">
+                                            <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
+                                            <div class="input_add_member form-control position-relative d-flex"
+                                                 style="padding: 4px !important; ">
+                                                <div class="position-relative w-100 ms-1">
+                                                    <input type="text"
+                                                           class="list_member_search w-100 position-absolute top-0"
+                                                           style="line-height: 40px"
+                                                           onchange="handleChangeInputMember()"
+                                                           name="list_member_search" id="list_member_search" />
+                                                    <i class="feather-search font-xss fw-700 position-absolute"
+                                                       style="margin-top: 6px; right: 26px"
+                                                       onclick="getListMember()"></i>
                                                 </div>
                                             </div>
-                                            <p class="alert_list_member m-0 d-none"
-                                               style="color: red;"> {{ __('texts.texts.not_found_member.' . auth()->user()->lang) }}</p>
-                                            {{-- Show list member --}}
-                                            <div style="position: relative; z-index: 1"
-                                                 class="mt-1 list_customer d-none">
-                                                <ul id="selected" class="list">
-                                                </ul>
+                                            {{-- Show list member selected --}}
+                                            <div class="col-12">
+                                                <div id="error-profile" class="alert_custom d-none" role="alert">
+                                                    {{ __('texts.texts.not_found_member.' . auth()->user()->lang) }}
+                                                </div>
                                             </div>
+                                            <div class="list_member_selected w-100">
+                                            </div>
+                                        </div>
+                                        {{-- Show list member --}}
+                                        <div style="position: relative; z-index: 1"
+                                             class="mt-1 list_customer d-none">
+                                            <ul id="selected" class="list">
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
-                                            *</label>
-                                        <textarea
-                                                class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
-                                                name="description" rows="5"
-                                                spellcheck="false" required>{{$plan['description'] ?? __('texts.texts.description_for_plan.' . auth()->user()->lang)}}</textarea>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
+                                        *</label>
+                                    <textarea
+                                            class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
+                                            name="description" rows="5"
+                                            spellcheck="false" required>{{__('texts.texts.description_for_plan.' . auth()->user()->lang)}}</textarea>
                                 </div>
-                                <input type="submit" value="{{ __('texts.texts.update.' . auth()->user()->lang) }}"
-                                       class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
-                            </form>
+                            </div>
+                            <button onclick="handleClickUpdate()" class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0">
+                                {{ __('texts.texts.update.' . auth()->user()->lang) }}
+                            </button>
                         </div>
                     </div>
                 </div>

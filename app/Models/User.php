@@ -22,7 +22,7 @@ class User extends Authenticatable implements JWTSubject
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['password', 'created_at', 'updated_at', 'id'];
+    protected $hidden = ['password', 'created_at', 'updated_at'];
 
     protected $table = TableConstant::USER_TABLE;
 

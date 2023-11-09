@@ -21,7 +21,7 @@
         })
 
         function handleClickEditPlan(idPlan) {
-            location.replace(window.location.origin + `/plan/${idPlan}`);
+            location.replace(window.location.origin + `/update-plan?id=${idPlan}`);
         }
 
         function setDataTotal(key, total) {

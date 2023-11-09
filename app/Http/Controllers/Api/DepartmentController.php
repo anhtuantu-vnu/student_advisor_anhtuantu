@@ -22,7 +22,7 @@ class DepartmentController extends Controller
             return $this->successWithContent($data);
         } catch (\Exception $e) {
             report($e);
-            return $this->failedWithError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error getting departments: ' . $e->getMessage());
+            return $this->failedWithErrors(Response::HTTP_INTERNAL_SERVER_ERROR, 'Error getting departments: ' . $e->getMessage());
         }
     }
 }

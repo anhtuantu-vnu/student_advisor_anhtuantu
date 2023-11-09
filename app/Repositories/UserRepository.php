@@ -12,13 +12,23 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * @param $search
+     * @param $data
      * @return mixed
      */
-    public function searchMemberByCondition($search): mixed
+    public function searchMemberByCondition($data): mixed
     {
-        return $this->model->where('email', 'LIKE' , "%$search%")
-            ->orWhere('last_name', 'LIKE' , "%$search%")
-            ->orWhere('first_name', 'LIKE' , "%$search%")->get();
+        $search = $data['search'];
+        $dataReturn = $this->model->where(function($query) use ($search) {
+            $query->orWhere('email', 'LIKE' , "%$search%")
+                ->orWhere('last_name', 'LIKE' , "%$search%")
+                ->orWhere('first_name', 'LIKE' , "%$search%");
+        });
+        if(count(json_decode($data['member_selected'], true))) {
+            $listIdMemberSelected = collect(json_decode($data['member_selected'], true))->map(function($member) {
+                return $member['id'];
+            })->toArray();
+            $dataReturn = $dataReturn->whereNotIn('id', $listIdMemberSelected);
+        }
+        return $dataReturn->get();
     }
 }
