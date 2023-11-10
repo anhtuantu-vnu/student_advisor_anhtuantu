@@ -297,7 +297,7 @@
                 mainFeedsContainer.dataset.loading == "true";
                 $.ajax({
                     type: "GET",
-                    url: `/events?page=${eventPage}&limit=${eventLimit}`,
+                    url: `/events?page=${eventPage}&limit=${eventLimit}&type=event&active=1`,
                     success: function(data) {
                         if (data.meta.success) {
                             events = data.data.events;
@@ -357,6 +357,9 @@
         }
 
         function getEventDepartmentTags(event) {
+            if (!event.tags) {
+                return '';
+            }
             let eDepartments = event.tags.split(',');
             let res = '';
             eDepartments.forEach(item => {
@@ -457,11 +460,11 @@
                                     </span>
                                 </h4>
                             </div>
-                            <div class="card-body p-0 d-flex">
-                                <i class="feather-x-circle text-danger me-3 font-lg"></i>
-                                <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4 delete-event-button">
+                            <div class="card-body p-0 d-flex delete-event-button" data-id="${event.id}" data-uuid="${event.uuid}">
+                                <i class="feather-x-circle text-danger me-3 font-lg" data-id="${event.id}" data-uuid="${event.uuid}"></i>
+                                <h4 class="cursor-pointer fw-600 text-grey-900 font-xssss mt-0 me-4" data-id="${event.id}" data-uuid="${event.uuid}">
                                     ${deleteActionLabel}
-                                    <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500">
+                                    <span class="d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500"  data-id="${event.id}" data-uuid="${event.uuid}">
                                         ${deleteActionDescription}
                                     </span>
                                 </h4>
@@ -590,6 +593,60 @@
             addOpenUpdateEvent();
             addSeeMoreOrHideEventDescriptionEvent();
             addEventGoingInterestedCopyEvent();
+            addEventDeleteEvent();
+        }
+
+        function addEventDeleteEvent() {
+            let deleteEventButtons = document.querySelectorAll(".delete-event-button");
+            Array.from(deleteEventButtons).forEach(item => {
+                item.addEventListener("click", e => {
+                    let cancelEventConfirm = confirm(
+                        "{{ __('texts.texts.cancel_event_confirm.' . auth()->user()->lang) }}");
+                    if (!cancelEventConfirm) {
+                        return;
+                    }
+
+                    if (!e.target.loading || e.target.loading == "false") {
+                        $.ajax({
+                            type: "POST",
+                            url: `/events/${e.target.dataset.id}/cancel`,
+                            beforeSend: function() {
+                                e.target.dataset.loading = "true";
+                            },
+                            complete: function() {
+                                e.target.dataset.loading = "false";
+                            },
+                            error: function(error) {
+                                alert(error.statusText);
+                            },
+                            success: function(data) {
+                                if (data.meta.success) {
+                                    let message = "{{ auth()->user()->language }}" == "vi" ?
+                                        "Sự kiện huỷ thành công" : "Cancel event successfully";
+                                    alert(message);
+
+                                    let thisEventFeed = document.getElementById("feed_event_" +
+                                        e.target.dataset.uuid);
+                                    if (thisEventFeed) {
+                                        thisEventFeed.remove();
+                                    }
+                                    return;
+                                } else {
+                                    let message = currentLang == "vi" ?
+                                        "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
+                                        "Error happened. Please try again later."
+                                    if (data.message) {
+                                        message = data.message;
+                                    }
+
+                                    alert(message);
+                                    return;
+                                }
+                            },
+                        });
+                    }
+                });
+            });
         }
 
         function addSeeMoreOrHideEventDescriptionEvent() {
@@ -1211,6 +1268,7 @@
                 addImagesOpenModalEvent();
                 addOpenUpdateEvent();
                 addSeeMoreOrHideEventDescriptionEvent();
+                addEventDeleteEvent();
             }
         }
 

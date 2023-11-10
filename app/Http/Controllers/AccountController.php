@@ -152,7 +152,7 @@ class AccountController extends Controller
 
         $genderMap = User::GENDER_MAP;
 
-        return view('front-end.layouts.user.detail', [
+        return view('front-end.layouts.user.profile', [
             'thisUser' => $thisUser,
             'class_' => $class_,
             'genderMap' => $genderMap
@@ -170,6 +170,10 @@ class AccountController extends Controller
                 return $query->with(['class_']);
             }
         ])->first();
+
+        if ($thisUser == null) {
+            abort(404);
+        }
 
         if ($thisUser->role == _CONST::STUDENT_ROLE && $thisUser->classRoles != null) {
             $class_ = $thisUser->classRoles->count() > 0 ? $thisUser->classRoles[0]->class_ : null;
@@ -224,6 +228,30 @@ class AccountController extends Controller
             } else {
                 return $this->failedWithErrors(500, "no files specified");
             }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            Log::info('Error');
+
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
+    }
+
+    public function updateAllowSearchByTeachersOnly(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $allowSearchByTeacherOnly = intval($request->allow_search_by_teacher_only) == 1 ? true : false;
+            $user->allow_search_by_teacher_only = $allowSearchByTeacherOnly;
+            $user->save();
+
+            DB::commit();
+
+            return $this->successWithContent([
+                'message' => 'updated successfully',
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());

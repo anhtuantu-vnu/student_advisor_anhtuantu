@@ -11,6 +11,8 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IntakeController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +42,7 @@ Route::middleware(['auth.login'])->group(function () {
     Route::get("/users/{uuid}", [AccountController::class, 'showUserDetail'])->name('user.show.detail');
     Route::get("/my-profile", [AccountController::class, 'showProfile'])->name('app.my.profile');
     Route::post("/update-avatar", [AccountController::class, 'updateAvatar'])->name('app.update.avatar');
+    Route::post("/update-allow-search-by-teachers-only", [AccountController::class, 'updateAllowSearchByTeachersOnly'])->name('app.update.allow_search_by_teacher_only');
 
     // route event
     Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
@@ -49,18 +52,26 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post("/events/{id}", [EventController::class, 'updateEvent'])->name('event.update');
     Route::post("/events/{id}/going", [EventController::class, 'goingToEvent'])->name('event.going.to');
     Route::post("/events/{id}/interested", [EventController::class, 'interestedInEvent'])->name('event.interested.in');
+    Route::post("/events/{id}/reject", [EventController::class, 'rejectEventInvitation'])->name('event.reject.invitation');
     Route::post("/events/{id}/remove-images", [EventController::class, 'removeEventImages'])->name('event.remove.images');
+    Route::post("/events/{id}/invite", [EventController::class, 'inviteToEvent'])->name('event.invite');
+    Route::post("/events/{id}/cancel", [EventController::class, 'cancelEvent'])->name('event.cancel');
 
     // route intakes
     Route::get("/intakes/{uuid}", [IntakeController::class, 'showIntakeDetails'])->name('intake.show.detail');
     Route::post("/send-custom-email", [IntakeController::class, 'sendCustomEmail'])->name('intake.send.custom.email');
 
+    // search
+    Route::get("/search", [SearchController::class, 'showSearch'])->name('app.search.show');
+    Route::get("/search/users", [SearchController::class, 'searchUsers'])->name('app.search.users');
+    Route::get("/search/events", [SearchController::class, 'searchEvents'])->name('app.search.events');
+
     //route plan
-    Route::get('/get-plan' , [PlanController::class, 'getDataPlan'])->name('get_plan');
+    Route::get('/get-plan', [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
-    Route::get('/plan/{id}', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
-    Route::put('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('update_plan');
-    Route::delete("/plan/{id}" , [PlanController::class, 'deletePlan'])->name('delete_plan');
+    Route::get('/plan/{id}', [PlanController::class, 'showPlanUpdate'])->name('update_plan');
+    Route::put('/update-plan', [PlanController::class, 'showPlanUpdate'])->name('update_plan');
+    Route::delete("/plan/{id}", [PlanController::class, 'deletePlan'])->name('delete_plan');
     Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
     Route::get('/list-member', [PlanController::class, 'getListMember']);
     Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
@@ -74,8 +85,8 @@ Route::middleware(['auth.login'])->group(function () {
 
     //Route import
     Route::get("/import", [FileController::class, 'index'])->name('view_import');
-    Route::post("/import" , [FileController::class, 'uploadFile'])->name('upload_filed');
-    Route::middleware(['auth.role_admin'])->group(function() {
+    Route::post("/import", [FileController::class, 'uploadFile'])->name('upload_filed');
+    Route::middleware(['auth.role_admin'])->group(function () {
         Route::get('/export', function () {
             $path = storage_path('export/data_student_example.xlsx');
             return response()->download($path);

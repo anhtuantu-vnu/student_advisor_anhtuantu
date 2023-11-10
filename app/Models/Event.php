@@ -12,6 +12,8 @@ class Event extends Model
     protected $guarded = ['id'];
     protected $table = TableConstant::EVENT_TABLE;
 
+    const ALL_TYPES = ['event', 'meeting'];
+
     public function createdByUser()
     {
         return $this->belongsTo(User::class, 'created_by', 'uuid');

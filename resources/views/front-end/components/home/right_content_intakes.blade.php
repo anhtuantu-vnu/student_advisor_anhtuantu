@@ -3,7 +3,7 @@
         <h4 class="fw-700 mb-0 font-xssss text-grey-900">
             {{ __('texts.texts.intakes.' . auth()->user()->lang) }}
         </h4>
-        <a href="default-event.html" class="fw-600 ms-auto font-xssss text-primary">
+        <a href="/calendar?view_mode=timeGridDay" class="fw-600 ms-auto font-xssss text-primary">
             {{ __('texts.texts.see_all.' . auth()->user()->lang) }}
         </a>
     </div>

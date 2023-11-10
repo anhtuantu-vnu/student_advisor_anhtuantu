@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Traits\ResponseTrait;
-
 use Illuminate\View\View;
 
 use Illuminate\Support\Facades\DB;
@@ -14,8 +12,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Event;
+use App\Models\EventInvitation;
 use App\Models\EventMember;
 use App\Models\Notification;
+
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+
+use App\Mail\SendEventInvitation;
 
 class EventController extends Controller
 {
@@ -24,42 +28,69 @@ class EventController extends Controller
      */
     public function showEventDetail($uuid): View
     {
-        $thisEvent = Event::where('uuid', '=', $uuid)->with(['createdByUser', 'updatedByUser', 'eventMembers'])->first();
-        $targetEventMembers = EventMember::where([
-            ['event_id', '=', $uuid],
-            ['user_id', '=', auth()->user()->uuid],
-        ])->get();
-
-        $going = false;
-        $interested = false;
-        $goingCount = 0;
-        $interestedCount = 0;
-
-        foreach ($targetEventMembers as $eventMember) {
-            if ($eventMember->status == EventMember::STATUS_GOING) {
-                $going = true;
+        try {
+            $thisEvent = Event::where('uuid', '=', $uuid)
+                ->with([
+                    'createdByUser',
+                    'updatedByUser',
+                ])
+                ->first();
+            if ($thisEvent == null) {
+                abort(404);
             }
-            if ($eventMember->status == EventMember::STATUS_INTERESTED) {
-                $interested = true;
+            $targetEventMembers = EventMember::where([
+                ['event_id', '=', $uuid],
+                ['user_id', '=', auth()->user()->uuid],
+            ])->with('user')->get();
+
+            $going = false;
+            $interested = false;
+            $goingCount = 0;
+            $interestedCount = 0;
+
+            foreach ($targetEventMembers as $eventMember) {
+                if ($eventMember->status == EventMember::STATUS_GOING) {
+                    $going = true;
+                }
+                if ($eventMember->status == EventMember::STATUS_INTERESTED) {
+                    $interested = true;
+                }
             }
+            foreach ($thisEvent->eventMembers as $eventMember) {
+                if ($eventMember->status == EventMember::STATUS_GOING) {
+                    $goingCount++;
+                }
+                if ($eventMember->status == EventMember::STATUS_INTERESTED) {
+                    $interestedCount++;
+                }
+            }
+
+            // get invitation
+            $invitation = EventInvitation::where([
+                ['event_id', '=', $thisEvent->uuid],
+                ['origin_user', '=', $thisEvent->created_by],
+                ['target_user', '=', auth()->user()->uuid],
+            ])->first();
+
+            // get all invitations
+            $invitations = EventInvitation::where([
+                ['event_id', '=', $thisEvent->uuid],
+                ['origin_user', '=', $thisEvent->created_by],
+            ])->with(['targetUserInfo'])->get();
+
+            return view('front-end.layouts.event.detail', [
+                'event' => $thisEvent,
+                'targetEventMembers' => $targetEventMembers,
+                'going' => $going,
+                'interested' => $interested,
+                'goingCount' => $goingCount,
+                'interestedCount' => $interestedCount,
+                'invitation' => $invitation,
+                'invitations' => $invitations,
+            ]);
+        } catch (\Exception $e) {
+            abort(404);
         }
-        foreach ($thisEvent->eventMembers as $eventMember) {
-            if ($eventMember->status == EventMember::STATUS_GOING) {
-                $goingCount++;
-            }
-            if ($eventMember->status == EventMember::STATUS_INTERESTED) {
-                $interestedCount++;
-            }
-        }
-
-        return view('front-end.layouts.event.detail', [
-            'event' => $thisEvent,
-            'targetEventMembers' => $targetEventMembers,
-            'going' => $going,
-            'interested' => $interested,
-            'goingCount' => $goingCount,
-            'interestedCount' => $interestedCount,
-        ]);
     }
 
     /**
@@ -84,17 +115,31 @@ class EventController extends Controller
         try {
             $limit = 10;
             $page = 1;
+            $type = Event::ALL_TYPES;
+            $active = 1;
+
+            if (isset($request->active)) {
+                $active = intval($request->active);
+            }
+
             if (isset($request->limit)) {
                 $limit = intval($request->limit);
             }
             if (isset($request->page)) {
                 $page = intval($request->page);
             }
+            if (isset($request->type)) {
+                $type = explode(",", $request->type);
+            }
             $skip = $limit * $page - $limit;
 
             $data = [
                 'events' => Event::skip($skip)->take($limit)
-                    ->with(['createdByUser', 'updatedByUser', 'eventMembers'])->get(),
+                    ->whereIn('type', $type)
+                    ->where('active', '=', $active)
+                    ->with(['createdByUser', 'updatedByUser', 'eventMembers'])
+                    ->orderBy('id', 'desc')
+                    ->get(),
             ];
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
@@ -126,6 +171,10 @@ class EventController extends Controller
             $color = $request->color;
             $chosenDepartments = $request->chosen_departments;
             $eventFiles = [];
+            $type = 'event';
+            if (isset($request->type)) {
+                $type = $request->type;
+            }
 
             if ($request->hasFile('files')) {
                 $basePath = config('aws_.event_images.path') . '/' . config('aws_.event_images.file_path');
@@ -163,6 +212,7 @@ class EventController extends Controller
                 'tags' => $chosenDepartments,
                 'created_by' => $user->uuid,
                 'updated_by' => $user->uuid,
+                'type' => $type,
             ];
             $insertedEvent = Event::create($event);
             DB::commit();
@@ -348,16 +398,41 @@ class EventController extends Controller
                     'eventMember' => $insertedEventMember,
                 ];
 
-                // create going to event notification
-                if ($thisEvent->created_by != $user->uuid) {
-                    $notiData = [
-                        'target_url' => '/events' . '/' . $thisEvent->uuid,
-                        'origin_user' => $user->uuid,
-                        'target_user' => $thisEvent->created_by,
-                        'event_id' => $thisEvent->uuid,
-                        'type' => Notification::EVENT_TYPES['GOING_TO_EVENT'],
-                    ];
-                    Notification::create($notiData);
+                // update invitation if any
+                $findInvitation = EventInvitation::where([
+                    ['event_id', '=', $thisEvent->uuid],
+                    ['origin_user', '=', $thisEvent->created_by],
+                    ['target_user', '=', $user->uuid],
+                    ['status', '=', EventInvitation::STATUS_NO_RESPONSE],
+                ])->first();
+
+                if ($findInvitation != null) {
+                    $findInvitation->status = EventInvitation::STATUS_GOING;
+                    $findInvitation->save();
+
+                    // create going to event notification
+                    if ($thisEvent->created_by != $user->uuid) {
+                        $notiData = [
+                            'target_url' => '/events' . '/' . $thisEvent->uuid,
+                            'origin_user' => $user->uuid,
+                            'target_user' => $thisEvent->created_by,
+                            'event_id' => $thisEvent->uuid,
+                            'type' => Notification::EVENT_TYPES['RESPONDED_TO_EVENT_GOING'],
+                        ];
+                        Notification::create($notiData);
+                    }
+                } else {
+                    // create going to event notification
+                    if ($thisEvent->created_by != $user->uuid) {
+                        $notiData = [
+                            'target_url' => '/events' . '/' . $thisEvent->uuid,
+                            'origin_user' => $user->uuid,
+                            'target_user' => $thisEvent->created_by,
+                            'event_id' => $thisEvent->uuid,
+                            'type' => Notification::EVENT_TYPES['GOING_TO_EVENT'],
+                        ];
+                        Notification::create($notiData);
+                    }
                 }
             } else {
                 $findExistedGoingEventMember->delete();
@@ -367,6 +442,65 @@ class EventController extends Controller
                 ];
             }
             DB::commit();
+
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    public function rejectEventInvitation($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent == null) {
+                return $this->failedWithErrors(404, 'Event not found');
+            }
+
+            $findInvitation = EventInvitation::where([
+                ['event_id', '=', $thisEvent->uuid],
+                ['origin_user', '=', $thisEvent->created_by],
+                ['target_user', '=', $user->uuid],
+                ['status', '=', EventInvitation::STATUS_NO_RESPONSE],
+            ])->first();
+
+            if ($findInvitation == null) {
+                return $this->failedWithErrors(404, 'Invitation not found');
+            }
+
+            $findInvitation->status = EventInvitation::STATUS_REJECT;
+            $findInvitation->save();
+
+            $findExistedGoingEventMember = EventMember::where([
+                ['user_id', '=', $user->uuid],
+                ['event_id', '=', $thisEvent->uuid],
+                ['status', '=', EventMember::STATUS_GOING],
+            ])->first();
+
+            if ($findExistedGoingEventMember != null) {
+                $findExistedGoingEventMember->delete();
+            }
+
+            $notiData = [
+                'target_url' => '/events' . '/' . $thisEvent->uuid,
+                'origin_user' => $user->uuid,
+                'target_user' => $thisEvent->created_by,
+                'event_id' => $thisEvent->uuid,
+                'type' => Notification::EVENT_TYPES['RESPONDED_TO_EVENT_REJECTED'],
+            ];
+            Notification::create($notiData);
+
+            DB::commit();
+
+            $data = [
+                'status' => 'reject event invitation',
+            ];
 
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
@@ -432,6 +566,156 @@ class EventController extends Controller
                 ];
             }
             DB::commit();
+
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    public function inviteToEvent(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $thisEvent = Event::with(['createdByUser'])
+                ->findOrFail($id);
+
+            if ($thisEvent == null) {
+                return $this->failedWithErrors(404, 'Event not found');
+            }
+
+            $userIds = explode(",", $request->userIds);
+            $userEmails = explode(",", $request->userEmails);
+            $userNames = explode(",", $request->userNames);
+            $eventUrl = $request->eventUrl;
+            $usersToInvite = [];
+            $eventInvitations = [];
+
+            foreach ($userIds as $userId) {
+                $findInvitation = EventInvitation::where([
+                    ['event_id', '=', $thisEvent->uuid],
+                    ['origin_user', '=', $thisEvent->created_by],
+                    ['target_user', '=', $user->uuid],
+                    ['status', '=', EventInvitation::STATUS_NO_RESPONSE],
+                ])->first();
+
+                if ($findInvitation == null) {
+                    array_push($usersToInvite, $userId);
+                }
+            }
+
+            foreach ($usersToInvite as $userId) {
+                array_push($eventInvitations, [
+                    'event_id' => $thisEvent->uuid,
+                    'origin_user' => $thisEvent->created_by,
+                    'target_user' => $userId,
+                    'status' => EventInvitation::STATUS_NO_RESPONSE,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+            if (count($eventInvitations) > 0) {
+                EventInvitation::insert($eventInvitations);
+            }
+
+            // create event invitation notifications
+            $notificationsToCreate = [];
+            foreach ($usersToInvite as $user) {
+                array_push($notificationsToCreate, [
+                    'target_url' => '/events' . '/' . $thisEvent->uuid,
+                    'origin_user' => $thisEvent->created_by,
+                    'target_user' => $user,
+                    'event_id' => $thisEvent->uuid,
+                    'type' => Notification::EVENT_TYPES['INVITED_TO_EVENT'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+            if (count($notificationsToCreate) > 0) {
+                Notification::insert($notificationsToCreate);
+            }
+
+            DB::commit();
+
+            $titleMap = [
+                1 => 'Mr',
+                2 => 'Mrs',
+                3 => 'Mr',
+            ];
+
+            foreach ($userEmails as $index => $userEmail) {
+                Mail::to($userEmail)->send(new SendEventInvitation(
+                    'Invitation to event ' . $thisEvent->name,
+                    $thisEvent,
+                    $thisEvent->createdByUser->last_name . ' ' . $thisEvent->createdByUser->first_name,
+                    $titleMap[$thisEvent->createdByUser->gender],
+                    $userNames[$index],
+                    $eventUrl
+                ));
+            }
+
+            $data = [
+                'message' => 'send event invitations successfully',
+            ];
+
+            return $this->successWithContent($data);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            return $this->failedWithErrors(500, $exception->getMessage());
+        }
+    }
+
+    public function cancelEvent($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = auth()->user();
+            $thisEvent = Event::findOrFail($id);
+
+            if ($thisEvent == null) {
+                return $this->failedWithErrors(404, 'Event not found');
+            }
+
+            $thisEvent->active = 0;
+            $thisEvent->save();
+
+            $eventMembers = EventMember::where([
+                ['event_id', '=', $thisEvent->uuid],
+                ['user_id', '!=', $thisEvent->created_by],
+                ['status', '=', EventMember::STATUS_GOING],
+            ])->get();
+
+            $notisToCreate = [];
+            foreach ($eventMembers as $member) {
+                $notiData = [
+                    'target_url' => '/events' . '/' . $thisEvent->uuid,
+                    'origin_user' => $thisEvent->created_by,
+                    'target_user' => $member->user_id,
+                    'event_id' => $thisEvent->uuid,
+                    'type' => Notification::EVENT_TYPES['CANCEL_EVENT'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ];
+
+                array_push($notisToCreate, $notiData);
+            }
+
+            if (count($notisToCreate) > 0) {
+                Notification::insert($notisToCreate);
+            }
+
+            DB::commit();
+
+            $data = [
+                'event' => $thisEvent,
+                'message' => 'canceled event successfully',
+            ];
 
             return $this->successWithContent($data);
         } catch (\Exception $exception) {
