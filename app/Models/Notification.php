@@ -17,6 +17,7 @@ class Notification extends Model
         'INVITED_TO_EVENT' => 'invited_to_event',
         'RESPONDED_TO_EVENT_GOING' => 'responded_to_event_going',
         'RESPONDED_TO_EVENT_REJECTED' => 'responded_to_event_rejected',
+        'CANCEL_EVENT' => 'cancel_event',
     ];
 
     public function targetUserInfo()

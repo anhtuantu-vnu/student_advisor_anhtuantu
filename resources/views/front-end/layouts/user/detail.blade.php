@@ -19,6 +19,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <img src="{{ $thisUser->avatar }}" alt="{{ $thisUser->last_name }}_logo"
+                                            class="border"
                                             style="width: 96px; height: 96px; object-fit: cover; border-radius: 100%;">
                                     </div>
                                     <div class="col-md-9">
@@ -45,7 +46,7 @@
                                             @endif
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.email.' . $thisUser->lang) }}</b>:
-                                                {{ $thisUser->email }}
+                                                <a href="mailto:{{ $thisUser->email }}">{{ $thisUser->email }}</a>
                                             </div>
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.phone.' . $thisUser->lang) }}</b>:

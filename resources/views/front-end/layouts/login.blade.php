@@ -153,11 +153,14 @@
                     if (result.meta.success) {
                         localStorage.setItem("jwtToken", result.data.authorization.token);
                         localStorage.setItem("user", JSON.stringify(result.data.user));
+
+                        loginForm.submit();
+                    } else {
+                        alert(JSON.stringify(result));
                     }
-                    loginForm.submit();
                 },
-                error: function() {
-                    loginForm.submit();
+                error: function(error) {
+                    alert(error.responseJSON.message);
                 },
             });
         });

@@ -42,78 +42,78 @@ return [
       "vi" => 'Kế hoạch',
       "en" => "Plans"
     ],
-      'active' => [
-          "vi" => 'Đang hoạt động',
-          "en" => "Active"
-      ],
-      'in_active' => [
-          'vi' => 'Không hoạt động',
-          'en' => 'In Active'
-      ],
-      'complete' => [
-          'vi' => 'Hoàn thành',
-          'en' => 'Complete'
-      ],
-      'total_plan' => [
-          'vi' => 'Tổng số kế hoạch',
-          'en' => 'Total plan'
-      ],
-      'create_plan' => [
-          'vi' => 'Tạo kế hoạch',
-          'en' => 'Create plan'
-      ],
-      'update_plan' => [
-          'vi' => 'Cập nhật kế hoạch',
-          'en' => 'Update plan'
-      ],
-      'name_plan' => [
-          'vi' => 'Tên kế hoạch',
-          'en' => 'Name Plan'
-      ],
-      'add_member' => [
-        'vi' => 'Thêm thành viên',
-        'en' => 'Add Member'
-      ],
-      'description' => [
-          'vi' => 'Mô tả',
-          'en' => 'Description'
-      ],
-      'description_for_plan' => [
-        'vi' =>   'Miêu tả cho kế hoạch...',
-          'en' => 'Description for plan...'
-      ],
-      'to_do' => [
-          'vi' => 'Chuẩn bị',
-          'en' => 'To do'
-      ],
-      'in_process' => [
-          'vi' => 'Đang làm',
-          'en' => 'In process'
-      ],
-      'review' => [
-          'vi' => 'Xem xét',
-          'en' => 'Review'
-      ],
-      'done' => [
-          'vi' => 'Hoàn thành',
-          'en' => 'Done'
-      ],
-      'create_an_task' => [
-          'vi' => 'Tạo nhiệm vụ',
-          'en' => 'Create an task'
-      ],
-      'what_needs_to_be_done' => [
-          'vi' => "Những gì cần phải được thực hiện?",
-          'en' => 'What needs to be done?'
-      ],
-      'visualize' => [
-          'vi' => 'Trực quan hóa công việc của bạn bằng bảng',
-          'en' => 'Visualize your work with a board'
-      ],
-      'track_organize' => [
-          'vi' => 'Theo dõi, sắp xếp và ưu tiên công việc của nhóm bạn. Bắt đầu bằng cách tạo một mục cho nhóm của bạn.',
-          'en' => 'Track, organize and prioritize your team’s work. Get started by creating an item for your team.'
-      ],
+    'active' => [
+      "vi" => 'Đang hoạt động',
+      "en" => "Active"
+    ],
+    'in_active' => [
+      'vi' => 'Không hoạt động',
+      'en' => 'In Active'
+    ],
+    'complete' => [
+      'vi' => 'Hoàn thành',
+      'en' => 'Complete'
+    ],
+    'total_plan' => [
+      'vi' => 'Tổng số kế hoạch',
+      'en' => 'Total plan'
+    ],
+    'create_plan' => [
+      'vi' => 'Tạo kế hoạch',
+      'en' => 'Create plan'
+    ],
+    'update_plan' => [
+      'vi' => 'Cập nhật kế hoạch',
+      'en' => 'Update plan'
+    ],
+    'name_plan' => [
+      'vi' => 'Tên kế hoạch',
+      'en' => 'Name Plan'
+    ],
+    'add_member' => [
+      'vi' => 'Thêm thành viên',
+      'en' => 'Add Member'
+    ],
+    'description' => [
+      'vi' => 'Mô tả',
+      'en' => 'Description'
+    ],
+    'description_for_plan' => [
+      'vi' =>   'Miêu tả cho kế hoạch...',
+      'en' => 'Description for plan...'
+    ],
+    'to_do' => [
+      'vi' => 'Chuẩn bị',
+      'en' => 'To do'
+    ],
+    'in_process' => [
+      'vi' => 'Đang làm',
+      'en' => 'In process'
+    ],
+    'review' => [
+      'vi' => 'Xem xét',
+      'en' => 'Review'
+    ],
+    'done' => [
+      'vi' => 'Hoàn thành',
+      'en' => 'Done'
+    ],
+    'create_an_task' => [
+      'vi' => 'Tạo nhiệm vụ',
+      'en' => 'Create an task'
+    ],
+    'what_needs_to_be_done' => [
+      'vi' => "Những gì cần phải được thực hiện?",
+      'en' => 'What needs to be done?'
+    ],
+    'visualize' => [
+      'vi' => 'Trực quan hóa công việc của bạn bằng bảng',
+      'en' => 'Visualize your work with a board'
+    ],
+    'track_organize' => [
+      'vi' => 'Theo dõi, sắp xếp và ưu tiên công việc của nhóm bạn. Bắt đầu bằng cách tạo một mục cho nhóm của bạn.',
+      'en' => 'Track, organize and prioritize your team’s work. Get started by creating an item for your team.'
+    ],
     'events' => [
       "vi" => 'Sự kiện',
       "en" => 'Events'
@@ -379,80 +379,152 @@ return [
       "en" => 'marked interested in your event.'
     ],
     'import' => [
-        'vi' => 'Import',
-        'en' => 'Import'
+      'vi' => 'Import',
+      'en' => 'Import'
     ],
     'title_page_import' => [
-        'vi' => 'Nhập dữ liệu tập tin sinh viên',
-        'en' => 'Import file data student'
+      'vi' => 'Nhập dữ liệu tập tin sinh viên',
+      'en' => 'Import file data student'
     ],
     'title_page_import_schedule' => [
-        'vi' => 'Nhập dữ liệu tập tin lịch học của sinh viên',
-        'en' => 'Import student class schedule file data'
+      'vi' => 'Nhập dữ liệu tập tin lịch học của sinh viên',
+      'en' => 'Import student class schedule file data'
     ],
     'upload_file' => [
-        'vi' => 'Tải file',
-        'en' => 'Upload file'
+      'vi' => 'Tải file',
+      'en' => 'Upload file'
     ],
     'not_found_member' => [
-        'vi' => 'Không tìm thấy thành viên có email trên',
-        'en' => 'No members found with the above email'
+      'vi' => 'Không tìm thấy thành viên có email trên',
+      'en' => 'No members found with the above email'
     ],
     'assign_to' => [
-        'vi' => 'Giao cho',
-        'en' => 'Assign to'
+      'vi' => 'Giao cho',
+      'en' => 'Assign to'
     ],
     'write_a_comment' => [
-        'vi' => 'Viết bình luận',
-        'en' => 'Write a comment'
+      'vi' => 'Viết bình luận',
+      'en' => 'Write a comment'
     ],
     'close' => [
-        'vi' => 'Đóng',
-        'en' => 'Close'
+      'vi' => 'Đóng',
+      'en' => 'Close'
     ],
     'update' => [
-        'vi' => 'Cập nhật',
-        'en' => 'Update'
+      'vi' => 'Cập nhật',
+      'en' => 'Update'
     ],
     'activity' => [
-        'vi' => 'Hoạt động',
-        'en' => 'Activity'
+      'vi' => 'Hoạt động',
+      'en' => 'Activity'
     ],
     'task' => [
-        'vi' => 'Nhiệm vụ',
-        'en' => 'Task'
+      'vi' => 'Nhiệm vụ',
+      'en' => 'Task'
     ],
     'in_list' => [
-        'vi' => 'loại task',
-        'en' => 'in list'
+      'vi' => 'loại task',
+      'en' => 'in list'
     ],
     'description_task' => [
-        'vi' => 'Thêm mô tả chi tiết hơn...',
-        'en' => 'Add a more detailed description...'
+      'vi' => 'Thêm mô tả chi tiết hơn...',
+      'en' => 'Add a more detailed description...'
     ],
     'description_member' => [
-        'vi' => 'Chưa có mô tả nào',
-        'en' => 'No descriptions'
+      'vi' => 'Chưa có mô tả nào',
+      'en' => 'No descriptions'
     ],
     'assigned' => [
-        'vi' => 'được giao',
-        'en' => 'assigned'
+      'vi' => 'được giao',
+      'en' => 'assigned'
     ],
     'delete_task' => [
-        'vi' => 'Bạn có chắc chắn muốn xoá task ',
-        'en' => 'Are you sure you want to delete task'
+      'vi' => 'Bạn có chắc chắn muốn xoá task ',
+      'en' => 'Are you sure you want to delete task'
     ],
     'delete' => [
-        'vi' => 'Xoá',
-        'en' => 'Delete'
+      'vi' => 'Xoá',
+      'en' => 'Delete'
     ],
     'edit' => [
-        'vi' => 'Chỉnh sửa',
-        'en' => 'Edit'
+      'vi' => 'Chỉnh sửa',
+      'en' => 'Edit'
     ],
     'delete_plan' => [
-        'vi' => 'Bạn có chắc chắn muốn xoá kế hoạch ',
-        'en' => 'Are you sure you want to delete plan'
+      'vi' => 'Bạn có chắc chắn muốn xoá kế hoạch ',
+      'en' => 'Are you sure you want to delete plan'
+    ],
+    'cannot_find_event' => [
+      'vi' => 'Không tìm thấy sự kiện',
+      'en' => 'Cannot find event'
+    ],
+    'meeting_name' => [
+      "vi" => 'Tên lịch hẹn',
+      "en" => 'Meeting name'
+    ],
+    'meeting_created_successfully' => [
+      "vi" => 'Tạo lịch hẹn thành công',
+      "en" => 'Meeting scheduled successfully'
+    ],
+    'invited_to_event_notification' => [
+      "vi" => 'đã mời bạn tham gia một sự kiện',
+      "en" => 'invited you to a meeting'
+    ],
+    'invited_to_event' => [
+      "vi" => 'Bạn đã được mời tham gia sự kiện, phản hồi lời mời:',
+      "en" => 'You are invited to this event, respond to the invitation:'
+    ],
+    'responded_going_to_event_notification' => [
+      "vi" => 'đã phản hồi lời mời sự kiện của bạn: Tham gia',
+      "en" => 'responded to your event invitation: Going'
+    ],
+    'responded_reject_event_notification' => [
+      "vi" => 'đã phản hồi lời mời sự kiện của bạn: Từ chối',
+      "en" => 'responded to your event invitation: Rejected'
+    ],
+    'people_invited' => [
+      "vi" => 'người được mời',
+      "en" => 'person/people invited'
+    ],
+    'cancel_event_confirm' => [
+      "vi" => 'Bạn có chắc muốn huỷ sự kiện này chứ?',
+      "en" => 'Are you sure to cancel this event?'
+    ],
+    'event_canceled_notification' => [
+      "vi" => 'đã huỷ mộ sự kiện mà bạn sẽ tham dự',
+      "en" => 'canceled an event that you are going to'
+    ],
+    'allow_search_by_teacher_only' => [
+      "vi" => 'Chỉ tài khoản giáo viên mới có thể tìm tài khoản của bạn',
+      "en" => 'Only teachers can search your profile'
+    ],
+    'allow_search_by_all_types_of_account' => [
+      "vi" => 'Mọi người có thể tìm kiếm tài khoản của bạn',
+      "en" => 'Everyone can search your account'
+    ],
+    'allow_search_by_all_types_of_account_title' => [
+      "vi" => 'Cho phép mọi tài khoản tìm kiếm tài khoản của bạn',
+      "en" => 'Allow all accounts to search your account'
+    ],
+    'allow_search_by_teacher_only_title' => [
+      "vi" => 'Chỉ cho phép giáo viên tìm',
+      "en" => 'Only allow teacher accounts'
+    ],
+    'results' => [
+      "vi" => 'Kết quả',
+      "en" => 'Results'
+    ],
+    'users' => [
+      "vi" => 'Người dùng',
+      "en" => 'Users'
+    ],
+    'no_users_found' => [
+      "vi" => 'Không tìm thấy người dùng nào',
+      "en" => 'No users found'
+    ],
+    'no_events_found' => [
+      "vi" => 'Không tìm thấy sự kiện nào',
+      "en" => 'No events found'
     ],
     'select_default' => [
         'vi' => 'Chưa được chỉ định',

@@ -101,6 +101,30 @@
                 }
             });
         });
+
+        let updateUserAllowSearch = document.querySelectorAll(".updateUserAllowSearch");
+        Array.from(updateUserAllowSearch).forEach(item => {
+            item.addEventListener("click", e => {
+                let allow_search_by_teacher_only = e.target.dataset.allow == "all" ? 0 : 1;
+                $.ajax({
+                    type: "POST",
+                    url: "/update-allow-search-by-teachers-only",
+                    data: "allow_search_by_teacher_only=" + allow_search_by_teacher_only,
+
+                    success: function(data) {
+                        if (data.meta.success) {
+                            let lcUser = JSON.parse(localStorage.getItem("user"));
+                            lcUser.allow_search_by_teacher_only = allow_search_by_teacher_only;
+                            localStorage.setItem("user", JSON.stringify(lcUser))
+                            window.location.reload();
+                        }
+                    },
+                    error: function(error) {
+                        alert(error.statusText);
+                    },
+                });
+            });
+        });
     </script>
 @endpush
 
@@ -155,7 +179,7 @@
                                             @endif
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.email.' . $thisUser->lang) }}</b>:
-                                                {{ $thisUser->email }}
+                                                <a href="mailto:{{ $thisUser->email }}">{{ $thisUser->email }}</a>
                                             </div>
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.phone.' . $thisUser->lang) }}</b>:
@@ -169,6 +193,24 @@
                                                 <b>{{ __('texts.texts.date_of_birth.' . $thisUser->lang) }}</b>:
                                                 {{ \Carbon\Carbon::parse($thisUser->date_of_birth)->format('d/m/Y') }}
                                             </div>
+                                            @if ($thisUser->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
+                                                <div class="col-md-12 mt-2">
+                                                    @if ($thisUser->allow_search_by_teacher_only == true)
+                                                        <b>{{ __('texts.texts.allow_search_by_teacher_only.' . $thisUser->lang) }}</b>:
+                                                        <span
+                                                            class="cursor-pointer text-decoration-underline updateUserAllowSearch"
+                                                            data-allow="all">
+                                                            {{ __('texts.texts.allow_search_by_all_types_of_account_title.' . $thisUser->lang) }}
+                                                        </span>
+                                                    @else
+                                                        <b>{{ __('texts.texts.allow_search_by_all_types_of_account.' . $thisUser->lang) }}</b>:
+                                                        <span
+                                                            class="cursor-pointer text-decoration-underline updateUserAllowSearch"
+                                                            data-allow="teachers">
+                                                            {{ __('texts.texts.allow_search_by_teacher_only_title.' . $thisUser->lang) }}
+                                                    @endif
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

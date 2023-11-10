@@ -3,6 +3,32 @@
 @section('style_page')
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('css/layout_custom.css') }}" />
+
+    <style>
+        .input-color-container {
+            position: relative;
+            overflow: hidden;
+            width: 40px;
+            height: 40px;
+            border: solid 2px #ddd;
+            border-radius: 40px;
+        }
+
+        .input-color {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            width: 56px;
+            height: 56px;
+            border: none;
+        }
+
+        .input-color-label {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #3498db;
+        }
+    </style>
 @endsection
 
 @push('js_page')
@@ -212,6 +238,208 @@
                 });
             }
         });
+
+        // schedule meeting
+        let saveMeetingButton = document.getElementById("saveMeetingButton");
+        let openScheduleMeetingModalButton = document.getElementById("openScheduleMeetingModalButton");
+        let chosenStudentNamesModal = document.getElementById("chosenStudentNamesModal");
+
+        scheduleMeetingButton.addEventListener("click", e => {
+            openScheduleMeetingModalButton.click();
+
+            chosenStudentNamesModal.innerHTML = '';
+            chosenStudents.forEach(item => {
+                chosenStudentNamesModal.innerHTML += `
+                <span class="badge badge-primary" style="margin-right: 8px; margin-bottom: 8px;">
+                  <div class="d-flex flex-wrap align-items-center">
+                    <img src="${item.avatar}" alt="${item.last_name}_logo" style="width: 32px; height: 32px; object-fit: cover; border-radius: 100%; margin-right: 8px;" class="border" />
+                    <div>
+                      ${item.last_name + " " + item.first_name}
+                    </div>
+                  </div>  
+                </span>
+                `;
+            });
+
+            document.getElementById("meetingName").value =
+                "Meeting with teacher {{ auth()->user()->last_name . ' ' . auth()->user()->first_name }}";
+            document.getElementById("meetingDescription").value =
+                "Meeting with teacher {{ auth()->user()->last_name . ' ' . auth()->user()->first_name }}";
+        });
+
+        function getEventDate(input) {
+            try {
+                return input.split("T")[0];
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function getEventHour(input) {
+            try {
+                let time = input.split("T")[1];
+                return parseInt(time.split(":")[0]);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function getEventMinute(input) {
+            try {
+                let time = input.split("T")[1];
+                return parseInt(time.split(":")[1]);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        saveMeetingButton.addEventListener("click", e => {
+            let eventValidations = {
+                name_required: {
+                    vi: "Vui lòng điền tên sự kiện",
+                    en: "Please input event name",
+                },
+                description_required: {
+                    vi: "Vui lòng điền mô tả sự kiện",
+                    en: "Please input event description",
+                },
+                location_required: {
+                    vi: "Vui lòng điền địa điểm tổ chức sự kiện",
+                    en: "Please input event location",
+                },
+                start_time_required: {
+                    vi: "Vui lòng chọn thời gian bắt đầu sự kiện",
+                    en: "Please input event start time",
+                },
+                end_time_required: {
+                    vi: "Vui lòng chọn thời gian kết thúc sự kiện",
+                    en: "Please input event end time",
+                },
+                invalid_time: {
+                    vi: "Thời gian sự kiện không hợp lệ",
+                    en: "Invalid event time",
+                },
+            }
+
+            let currentLang = "{{ auth()->user()->lang }}";
+
+            let meetingName = document.getElementById("meetingName");
+            let meetingStartTime = document.getElementById("meetingStartTime");
+            let meetingEndTime = document.getElementById("meetingEndTime");
+            let meetingLocation = document.getElementById("meetingLocation");
+            let meetingColor = document.getElementById("meetingColor");
+            let meetingDescription = document.getElementById("meetingDescription");
+            let messages = [];
+
+            if (!meetingName.value) {
+                messages.push(eventValidations.name_required[currentLang]);
+            }
+            if (!meetingDescription.value) {
+                messages.push(eventValidations.description_required[currentLang]);
+            }
+            if (!meetingLocation.value) {
+                messages.push(eventValidations.location_required[currentLang]);
+            }
+            if (!meetingStartTime.value) {
+                messages.push(eventValidations.start_time_required[currentLang]);
+            }
+            if (!meetingEndTime.value) {
+                messages.push(eventValidations.end_time_required[currentLang]);
+            }
+            if (meetingStartTime.value && meetingEndTime.value) {
+                var date1 = new Date(meetingStartTime.value);
+                var date2 = new Date(meetingEndTime.value);
+                if (date1 >= date2) {
+                    messages.push(eventValidations.invalid_time[currentLang]);
+                }
+            }
+
+            if (messages.length) {
+                alert(messages.join(", "));
+                return;
+            }
+
+            let startDate = getEventDate(meetingStartTime.value);
+            let startHour = getEventHour(meetingStartTime.value);
+            let startMinute = getEventMinute(meetingStartTime.value);
+
+            let endDate = getEventDate(meetingEndTime.value);
+            let endHour = getEventHour(meetingEndTime.value);
+            let endMinute = getEventMinute(meetingEndTime.value);
+
+            let formData = new FormData();
+            formData.append("event_name", meetingName.value);
+            formData.append("color", meetingColor.value);
+            formData.append("event_description", meetingDescription.value);
+            formData.append("event_location", meetingLocation.value);
+            formData.append("start_date", startDate);
+            formData.append("end_date", endDate);
+            formData.append("start_hour", startHour);
+            formData.append("start_minute", startMinute);
+            formData.append("end_hour", endHour);
+            formData.append("end_minute", endMinute);
+            formData.append("type", "meeting");
+
+            $.ajax({
+                type: "POST",
+                url: `/create-event`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    e.target.setAttribute("disabled", "");
+                    document.getElementById("scheduleMeetingLoading").classList.remove("d-none");
+                    e.target.dataset.loading = "true";
+                },
+                complete: function(data) {
+                    e.target.removeAttribute("disabled");
+                    document.getElementById("scheduleMeetingLoading").classList.add("d-none");
+                    e.target.dataset.loading = "false";
+                },
+                error: function(error) {
+                    alert(error.statusText);
+                },
+                success: function(data) {
+                    if (data.meta.success) {
+                        alert(
+                            "{{ __('texts.texts.meeting_created_successfully.' . auth()->user()->lang) }}"
+                        );
+                        sendEventInvitations(data.data.event, chosenStudents);
+                    } else {
+                        let message = currentLang == "vi" ?
+                            "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
+                            "Error happened. Please try again later."
+                        if (data.message) {
+                            message = data.message;
+                        }
+
+                        alert(message);
+                        return;
+                    }
+                },
+            });
+        });
+
+        function sendEventInvitations(event, studentsToInvite) {
+            let userIds = studentsToInvite.map(item => item.uuid);
+            let userNames = studentsToInvite.map(item => item.last_name + " " + item.first_name);
+            let userEmails = studentsToInvite.map(item => item.email);
+            let eventUrl = window.location.origin + "/events/" + event.uuid;
+
+            let formData = 'userIds=' + userIds.join(",") +
+                '&userNames=' + userNames.join(",") +
+                '&userEmails=' + userEmails.join(",") +
+                '&eventUrl=' + eventUrl;
+            $.ajax({
+                type: "POST",
+                url: `/events/${event.id}/invite`,
+                data: formData,
+                error: function(error) {
+                    alert("cannot send event invitations: " + error.statusText);
+                },
+            });
+        }
     </script>
 @endpush
 
@@ -246,7 +474,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <button class="btn btn-primary text-white" disabled
-                                                        id="scheduleMeetingButton">
+                                                        id="scheduleMeetingButton" type="button">
                                                         {{ __('texts.texts.schedule_meeting.' . auth()->user()->lang) }}
                                                     </button>
                                                 </div>
@@ -365,97 +593,7 @@
 @endsection
 
 @section('modal')
-    <div data-bs-toggle="modal" data-bs-target="#studentInfoModal" class="d-none" id="openStudentInfoModal"></div>
-
-    <div class="modal fade" id="studentInfoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen-lg-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title" id="studentInfoModalTitle"></div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="max-height: 560px; overflow-y: scroll;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <i class="feather-user me-3"></i>
-                            <span id="studentNameInfo"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="feather-home me-3"></i>
-                            <span id="studentDepartmentInfo"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="feather-mail me-3"></i>
-                            <span id="studentEmailInfo"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="feather-phone me-3"></i>
-                            <span id="studentPhoneInfo"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="feather-info me-3"></i>
-                            <span id="studentGenderInfo"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <i class="feather-calendar me-3"></i>
-                            <span id="studentDobInfo"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div data-bs-toggle="modal" data-bs-target="#customEmailModal" class="d-none" id="openCustomEmailModalButton"></div>
-    <div class="modal fade" id="customEmailModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen-lg-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title" id="sendCustomEmailModalTitle"></h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="max-height: 560px; overflow-y: scroll;">
-                    <form action="">
-                        <div class="row">
-                            <div class="col-md-12 mb-2">
-                                <input type="email" class="form-control" id="customEmailToStudent" disabled
-                                    placeholder="{{ __('texts.texts.full_name.' . auth()->user()->lang) }}">
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <input type="email" class="form-control" id="customEmailSubject"
-                                    placeholder="{{ __('texts.texts.subject.' . auth()->user()->lang) }}">
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <input type="email" class="form-control" id="customEmailToEmail"
-                                    placeholder="{{ __('texts.texts.email.' . auth()->user()->lang) }}">
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <input type="email" class="form-control" id="customEmailCcEmail"
-                                    placeholder="{{ __('texts.texts.cc_email.' . auth()->user()->lang) }}">
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <textarea id="customEmailContent"
-                                    class="bor-0 w-100 rounded-xxl p-2 text-grey-600 fw-500 border-light-md theme-dark-bg" cols="30"
-                                    rows="10" placeholder="{{ __('texts.texts.content.' . auth()->user()->lang) }}"></textarea>
-                            </div>
-                            <div class="col-md-12 mb-2">
-                                <button class="btn btn-success text-white" type="button" id="sendCustomEmailButton">
-                                    <div class="d-flex align-items-center">
-                                        <div style="margin-right: 8px;">
-                                            {{ __('texts.texts.send.' . auth()->user()->lang) }}
-                                        </div>
-                                        <div class="text-center d-none" id="sendEmailLoading">
-                                            <div class="spinner-border" role="status">
-                                                <span class="sr-only"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('front-end.layouts.intake.student_info_modal')
+    @include('front-end.layouts.intake.send_custom_email_modal')
+    @include('front-end.layouts.intake.schedule_meeting_modal')
 @endsection

@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css/layout_custom.css') }}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css" />
+
+    <style>
+        a.text-decoration-line-through div {
+            text-decoration: line-through;
+        }
+    </style>
 @endsection
 
 @push('js_page')
@@ -61,7 +67,6 @@
                         document.getElementById("loadingSpinner").classList.remove("d-none");
                     },
                     success: function(result) {
-                        console.log('aaa', result);
                         if (result.meta.success) {
                             eventsData = eventsData.concat(result.data.events);
                             if (allEvents.length) {
@@ -170,6 +175,10 @@
 
                 if (eventsData && eventsData.length) {
                     eventsData.map(item => {
+                        let classNames = ['cursor-pointer'];
+                        if (item.active == 0) {
+                            classNames.push('text-decoration-line-through');
+                        }
                         res.push({
                             id: item.uuid,
                             title: item.name,
@@ -193,17 +202,19 @@
                                 originalEvent: item,
                                 type: 'event',
                             },
-                            classNames: ['cursor-pointer'],
+                            classNames: classNames,
                         });
                     });
                 }
 
-                console.log("res", res);
                 allEvents = [...res];
                 return res;
             }
 
             function initCalendar() {
+                let params = new URL(window.location.href);
+                var view_mode = params.searchParams.get("view_mode") || 'dayGridMonth';
+
                 let events = processEvents();
                 var calendarEl = document.getElementById('huet_calendar');
                 calendar = new FullCalendar.Calendar(calendarEl, {
@@ -215,7 +226,8 @@
                     events: [...allEvents],
                     eventClick: function(info) {
                         handleClickEvent(info);
-                    }
+                    },
+                    initialView: view_mode,
                 });
 
                 calendar.setOption('locale', 'vn');
@@ -236,7 +248,6 @@
 
             function handleClickEvent(info) {
                 document.getElementById("openEventInfoModalButton").click();
-                console.log("info", info);
 
                 if (info.event.extendedProps.type == 'intake') {
                     populateEventInfoTypeIntake(info);
@@ -247,11 +258,17 @@
             }
 
             function populateEventInfoTypeEvent(info) {
-                document.getElementById("eventInfoModalTitle").textContent = info.event.extendedProps.originalEvent
-                    .name;
-
                 let currentCreatedBy = info.event.extendedProps.originalEvent.created_by_user;
                 let originalEvent = info.event.extendedProps.originalEvent;
+
+                let titleClass = '';
+                if (originalEvent.active == 0) {
+                    titleClass = 'text-decoration-line-through';
+                }
+                document.getElementById("eventInfoModalTitle").innerHTML = `
+                <a class="${titleClass}" href="/events/${originalEvent.uuid}">${originalEvent.name}</a>
+                `;
+
                 if (currentCreatedBy.role == "teacher") {
                     document.getElementById("eventModalUserInfo").innerHTML =
                         "{{ __('texts.texts.teacher.' . auth()->user()->lang) }} " + `<a href="/users/${currentCreatedBy.uuid}" target="_blank">${currentCreatedBy.last_name +
@@ -334,8 +351,9 @@
             }
 
             function populateEventInfoTypeIntake(info) {
-                document.getElementById("eventInfoModalTitle").textContent = JSON.parse(info.event.extendedProps
-                    .subject.name)["{{ auth()->user()->lang }}"];
+                document.getElementById("eventInfoModalTitle").innerHTML = `
+                <a href="/intakes/${info.event.extendedProps.intake.uuid}">${JSON.parse(info.event.extendedProps.subject.name)["{{ auth()->user()->lang }}"]}</a>
+                `;
 
                 if (!intakeTeachersCache[info.event.extendedProps.intake.uuid]) {
                     getIntakeTeacherInfo(info.event.extendedProps.intake.uuid);

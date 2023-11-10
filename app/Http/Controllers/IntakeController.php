@@ -19,26 +19,35 @@ class IntakeController extends Controller
      */
     public function showIntakeDetails($uuid): View
     {
-        $thisIntake = Intake::where('uuid', '=', $uuid)->with(['subject'])->first();
-        $intakeMembersStudents = IntakeMember::where([
-            ['intake_id', '=', $uuid],
-            ['role', '=', _CONST::STUDENT_ROLE],
-        ])->with(['user' => function ($query) {
-            $query->with('department');
-        }])->get();
+        try {
+            $thisIntake = Intake::where('uuid', '=', $uuid)->with(['subject'])->first();
+            if ($thisIntake == null) {
+                abort(404);
+            }
 
-        $intakeMembersTeachers = IntakeMember::where([
-            ['intake_id', '=', $uuid],
-            ['role', '=', _CONST::TEACHER_ROLE],
-        ])->with(['user' => function ($query) {
-            $query->with('department');
-        }])->get();
+            $intakeMembersStudents = IntakeMember::where([
+                ['intake_id', '=', $uuid],
+                ['role', '=', _CONST::STUDENT_ROLE],
+            ])->with(['user' => function ($query) {
+                $query->with('department');
+            }])->get();
 
-        return view('front-end.layouts.intake.detail', [
-            'intake' => $thisIntake,
-            'intakeMembersStudents' => $intakeMembersStudents,
-            'intakeMembersTeachers' => $intakeMembersTeachers,
-        ]);
+            $intakeMembersTeachers = IntakeMember::where([
+                ['intake_id', '=', $uuid],
+                ['role', '=', _CONST::TEACHER_ROLE],
+            ])->with(['user' => function ($query) {
+                $query->with('department');
+            }])->get();
+
+            return view('front-end.layouts.intake.detail', [
+                'intake' => $thisIntake,
+                'intakeMembersStudents' => $intakeMembersStudents,
+                'intakeMembersTeachers' => $intakeMembersTeachers,
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            abort(404);
+        }
     }
 
     public function sendCustomEmail(Request $request)

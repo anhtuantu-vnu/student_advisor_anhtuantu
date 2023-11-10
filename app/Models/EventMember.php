@@ -14,4 +14,9 @@ class EventMember extends Model
 
     protected $guarded = ['id'];
     protected $table = TableConstant::EVENT_MEMBER_TABLE;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'uuid');
+    }
 }
