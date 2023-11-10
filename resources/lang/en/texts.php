@@ -526,5 +526,9 @@ return [
       "vi" => 'Không tìm thấy sự kiện nào',
       "en" => 'No events found'
     ],
+    'select_default' => [
+        'vi' => 'Chưa được chỉ định',
+        'en' => 'Unassigned'
+    ],
   ]
 ];

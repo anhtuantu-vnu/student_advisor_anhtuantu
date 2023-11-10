@@ -47,7 +47,7 @@ class NotificationController extends Controller
             return $this->successWithContent($data);
         } catch (\Exception $e) {
             report($e);
-            return $this->failedWithError(500, 'Error getting user notifications: ' . $e->getMessage());
+            return $this->failedWithErrors(500, 'Error getting user notifications: ' . $e->getMessage());
         }
     }
 

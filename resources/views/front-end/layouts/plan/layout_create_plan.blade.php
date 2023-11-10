@@ -6,11 +6,9 @@
 
 @push('js_page')
     <script>
-        const listUserSelected = [];
+        let listUserSelected = [];
         const idUserSelected = [];
         let listUser = [];
-        const listUserShow = listUser;
-        let isShowListMember = false;
 
         //Get list member
         function getListMember() {
@@ -19,7 +17,7 @@
                 $.ajax({
                     url: '/list-member',
                     type: 'GET',
-                    data: {"search": dataSearch},
+                    data: {"search": dataSearch, "member_selected" : JSON.stringify(listUserSelected)},
                     processData: true,
                     contentType: false,
                     beforeSend: function () {
@@ -103,17 +101,25 @@
         }
 
         //function render UI
+        function handleRemoveMember(idMember) {
+            listUserSelected = listUserSelected.filter(member => {
+                return member['id'] !== idMember;
+            })
+            renderListMemberSelected();
+        }
+
         function renderListMemberSelected() {
-            let listSelect = document.querySelector('.list_member_selected');
-            removeAllElementChild(listSelect);
-            listUserSelected.forEach(function (user) {
-                let itemUser = initElement('p');
-                itemUser.classList = 'm-0 fs-5 ms-1 p-1';
-                itemUser.style.cssText = "border: 1px solid #c9cccd; padding: 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px";
-                itemUser.innerText = user.email;
-                listSelect.appendChild(itemUser);
+            $('.list_member_selected').empty();
+            let uiMember = "";
+            listUserSelected.forEach(member => {
+                let idMember = member['id'];
+                uiMember += `
+                <p class="m-0 fs-5 me-1 mt-1" style="border: 1px solid #c9cccd; padding: 2px 4px; border-radius: 4px; background-color: #ECF0F1; color: black; line-height: 30px">
+                    ${member['email']} <span class="icon_remove_member" onclick="handleRemoveMember(${idMember})">x</span>
+                </p>
+                `;
             });
-            return listSelect;
+            $('.list_member_selected').append(uiMember);
         }
     </script>
 @endpush
@@ -148,10 +154,6 @@
                                                 <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
                                                 <div class="input_add_member form-control position-relative d-flex"
                                                      style="padding: 4px !important;">
-                                                    {{-- Show list member selected --}}
-                                                    <div class="list_member_selected" style="overflow-x: scroll; height: 40px">
-                                                    </div>
-
                                                     <div class="position-relative w-100 ms-1">
                                                         <input type="text" class="d-none" name="list_member" id="list_member" />
                                                         <input type="text"
@@ -163,12 +165,15 @@
                                                            onclick="getListMember()"></i>
                                                     </div>
                                                 </div>
+                                                {{-- Show list member selected --}}
+                                                <div class="list_member_selected w-100">
+                                                </div>
                                             </div>
                                             <p class="alert_list_member m-0 d-none"
                                                style="color: red;"> {{ __('texts.texts.not_found_member.' . auth()->user()->lang) }}</p>
                                             {{-- Show list member --}}
                                             <div style="position: relative; z-index: 1"
-                                                 class="mt-1 list_customer d-none">
+                                                 class="list_customer d-none">
                                                 <ul id="selected" class="list">
                                                 </ul>
                                             </div>
@@ -179,9 +184,6 @@
                                     <div class="col-lg-12 mb-3">
                                         <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
                                             *</label>
-                                        {{--                                        @error('name')--}}
-                                        {{--                                            <div class="alert alert-danger">{{ $message }}</div>--}}
-                                        {{--                                        @enderror--}}
                                         <textarea
                                                 class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
                                                 name="description" rows="5"

@@ -21,6 +21,13 @@ class Task extends Model
         return $this->belongsTo(User::class, 'assigned_to', 'uuid');
     }
 
+    /**
+     * @return BelongsTo
+     */
+    public function userCreatedBy(): BelongsTo {
+        return $this->belongsTo(User::class, 'assigned_to', 'uuid');
+    }
+
     const STATUS_TASK_DONE = 'done';
     const STATUS_TASK_IN_PROCESS = 'progress';
     const STATUS_TASK_TO_DO = 'to_do';

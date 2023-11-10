@@ -8,6 +8,7 @@ use App\Repositories\PlanMemberRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PlanService
@@ -58,7 +59,7 @@ class PlanService
         $plan['uuid'] = Str::uuid();
         $plan['created_at'] = Carbon::today();
         $plan['updated_at'] = Carbon::today();
-        $plan['create_by'] = $userId;
+        $plan['created_by'] = $userId;
         $plan['settings'] = Plan::SETTING_DEFAULT[rand(0, 5)];
         return $this->planRepository->create($plan);
     }
@@ -91,7 +92,7 @@ class PlanService
      */
     public function getPlans($userId): array
     {
-        return $this->planRepository->find(['create_by' => $userId])->map(function($plan) {
+        return $this->planRepository->find(['created_by' => $userId])->map(function($plan) {
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $plan['created_at']);
             $plan['date_created'] = $date->format('F d, Y');
             $plan['count_date'] = $date->diffInDays(now());
@@ -127,5 +128,30 @@ class PlanService
             $plan['status_key'] = 'complete';
         }
         return $plan->toArray();
+    }
+
+    public function updateDataPlan($data) {
+        try {
+            DB::beginTransaction();
+            $this->planRepository->updateByCondition(
+                [
+                    'name' => $data['name'],
+                    'description' => $data['description']
+                ],
+                ['uuid' => $data['id_plan']]
+            );
+            $plan = $this->planRepository->findOne(['uuid' => $data['id_plan']]);
+            $listOldMember = $this->planMemberRepository->selectColumnByCondition(
+                ['user_id'],
+                ['plan_id' => $data['id_plan']]
+            );
+            dd($listOldMember);
+            DB::commit();
+            return $this->successWithNoContent("Update success");
+        } catch (\Throwable $throwable) {
+            DB::rollBack();
+            return $this->failedWithErrors(500, 'Update failed');
+        }
+
     }
 }

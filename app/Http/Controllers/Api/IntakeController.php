@@ -26,7 +26,7 @@ class IntakeController extends Controller
             ])->first();
 
             if ($thisIntake == null) {
-                return $this->failedWithError(404, 'You are not in this class');
+                return $this->failedWithErrors(404, 'You are not in this class');
             }
 
             $thisTeacherMembers = IntakeMember::where([
@@ -40,7 +40,7 @@ class IntakeController extends Controller
             return $this->successWithContent($data);
         } catch (\Exception $e) {
             report($e);
-            return $this->failedWithError(500, 'Error getting intake teacher info: ' . $e->getMessage());
+            return $this->failedWithErrors(500, 'Error getting intake teacher info: ' . $e->getMessage());
         }
     }
 }

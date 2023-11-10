@@ -71,4 +71,17 @@ class TaskRepository extends AbstractRepository
         }
         return $dataTasks;
     }
+
+    /**
+     * @param $idTask
+     * @return array
+     */
+    public function getDataUserSendMail($idTask): array
+    {
+        $data = $this->model->where(['id' => $idTask])->with('userAssign')->with('userCreatedBy')->first();
+        return [
+            'mail_user_assign' => $data['userAssign']['email'],
+            'mail_user_created_by' =>  $data['userCreatedBy']['email']
+        ];
+    }
 }
