@@ -163,7 +163,6 @@
                 $(`#loading_btn_modal`).addClass("d-none");
                 $(`#btn_cancel`).removeClass('disable_ui');
                 $(`#btn_save`).removeClass('disable_ui');
-                hideModal(idTask)
             }, 1000)
         }
     </script>

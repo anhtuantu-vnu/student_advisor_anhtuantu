@@ -6,6 +6,7 @@ use App\Repositories\PlanRepository;
 use App\Repositories\TaskRepository;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\UserRepository;
+use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 
 class PlanService
 {
+    use ResponseTrait;
     /**
      * @var PlanRepository
      */
@@ -130,6 +132,10 @@ class PlanService
         return $plan->toArray();
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     */
     public function updateDataPlan($data) {
         try {
             DB::beginTransaction();
@@ -152,6 +158,19 @@ class PlanService
             DB::rollBack();
             return $this->failedWithErrors(500, 'Update failed');
         }
+    }
 
+    public function deleteDataPlan($idPlan) {
+        try {
+            DB::beginTransaction();
+            $this->planMemberRepository->deleteByCondition(['plan_id' => $idPlan]);
+            $this->taskRepository->deleteByCondition(['plan_id' => $idPlan]);
+            $this->planRepository->deleteByCondition(['uuid' => $idPlan]);
+            DB::commit();
+            return $this->successWithNoContent('Delete Success');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->failedWithErrors(500, $th->getMessage());
+        }
     }
 }
