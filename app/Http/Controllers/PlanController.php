@@ -138,14 +138,6 @@ class PlanController extends Controller
      */
     public function deletePlan($id): JsonResponse
     {
-        try {
-            DB::beginTransaction();
-//            $this->planRepository->deleteByCondition(['uuid' => $id]);
-            DB::commit();
-            return $this->successWithNoContent('Delete Success');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return $this->failedWithErrors(500, $th->getMessage());
-        }
+        return $this->planService->deleteDataPlan($id);
     }
 }
