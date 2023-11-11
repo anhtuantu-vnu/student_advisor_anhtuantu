@@ -16,53 +16,64 @@
                                 {{ __('texts.texts.user_info.' . auth()->user()->lang) }}
                             </h1>
                             <div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <img src="{{ $thisUser->avatar }}" alt="{{ $thisUser->last_name }}_logo"
-                                            class="border"
-                                            style="width: 96px; height: 96px; object-fit: cover; border-radius: 100%;">
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.full_name.' . $thisUser->lang) }}</b>:
-                                                {{ $thisUser->last_name . ' ' . $thisUser->first_name }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.role.' . $thisUser->lang) }}</b>:
-                                                {{ $thisUser->role }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.department.' . $thisUser->lang) }}</b>:
-                                                {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
-                                            </div>
-                                            @if (auth()->user()->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
+                                @if (auth()->user()->role != App\Http\Controllers\_CONST::STUDENT_ROLE ||
+                                        $thisUser->allow_search_by_teacher_only == false ||
+                                        $thisUser->role == App\Http\Controllers\_CONST::TEACHER_ROLE ||
+                                        $thisUser->uuid == auth()->user()->uuid)
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <img src="{{ $thisUser->avatar }}" alt="{{ $thisUser->last_name }}_logo"
+                                                class="border"
+                                                style="width: 96px; height: 96px; object-fit: cover; border-radius: 100%;">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="row">
                                                 <div class="col-md-6">
-                                                    <b>{{ __('texts.texts.class.' . $thisUser->lang) }}</b>:
-                                                    @if ($class_ != null)
-                                                        {{ $class_->name }}
-                                                    @endif
+                                                    <b>{{ __('texts.texts.full_name.' . $thisUser->lang) }}</b>:
+                                                    {{ $thisUser->last_name . ' ' . $thisUser->first_name }}
                                                 </div>
-                                            @endif
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.email.' . $thisUser->lang) }}</b>:
-                                                <a href="mailto:{{ $thisUser->email }}">{{ $thisUser->email }}</a>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.phone.' . $thisUser->lang) }}</b>:
-                                                {{ $thisUser->phone }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.gender.' . $thisUser->lang) }}</b>:
-                                                {{ $genderMap[$thisUser->gender] }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>{{ __('texts.texts.date_of_birth.' . $thisUser->lang) }}</b>:
-                                                {{ \Carbon\Carbon::parse($thisUser->date_of_birth)->format('d/m/Y') }}
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.role.' . $thisUser->lang) }}</b>:
+                                                    {{ $thisUser->role }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.department.' . $thisUser->lang) }}</b>:
+                                                    {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
+                                                </div>
+                                                @if (auth()->user()->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
+                                                    <div class="col-md-6">
+                                                        <b>{{ __('texts.texts.class.' . $thisUser->lang) }}</b>:
+                                                        @if ($class_ != null)
+                                                            {{ $class_->name }}
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.email.' . $thisUser->lang) }}</b>:
+                                                    <a href="mailto:{{ $thisUser->email }}">{{ $thisUser->email }}</a>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.phone.' . $thisUser->lang) }}</b>:
+                                                    {{ $thisUser->phone }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.gender.' . $thisUser->lang) }}</b>:
+                                                    {{ $genderMap[$thisUser->gender] }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <b>{{ __('texts.texts.date_of_birth.' . $thisUser->lang) }}</b>:
+                                                    {{ \Carbon\Carbon::parse($thisUser->date_of_birth)->format('d/m/Y') }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <b>{{ __('texts.texts.private_account.' . $thisUser->lang) }}</b>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

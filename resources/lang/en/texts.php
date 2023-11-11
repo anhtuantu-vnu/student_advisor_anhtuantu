@@ -527,8 +527,16 @@ return [
       "en" => 'No events found'
     ],
     'select_default' => [
-        'vi' => 'Chưa được chỉ định',
-        'en' => 'Unassigned'
+      'vi' => 'Chưa được chỉ định',
+      'en' => 'Unassigned'
+    ],
+    'private_account' => [
+      'vi' => 'Bạn không xem được tài khoản này',
+      'en' => 'You cannot view this account'
+    ],
+    'not_your_event' => [
+      'vi' => 'Bạn không thể chỉnh sửa sự kiện này',
+      'en' => 'You cannot update this event'
     ],
   ]
 ];

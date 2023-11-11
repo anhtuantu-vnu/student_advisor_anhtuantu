@@ -49,7 +49,12 @@ class SearchController extends Controller
             } else {
                 $foundUsers = User::skip($skip)->take($limit)
                     ->where('role', '!=', _CONST::ADMIN_ROLE)
-                    ->where('allow_search_by_teacher_only', '=', false)
+                    ->where(function ($query) {
+                        $query->where([
+                            ['allow_search_by_teacher_only', '=', false],
+                            ['role', '=', _CONST::STUDENT_ROLE]
+                        ])->orWhere('role', '=', _CONST::TEACHER_ROLE);
+                    })
                     ->where(function ($query) use ($search) {
                         $query->where('last_name', 'like', '%' . $search . '%')
                             ->orWhere('first_name', 'like', '%' . $search . '%')

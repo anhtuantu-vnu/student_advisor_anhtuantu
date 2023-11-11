@@ -36,6 +36,7 @@
     });
     var channel = pusher.subscribe('NotificationEvent');
     channel.bind('notification-channel-{{ auth()->user()->uuid }}', function(data) {
+        console.log('realtime', data);
         let notificationPreviewContainer = document.getElementById("notificationPreviewContainer");
 
         let originUser = data.origin_user_info;

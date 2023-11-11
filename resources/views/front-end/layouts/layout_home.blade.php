@@ -141,7 +141,9 @@
                         {{-- stories --}}
                         {{-- @include('front-end.components.home.stories') --}}
 
-                        @include('front-end.components.home.create_event')
+                        @if (auth()->user()->role != App\Http\Controllers\_CONST::STUDENT_ROLE)
+                            @include('front-end.components.home.create_event')
+                        @endif
 
                         @include('front-end.components.home.events_feeds')
 
