@@ -151,7 +151,7 @@ class PlanService
                 ['user_id'],
                 ['plan_id' => $data['id_plan']]
             );
-            dd($listOldMember);
+            dd($listOldMember->toArray(), $data);
             DB::commit();
             return $this->successWithNoContent("Update success");
         } catch (\Throwable $throwable) {
