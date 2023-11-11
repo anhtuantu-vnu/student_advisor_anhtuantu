@@ -73,7 +73,7 @@ class TodoController extends Controller
     {
         try {
             DB::beginTransaction();
-//            $this->taskRepository->destroy($request->input('id'));
+            $this->taskRepository->deleteByCondition(['id' => $request->input('id')]);
             DB::commit();
             return $this->successWithNoContent('Delete success');
         } catch (\Throwable $th) {

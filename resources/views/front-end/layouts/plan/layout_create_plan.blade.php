@@ -8,6 +8,7 @@
     <script>
         let listUserSelected = [];
         const idUserSelected = [];
+        let listUserDelete = [];
         let listUser = [];
 
         //Get list member
@@ -92,6 +93,11 @@
             if (flagCheck) {
                 listUserSelected.push(data);
                 idUserSelected.push(data.uuid);
+
+                //remove id member when member deleted before
+                if(!listUserDelete.includes(data.uuid)) {
+                    listUserDelete.push(idMember);
+                }
             }
             $('#list_member').val(JSON.stringify(idUserSelected));
             $('#list_member_search').val("");
@@ -105,6 +111,9 @@
             listUserSelected = listUserSelected.filter(member => {
                 return member['id'] !== idMember;
             })
+            if(!listUserDelete.includes(idMember)) {
+                listUserDelete.push(idMember);
+            }
             renderListMemberSelected();
         }
 
