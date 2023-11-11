@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Facades\ChatUserMessenger;
 use App\Facades\FileUpload as UploadFileStudent;
+use App\Models\Notification;
+use App\Observers\NotificationObserver;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        Notification::observe(NotificationObserver::class);
     }
 }

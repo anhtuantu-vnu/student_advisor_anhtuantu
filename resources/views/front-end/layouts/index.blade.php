@@ -91,6 +91,10 @@
         {{-- End Footer --}}
     </div>
 
+    <div id="notificationPreviewContainer" style="position: fixed;bottom: 56px;left: 56px;z-index: 2;"
+        class="bg-white rounded p-3 border d-none">
+    </div>
+
     {{--  Modal  --}}
     @yield('modal')
     {{--  End Modal  --}}
