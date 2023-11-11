@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthContoller as ApiAuthContoller;
@@ -34,6 +35,7 @@ Route::controller(ApiAuthContoller::class)->group(function () {
 Route::get('/student-intakes', [UserController::class, 'studentIntakes']);
 Route::get('/student-intakes/{uuid}/teacher-info', [IntakeController::class, 'getIntakeTeacherInfo']);
 Route::get('/departments', [DepartmentController::class, 'actionDepartments']);
+Route::get('/unread-message', [HomeController::class, 'getUnreadMessage']);
 
 Route::get('/user-events', [EventController::class, 'getUserEvents']);
 Route::get("/user-notifications", [NotificationController::class, 'getuserNotifications']);

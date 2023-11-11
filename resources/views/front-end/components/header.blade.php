@@ -56,8 +56,10 @@
             @include('front-end.components.header.notifications')
         </div>
 
-        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn"><i
-                class="feather-message-square font-xl text-current"></i></a>
+        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn" style="position: relative"><i
+                class=" feather-message-square font-xl text-current"></i>
+            <span id="haveMessage" style="position: absolute;width: 10px; height: 10px; background: red;border-radius: 50%;"></span>
+        </a>
 
         {{-- settings here if needed --}}
         {{-- @include('front-end.components.header.settings') --}}

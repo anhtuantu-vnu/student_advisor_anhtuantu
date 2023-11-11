@@ -60,7 +60,7 @@
                             <i class="font-sm feather-message-square me-3 text-grey-500">
                             </i>
                             <span>{{ __('texts.texts.chat.' . auth()->user()->lang) }}</span>
-                            <span class="circle-count bg-warning mt-1">584</span>
+                            <span class="circle-count bg-warning mt-1" id = "countMessage">0</span>
                         </a>
                     </li>
                 </ul>

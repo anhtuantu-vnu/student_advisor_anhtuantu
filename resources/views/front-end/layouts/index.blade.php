@@ -100,4 +100,27 @@
     {{--  End Modal  --}}
 
     @stack('js_page')
+    <script>
+	    getDepartments()
+	    // load departments
+	    function getDepartments() {
+		    $.ajax({
+			    type: "GET",
+			    url: "/api/unread-message",
+			    headers: {
+				    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+			    },
+			    success: function(data) {
+				    if (data.meta.success) {
+					    $("#countMessage").html(data.data)
+					    if(data.data === 0) {
+						    $("#haveMessage").css("visibility", "hidden");
+                        } else {
+						    $("#haveMessage").css("visibility", "visible");
+					    }
+				    }
+			    },
+		    });
+	    }
+    </script>
 </body>

@@ -25,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('intake', function (Blueprint $table) {
+        Schema::table('intakes', function (Blueprint $table) {
             $table->dropColumn('week_days');
             $table->dropColumn('start_hour');
             $table->dropColumn('start_minute');
