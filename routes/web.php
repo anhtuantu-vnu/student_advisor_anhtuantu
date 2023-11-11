@@ -47,6 +47,7 @@ Route::middleware(['auth.login'])->group(function () {
     // route event
     Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
     Route::get("/events", [EventController::class, 'getEvents'])->name('event.get');
+    Route::get("/latest-events", [EventController::class, 'getLatestEvents'])->name('event.get.lastest');
     Route::get("/events/{uuid}", [EventController::class, 'showEventDetail'])->name('event.show.detail');
     Route::get("/events/{uuid}/update", [EventController::class, 'updateEventDetail'])->name('event.update.detail');
     Route::post("/events/{id}", [EventController::class, 'updateEvent'])->name('event.update');
@@ -69,10 +70,10 @@ Route::middleware(['auth.login'])->group(function () {
     //route plan
     Route::get('/get-plan', [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
-    Route::get('/update-plan', [PlanController::class , 'showPlanUpdate'])->name('show_update_plan');
+    Route::get('/update-plan', [PlanController::class, 'showPlanUpdate'])->name('show_update_plan');
     Route::get('/get-data-plan', [PlanController::class, 'getDataPlanUpdate'])->name('get_data_update_plan');
-    Route::post('/update-plan', [PlanController::class , 'updateDataPlan'])->name('update_plan');
-    Route::delete("/plan/{id}" , [PlanController::class, 'deletePlan'])->name('delete_plan');
+    Route::post('/update-plan', [PlanController::class, 'updateDataPlan'])->name('update_plan');
+    Route::delete("/plan/{id}", [PlanController::class, 'deletePlan'])->name('delete_plan');
     Route::get("/create-plan", [PlanController::class, 'formCreatePlan'])->name('ui_create_plan');
     Route::get('/list-member', [PlanController::class, 'getListMember']);
     Route::post('/create-plan', [PlanController::class, 'createPlan'])->name('create_plan');
@@ -184,4 +185,3 @@ Route::middleware(['auth.login'])->group(function () {
     Route::post('/student-chat/setActiveStatus', [MessageController::class, 'setActiveStatus'])->name('activeStatus.set');
     Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
 });
-

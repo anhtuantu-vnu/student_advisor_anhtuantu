@@ -93,6 +93,11 @@ class EventController extends Controller
         }
     }
 
+    public function getLatestEvents()
+    {
+        return view('front-end.layouts.event.lastest');
+    }
+
     /**
      * @return View
      */
@@ -636,7 +641,10 @@ class EventController extends Controller
                 ]);
             }
             if (count($notificationsToCreate) > 0) {
-                Notification::insert($notificationsToCreate);
+                foreach ($notificationsToCreate as $noti) {
+                    Notification::create($noti);
+                }
+                // Notification::insert($notificationsToCreate);
             }
 
             DB::commit();

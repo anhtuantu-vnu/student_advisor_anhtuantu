@@ -63,7 +63,7 @@
         {{-- @include('front-end.components.header.settings') --}}
 
         <span class="p-0 ms-3 menu-icon" id="dropdownProfile" data-bs-toggle="dropdown" aria-expanded="false">
-            <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1"
+            <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1 border"
                 style="border-radius: 100%; object-fit: cover; width: 40px; height: 40px;">
         </span>
         <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" aria-labelledby="dropdownProfile">

@@ -527,109 +527,122 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="mt-3">
-                                    <form action="" id="updateEventForm">
-                                        <div class="row">
-                                            <div class="col-md-6 mb-2">
-                                                <input type="text" class="form-control" value="{{ $event->name }}"
-                                                    id="updateEventName"
-                                                    placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) . ' ' }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <input type="text" class="form-control" value="{{ $event->location }}"
-                                                    id="updateEventLocation"
-                                                    placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) . ' ' }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label for="updateEventStartTime">
-                                                    {{ __('texts.texts.event_start_time.' . auth()->user()->lang) . ' ' }}
-                                                </label>
-                                                <input type="datetime-local" class="form-control" id="updateEventStartTime"
-                                                    placeholder="{{ __('texts.texts.start_time.' . auth()->user()->lang) . ' ' }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label for="updateEventEndTime">
-                                                    {{ __('texts.texts.event_end_time.' . auth()->user()->lang) . ' ' }}
-                                                </label>
-                                                <input type="datetime-local" class="form-control" id="updateEventEndTime"
-                                                    placeholder="{{ __('texts.texts.end_time.' . auth()->user()->lang) . ' ' }}">
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control" id="updateEventDepartment"
-                                                        placeholder="{{ __('texts.texts.department.' . auth()->user()->lang) . ' ' }}">
+                                @if (auth()->user()->uuid == $event->created_by && $event->active == 1)
+                                    <div class="mt-3">
+                                        <form action="" id="updateEventForm">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control" value="{{ $event->name }}"
+                                                        id="updateEventName"
+                                                        placeholder="{{ __('texts.texts.event_name.' . auth()->user()->lang) . ' ' }}">
                                                 </div>
-                                                <div class="position-absolute bg-white p-2 rounded border d-none"
-                                                    id="updateDepartmentChoices" style="min-width: 240px; z-index: 2;">
+                                                <div class="col-md-6 mb-2">
+                                                    <input type="text" class="form-control"
+                                                        value="{{ $event->location }}" id="updateEventLocation"
+                                                        placeholder="{{ __('texts.texts.location.' . auth()->user()->lang) . ' ' }}">
                                                 </div>
-                                                <div>
-                                                    <div class="d-flex flex-wrap" id="chosenUpdateDepartmentsContainer">
+                                                <div class="col-md-6 mb-2">
+                                                    <label for="updateEventStartTime">
+                                                        {{ __('texts.texts.event_start_time.' . auth()->user()->lang) . ' ' }}
+                                                    </label>
+                                                    <input type="datetime-local" class="form-control"
+                                                        id="updateEventStartTime"
+                                                        placeholder="{{ __('texts.texts.start_time.' . auth()->user()->lang) . ' ' }}">
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <label for="updateEventEndTime">
+                                                        {{ __('texts.texts.event_end_time.' . auth()->user()->lang) . ' ' }}
+                                                    </label>
+                                                    <input type="datetime-local" class="form-control"
+                                                        id="updateEventEndTime"
+                                                        placeholder="{{ __('texts.texts.end_time.' . auth()->user()->lang) . ' ' }}">
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="position-relative">
+                                                        <input type="text" class="form-control"
+                                                            id="updateEventDepartment"
+                                                            placeholder="{{ __('texts.texts.department.' . auth()->user()->lang) . ' ' }}">
+                                                    </div>
+                                                    <div class="position-absolute bg-white p-2 rounded border d-none"
+                                                        id="updateDepartmentChoices" style="min-width: 240px; z-index: 2;">
+                                                    </div>
+                                                    <div>
+                                                        <div class="d-flex flex-wrap" id="chosenUpdateDepartmentsContainer">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <div class="input-color-container">
-                                                    <input type="color" class="input-color" id="updateEventColor"
-                                                        value="{{ $event->color }}"
-                                                        placeholder="{{ __('texts.texts.color.' . auth()->user()->lang) . ' ' }}">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-2">
-                                                <textarea id="updateEventDescription"
-                                                    class="bor-0 w-100 rounded-xxl p-2 text-grey-600 fw-500 border-light-md theme-dark-bg" cols="30" rows="10"
-                                                    placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}">{{ $event->description }}</textarea>
-                                            </div>
-                                            <div class="col-12 mb-2">
-                                                <div class="card-body">
-                                                    <div class="d-flex">
-                                                        <span class="hiddenFileInputEvent rounded-3">
-                                                            <input type="file" name="eventFiles" accept="image/*"
-                                                                id="updateEventFiles" multiple />
-                                                        </span>
-                                                    </div>
-                                                    <div class="mt-2 d-flex flex-wrap" id="updatePreviewEventImages">
+                                                <div class="col-md-6 mb-2">
+                                                    <div class="input-color-container">
+                                                        <input type="color" class="input-color" id="updateEventColor"
+                                                            value="{{ $event->color }}"
+                                                            placeholder="{{ __('texts.texts.color.' . auth()->user()->lang) . ' ' }}">
                                                     </div>
                                                 </div>
+                                                <div class="col-12 mb-2">
+                                                    <textarea id="updateEventDescription"
+                                                        class="bor-0 w-100 rounded-xxl p-2 text-grey-600 fw-500 border-light-md theme-dark-bg" cols="30" rows="10"
+                                                        placeholder="{{ __('texts.texts.event_description.' . auth()->user()->lang) }}">{{ $event->description }}</textarea>
+                                                </div>
+                                                <div class="col-12 mb-2">
+                                                    <div class="card-body">
+                                                        <div class="d-flex">
+                                                            <span class="hiddenFileInputEvent rounded-3">
+                                                                <input type="file" name="eventFiles" accept="image/*"
+                                                                    id="updateEventFiles" multiple />
+                                                            </span>
+                                                        </div>
+                                                        <div class="mt-2 d-flex flex-wrap" id="updatePreviewEventImages">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <button class="btn btn-primary text-white" type="button"
+                                                        id="saveUpdateEventButton">
+                                                        {{ __('texts.texts.save.' . auth()->user()->lang) . ' ' }}
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div class="col-12">
-                                                <button class="btn btn-primary text-white" type="button"
-                                                    id="saveUpdateEventButton">
-                                                    {{ __('texts.texts.save.' . auth()->user()->lang) . ' ' }}
-                                                </button>
+                                        </form>
+                                        <div class="row mt-3">
+                                            <div>
+                                                <b>
+                                                    {{ __('texts.texts.images.' . auth()->user()->lang) }}
+                                                </b>
                                             </div>
+
+                                            @if (count(json_decode($event->files, true)) > 0)
+                                                @foreach (json_decode($event->files, true) as $file)
+                                                    <div class="col-md-3">
+                                                        <img class="border cursor-pointer event-images"
+                                                            style="width: 100%; aspect-ratio: 1; object-fit: cover;"
+                                                            src="{{ config('aws_.aws_url.url') . '/' . config('aws_.event_images.path') . '/' . config('aws_.event_images.file_path') . '/' . $file['url'] }}"
+                                                            alt="{{ $file['name'] }}">
+                                                    </div>
+                                                @endforeach
+
+                                                <div class="mt-2">
+                                                    <button class="btn btn-danger text-white" type="button"
+                                                        id="removeAllImagesButton">
+                                                        {{ __('texts.texts.remove_all_images.' . auth()->user()->lang) }}
+                                                    </button>
+                                                </div>
+                                            @else
+                                                <span>
+                                                    {{ __('texts.texts.no_images_found.' . auth()->user()->lang) }}
+                                                </span>
+                                            @endif
+
                                         </div>
-                                    </form>
-                                    <div class="row mt-3">
-                                        <div>
-                                            <b>
-                                                {{ __('texts.texts.images.' . auth()->user()->lang) }}
-                                            </b>
-                                        </div>
-
-                                        @if (count(json_decode($event->files, true)) > 0)
-                                            @foreach (json_decode($event->files, true) as $file)
-                                                <div class="col-md-3">
-                                                    <img class="border cursor-pointer event-images"
-                                                        style="width: 100%; aspect-ratio: 1; object-fit: cover;"
-                                                        src="{{ config('aws_.aws_url.url') . '/' . config('aws_.event_images.path') . '/' . config('aws_.event_images.file_path') . '/' . $file['url'] }}"
-                                                        alt="{{ $file['name'] }}">
-                                                </div>
-                                            @endforeach
-
-                                            <div class="mt-2">
-                                                <button class="btn btn-danger text-white" type="button"
-                                                    id="removeAllImagesButton">
-                                                    {{ __('texts.texts.remove_all_images.' . auth()->user()->lang) }}
-                                                </button>
-                                            </div>
-                                        @else
-                                            <span>
-                                                {{ __('texts.texts.no_images_found.' . auth()->user()->lang) }}
-                                            </span>
-                                        @endif
-
                                     </div>
-                                </div>
+                                @else
+                                    <div class="mt-3">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {{ __('texts.texts.not_your_event.' . auth()->user()->lang) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

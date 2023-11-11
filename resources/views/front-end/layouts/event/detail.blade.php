@@ -332,7 +332,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if (auth()->user()->uuid = $event->created_by && $event->active == 1)
+                                    @if (auth()->user()->uuid == $event->created_by && $event->active == 1)
                                         <div>
                                             <a href="#" class="ms-auto"
                                                 id="dropdownUpdateMenuEvent_{{ $event->uuid }}" data-bs-toggle="dropdown"
