@@ -68,6 +68,7 @@ Route::middleware(['auth.login'])->group(function () {
     Route::get("/search/events", [SearchController::class, 'searchEvents'])->name('app.search.events');
 
     //route plan
+    Route::get('/get-plan-home', [PlanController::class, 'getPlanLimit'])->name('get_plan_limit');
     Route::get('/get-plan', [PlanController::class, 'getDataPlan'])->name('get_plan');
     Route::get("/plan", [PlanController::class, 'showPlan'])->name('plan');
     Route::get('/update-plan', [PlanController::class, 'showPlanUpdate'])->name('show_update_plan');

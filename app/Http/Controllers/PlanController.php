@@ -6,7 +6,6 @@ use App\Models\Plan;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\PlanRepository;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,8 +13,8 @@ use App\Services\PlanService;
 use App\Repositories\UserRepository;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class PlanController extends Controller
 {
@@ -73,6 +72,21 @@ class PlanController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function getPlanLimit(): JsonResponse
+    {
+        $listPlan = [];
+        $this->planMemberRepository->getListPlanByMemberLimit(Auth::user()->uuid, 3)->sortByDesc('updated_at')->each(function($plan) use(&$listPlan){
+            $dataReturn = $plan['planByMemberId'];
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $dataReturn['updated_at']);
+            $dataReturn['updated_at_fomat'] = $date->format('F d, Y');
+            $listPlan[] = $dataReturn;
+        });
+        return $this->successWithContent($listPlan);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
@@ -97,7 +111,11 @@ class PlanController extends Controller
         return $this->successWithContent($dataPlan);
     }
 
-    public function updateDataPlan(Request $request) {
+    /**
+     * @param Request $request
+     */
+    public function updateDataPlan(Request $request)
+    {
         return $this->planService->updateDataPlan($request->input());
     }
 

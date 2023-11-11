@@ -21,9 +21,6 @@
                 cache: false,
                 contentType: false,
                 processData: true,
-                // beforeSend: function () {
-                //     document.getElementById("loadingSpinner").classList.remove("d-none");
-                // },
                 success: function (data) {
                     for (const [key, listTaskByType] of Object.entries(data.data)) {
                         if (['is_task' , 'author'].includes(key)) continue;
@@ -278,13 +275,17 @@
                     removeLoadingBtnModalDelete(idTask)
                 }
             })
-            console.log(status, idTask)
         }
 
         //set height for draggable_item
         function setHeightForDraggableItem() {
             if(document.querySelector('.tasks_to_do')) {
-                let heightDraggable = document.querySelector('.tasks_to_do').offsetHeight;
+                let heightDraggable = 0;
+                document.querySelectorAll('.box_draggable').forEach(function (box) {
+                    if(box.offsetHeight > heightDraggable) {
+                        heightDraggable = box.offsetHeight;
+                    }
+                })
                 document.querySelectorAll('.draggable_item').forEach(function (draggable) {
                     draggable.style.minHeight = `${heightDraggable + 70}px`;
                 })
@@ -334,7 +335,6 @@
                 }
             });
         }
-
 
         //init event click in task
         function showModal(modal) {
@@ -409,23 +409,6 @@
             }
 
             UIModal +=  `</div>
-                        {{--<div class="activity mt-3">--}}
-                        {{--    <div class="activity_text d-flex">--}}
-                        {{--        <i class="feather-activity text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>--}}
-                        {{--        <h2 class="ms-2">{{ __('texts.texts.activity.' . auth()->user()->lang) }}</h2>--}}
-                        {{--    </div>--}}
-                        {{--    <div class="activity_comment">--}}
-                        {{--        <img src="{{auth()->user()->avatar}}" />--}}
-                        {{--        <div class="activity_comment_input">--}}
-                        {{--            <input type="text" class="input_comment" name="comment" row="5"--}}
-                        {{--                placeholder="{{ __('texts.texts.write_a_comment.' . auth()->user()->lang) }}">--}}
-                        {{--        </div>--}}
-                        {{--    </div>--}}
-                        {{--</div>--}}
-                        {{--<div class="list_comment">--}}
-
-                        {{--</div>--}}
-
                         <div class="modal-footer" style="border:none; padding: 0.75rem 0 !important;">
                             <button type="button" onclick="hideModal(${task["id"]})" id="btn_cancel_${task['id']}" class="btn btn-secondary"
                                 data-bs-dismiss="modal">{{ __('texts.texts.close.' . auth()->user()->lang) }}</button>

@@ -9,6 +9,7 @@ use App\Repositories\UserRepository;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -94,7 +95,8 @@ class PlanService
      */
     public function getPlans($userId): array
     {
-        return $this->planRepository->find(['created_by' => $userId])->map(function($plan) {
+        return $this->planMemberRepository->getListPlanByMember($userId)->map(function($planData) {
+            $plan = $planData['planByMemberId'];
             $date = Carbon::createFromFormat('Y-m-d H:i:s', $plan['created_at']);
             $plan['date_created'] = $date->format('F d, Y');
             $plan['count_date'] = $date->diffInDays(now());
@@ -134,9 +136,10 @@ class PlanService
 
     /**
      * @param $data
-     * @return mixed
+     * @return JsonResponse
      */
-    public function updateDataPlan($data) {
+    public function updateDataPlan($data): JsonResponse
+    {
         try {
             DB::beginTransaction();
             $this->planRepository->updateByCondition(
@@ -146,21 +149,34 @@ class PlanService
                 ],
                 ['uuid' => $data['id_plan']]
             );
-            $plan = $this->planRepository->findOne(['uuid' => $data['id_plan']]);
-            $listOldMember = $this->planMemberRepository->selectColumnByCondition(
-                ['user_id'],
-                ['plan_id' => $data['id_plan']]
-            );
-            dd($listOldMember->toArray(), $data);
+            $this->planMemberRepository->deleteMemberWhenUpdatePlan(json_decode($data['list_member_deleted'], true), $data['id_plan']);
+            $today = Carbon::today();
+            $listNewMember = json_decode($data['list_member_add'], true);
+            foreach ($listNewMember as $userId) {
+                $member = [
+                    'uuid'       => Str::uuid(),
+                    'plan_id'    => $data['id_plan'],
+                    'user_id'    => $userId,
+                    'created_at' => $today,
+                    'updated_at' => $today,
+                ];
+                $this->planMemberRepository->create($member);
+            }
             DB::commit();
             return $this->successWithNoContent("Update success");
         } catch (\Throwable $throwable) {
+            $throwable->getMessage();
             DB::rollBack();
             return $this->failedWithErrors(500, 'Update failed');
         }
     }
 
-    public function deleteDataPlan($idPlan) {
+    /**
+     * @param $idPlan
+     * @return JsonResponse
+     */
+    public function deleteDataPlan($idPlan): JsonResponse
+    {
         try {
             DB::beginTransaction();
             $this->planMemberRepository->deleteByCondition(['plan_id' => $idPlan]);
