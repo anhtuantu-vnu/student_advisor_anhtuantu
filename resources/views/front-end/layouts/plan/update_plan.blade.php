@@ -7,6 +7,10 @@
 @push('js_page')
     <script>
         let listMember = [];
+        let listUserDelete = [];
+        let idUserSelected = [];
+        let listNewUserAdd  = [];
+
         //render list member
         function getDataPlan() {
             let idPlan = window.location.search.slice(4);
@@ -43,7 +47,7 @@
                 $.ajax({
                     url: '/list-member',
                     type: 'GET',
-                    data: {"search": dataSearch, "member_selected" : listMember},
+                    data: {"search": dataSearch, "member_selected" : JSON.stringify(listMember)},
                     processData: true,
                     contentType: false,
                     beforeSend: function () {
@@ -81,13 +85,65 @@
                         $('#loadingSpinner').addClass('d-none')
                     }
                 });
+            } else {
+                clickOutSide()
             }
         }
+
+        function clickSearchMember() {
+            let listUser = document.querySelector('.list_customer');
+            return removeClassNone(listUser);
+        }
+
+        function clickOutSide() {
+            let listUser = document.querySelector('.list_customer');
+            return addClassNone(listUser);
+        }
+
         function showError() {
             $("#error-profile").removeClass("d-none");
         }
 
+        function clickSelectedUser(userId) {
+            let data = listUser.filter(user => user.uuid === userId)[0];
+            let flagCheck = true;
+            for (let i = 0; i < listMember.length; i++) {
+                if (listMember[i].email === data['email']) {
+                    listMember.splice(i, 1);
+                    idUserSelected.splice(i, 1);
+                    flagCheck = false;
+                    break; // Exit the loop when the condition is met
+                }
+            }
+
+            if (flagCheck) {
+                listMember.push(data);
+                idUserSelected.push(data.uuid);
+                //remove id member when member deleted before
+                if(listUserDelete.includes(data.uuid)) {
+                    listUserDelete = listUserDelete.filter(idMember => {
+                        return idMember !== data.uuid;
+                    });
+                } else {
+                    listNewUserAdd.push(data.uuid);
+                }
+            }
+            $('#list_member').val(JSON.stringify(idUserSelected));
+            $('#list_member_search').val("");
+            clickOutSide();
+            renderListMember(listMember);
+            return true;
+        }
+
         function handleRemoveMember(idMember) {
+            let memberDelete = listMember.filter(member => {
+                if(member['id'] === idMember) {
+                    return member['uuid'];
+                }
+            })
+            if(!listUserDelete.includes(memberDelete[0]['uuid'])) {
+                listUserDelete.push(memberDelete[0]['uuid']);
+            }
             listMember = listMember.filter(member => {
                 return member['id'] !== idMember;
             })
@@ -112,7 +168,8 @@
             const formData = new FormData();
             formData.append('name', $('.input_name').val());
             formData.append('description', $('.input_description').val());
-            formData.append('list_member', JSON.stringify(listMember));
+            formData.append('list_member_deleted', JSON.stringify(listUserDelete));
+            formData.append('list_member_add', JSON.stringify(listNewUserAdd));
             formData.append('id_plan', window.location.search.slice(4));
             $.ajax({
                 url: '/update-plan',
@@ -124,7 +181,7 @@
                     $('#loadingSpinner').removeClass('d-none')
                 },
                 success: function (data) {
-                    getListMember();
+                    window.location.replace(`${window.location.origin}/plan`);
                 },
                 error: function (error) {
                     console.log(error);
@@ -163,7 +220,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12 mb-3">
+                                <div class="col-lg-12 mb-3 pointer-event">
                                     <div tabindex="0">
                                         <div class="form-group select_add_customer">
                                             <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>

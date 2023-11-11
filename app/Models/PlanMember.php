@@ -20,4 +20,12 @@ class PlanMember extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'uuid');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function planByMemberId(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class, 'plan_id', 'uuid');
+    }
 }

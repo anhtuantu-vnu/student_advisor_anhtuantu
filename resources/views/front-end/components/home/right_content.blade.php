@@ -8,18 +8,8 @@
                 {{ __('texts.texts.see_all.' . auth()->user()->lang) }}
             </a>
         </div>
-        <div class="card-body d-flex pt-4 ps-4 pe-4 pb-0 border-top-xs bor-0">
-            <figure class="avatar me-3"><img src="{{ asset('images/user-7.png') }}" alt="image"
-                    class="shadow-sm rounded-circle w45"></figure>
-            <h4 class="fw-700 text-grey-900 font-xssss mt-1">Anthony Daugloi <span
-                    class="d-block font-xssss fw-500 mt-1 lh-3 text-grey-500">12 mutual friends</span>
-            </h4>
-        </div>
-        <div class="card-body d-flex align-items-center pt-0 ps-4 pe-4 pb-4">
-            <a href="#"
-                class="p-2 lh-20 w100 bg-primary-gradiant me-2 text-white text-center font-xssss fw-600 ls-1 rounded-xl">Confirm</a>
-            <a href="#"
-                class="p-2 lh-20 w100 bg-grey text-grey-800 text-center font-xssss fw-600 ls-1 rounded-xl">Delete</a>
+        <div class="card-body pt-0 ps-4 pe-4 pb-3 overflow-hidden plan_list">
+
         </div>
     </div>
 
@@ -29,3 +19,38 @@
     {{-- intakes preview --}}
     @include('front-end.components.home.right_content_intakes')
 </div>
+
+<script>
+    $.ajax({
+        url: '/get-plan-home',
+        type: 'GET',
+        processData: true,
+        contentType: false,
+        success: function (data) {
+            let uiPlanList = '';
+            let listTask = data.data;
+            if( Object.keys(listTask).length){
+                for (const plan of listTask) {
+                    uiPlanList += `
+                        <div class="project-box w-100 p-2 mb-2 rounded"
+                             style="background-color: ${plan['settings']['background_color']}">
+                            <a href="{{ route('show_task') }}?id=${plan['uuid']}" style="color: black">
+                                <div class="project-box-content-header">
+                                    <span class="box-content-header" data-max-width="20vw"
+                                  data-tooltip-title="${plan['name']}">
+                                <p class="mb-1">${plan['name']}</p>
+                            </span>
+                                    <p class="mb-1" style="font-size: 12px; line-height: 12px">${plan['updated_at_fomat']}</p>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+            $('.plan_list').append(uiPlanList)
+        },
+        error: function (error) {
+            console.log(error);
+        },
+    });
+</script>
