@@ -56,7 +56,7 @@
                         </li>
                     @endif
                     <li>
-                        <a href="default-email-box.html" class="nav-content-bttn open-font">
+                        <a href="/student-chat" class="nav-content-bttn open-font">
                             <i class="font-sm feather-message-square me-3 text-grey-500">
                             </i>
                             <span>{{ __('texts.texts.chat.' . auth()->user()->lang) }}</span>
