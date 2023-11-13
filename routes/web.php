@@ -89,11 +89,16 @@ Route::middleware(['auth.login'])->group(function () {
     //Route import
     Route::get("/import", [FileController::class, 'index'])->name('view_import');
     Route::post("/import", [FileController::class, 'uploadFile'])->name('upload_filed');
+    Route::post("/import-schedule", [FileController::class, 'uploadFileSchedule'])->name('upload_filed');
     Route::middleware(['auth.role_admin'])->group(function () {
         Route::get('/export', function () {
             $path = storage_path('export/data_student_example.xlsx');
             return response()->download($path);
         })->name('export');
+        Route::get('/export-schedule', function () {
+            $path = storage_path('export/import_schedule_student.xlsx');
+            return response()->download($path);
+        })->name('export-schedule');
     });
 
     /**

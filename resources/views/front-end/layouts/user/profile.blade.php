@@ -91,10 +91,10 @@
                     let lcUser = JSON.parse(localStorage.getItem("user"));
                     lcUser.avatar = newAvatar;
                     localStorage.setItem("user", JSON.stringify(lcUser))
-                    showProfileMessage("success", data.meta.message);
+                    showProfileMessage("success", {{ __('texts.texts.import_success.' . auth()->user()->lang) }});
                 },
                 error: function(error) {
-                    showProfileMessage("danger", error.statusText);
+                    showProfileMessage("danger", {{ __('texts.texts.import_failed.' . auth()->user()->lang) }});
                 },
                 complete: function(data) {
                     document.getElementById("loadingSpinner").classList.add("d-none");

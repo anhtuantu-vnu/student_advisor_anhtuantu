@@ -287,7 +287,7 @@
                     }
                 })
                 document.querySelectorAll('.draggable_item').forEach(function (draggable) {
-                    draggable.style.minHeight = `${heightDraggable + 70}px`;
+                    draggable.style.minHeight = `${heightDraggable}px`;
                 })
                 document.querySelector('.middle-sidebar-left').style.maxWidth = '1240px';
             }

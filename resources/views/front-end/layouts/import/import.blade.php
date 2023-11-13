@@ -35,6 +35,9 @@
         function handleUploadFile() {
             $('#uploadFileStudent').removeClass('disable_btn');
         }
+        function handleUploadFileSchedule() {
+            $('#uploadFileStudentSchedule').removeClass('disable_btn');
+        }
 
         function resetDataInput() {
             $('#loadingSpinner').classList.add("d-none");
@@ -44,6 +47,9 @@
 
         $('.download_example_template').click(function() {
             window.location = '/export';
+        })
+        $('.download_example_template').click(function() {
+            window.location = '/export-schedule';
         })
 
         $('#uploadFileStudent').click(function() {
@@ -62,6 +68,33 @@
                 },
                 success: function() {
                     resetDataInput();
+                    showProfileMessage("success", data.meta.message);
+                },
+                error: function(error) {
+                    showProfileMessage("danger", error.statusText);
+                },
+                complete: function() {
+                    $('#loadingSpinner').addClass("d-none");
+                },
+            });
+        });
+        $('#uploadFileStudentSchedule').click(function() {
+            let fileInput = $('#fileStudent')[0].files[0]; // Lấy ra file từ input
+            let formData = new FormData(); // Tạo đối tượng FormData
+
+            formData.append('file', fileInput); // Thêm file vào FormData
+            $.ajax({
+                url: '/import-schedule',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    document.getElementById("loadingSpinner").classList.remove("d-none");
+                },
+                success: function() {
+                    resetDataInput();
+                    showProfileMessage("success", data.meta.message);
                 },
                 error: function(error) {
                     showProfileMessage("danger", error.statusText);
@@ -130,11 +163,11 @@
                                             @else
                                                 <p> Download our <a class="download_example_template"> .csv</a> template to see an example of the required format.</p>
                                             @endif
-                                            <input type="file" name="file" accept="xlsx" id="fileStudent" onchange="handleUploadFile()"/>
+                                            <input type="file" name="file" accept="xlsx" id="fileStudentSchedule" onchange="handleUploadFileSchedule()"/>
                                         </span>
                                     <div class="mt-4">
                                         <button class="btn btn-primary disable_btn text-white ps-3 pe-3" type="button"
-                                                id="uploadFileStudent">
+                                                id="uploadFileStudentSchedule">
                                             {{ __('texts.texts.upload_file.' . auth()->user()->lang) }}
                                         </button>
                                     </div>

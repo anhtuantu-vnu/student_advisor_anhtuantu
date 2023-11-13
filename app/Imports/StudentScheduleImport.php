@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use App\Models\Class_;
 use App\Services\FileServices;
-class StudentImport implements ToModel, WithChunkReading, WithHeadingRow
+class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     use Importable;
 
@@ -23,6 +23,7 @@ class StudentImport implements ToModel, WithChunkReading, WithHeadingRow
      */
     public function model(array $row): bool
     {
+        dd($row);
        $fileServer = app()->make(FileServices::class);
        $fileServer->importFileStudent($row);
 //        $class = $this->checkClassInFile($row);

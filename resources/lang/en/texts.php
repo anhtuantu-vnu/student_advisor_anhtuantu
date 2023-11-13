@@ -530,5 +530,13 @@ return [
         'vi' => 'Chưa được chỉ định',
         'en' => 'Unassigned'
     ],
+    'import_success' => [
+        'vi' => 'Nhập dữ liệu thành công',
+        'en' => 'Import success'
+    ],
+    'import_failed' => [
+        'vi' => 'Nhập dữ liệu thất bại',
+        'en' => 'Import failed'
+    ]
   ]
 ];

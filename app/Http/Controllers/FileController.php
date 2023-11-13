@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\StudentScheduleImport;
 use App\Traits\ResponseTrait;
 use App\Imports\StudentImport;
 use Illuminate\Contracts\Foundation\Application;
@@ -29,6 +30,16 @@ class FileController extends Controller
     public function uploadFile(Request $request): JsonResponse
     {
         Excel::import(new StudentImport, $request->file('file'));
+        return $this->successWithContent('Import success');
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function uploadFileSchedule(Request $request): JsonResponse
+    {
+        Excel::import(new StudentScheduleImport, $request->file('file'));
         return $this->successWithContent('Import success');
     }
 }
