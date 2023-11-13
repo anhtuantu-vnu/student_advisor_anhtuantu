@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Imports;
-use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Models\Class_;
-use App\Services\FileServices;
+use App\Models\Intake;
+use App\Models\IntakeMember;
+use App\Models\Subject;
+use Carbon\Carbon;
 class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow
 {
     use Importable;
@@ -23,31 +23,47 @@ class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow
      */
     public function model(array $row): bool
     {
-        dd($row);
-       $fileServer = app()->make(FileServices::class);
-       $fileServer->importFileStudent($row);
+        $subject = Subject::where('code' ,$row['code_class'])->first();
+        $now = Carbon::now();
+        echo json_encode([
+            'uuid' => Str::uuid(),
+            'code' => sprintf('%s%u%u', $row['code_class'], $now->month, $now->year),
+            'subject_id' => $subject['uuid'],
+            'start_date' => format_time_import($row['start_date']),
+            'end_date' => format_time_import($row['end_date']),
+            'duration_weeks' => 3,
+            'updated_at' => 2434,
+            'created_at' => 123123,
+            'start_hour' => 123123,
+            'start_minute' => 123,
+            'end_hours' => 123,
+            'week_days' => $row['week_day'],
+            'location' => $row['location']
+        ]);
+        dd($subject, $row);
+        $intake = Intake::create([
+            'uuid' => Str::uuid(),
+            'code' => sprintf('%E%u%u', $row['code_class'], $now->month, $now->year),
+            'subject_id' => $subject['uuid'],
+            'start_date' => format_time_import($row['start_date']),
+            'end_date' => 23123,
+            'duration_weeks' => 3,
+            'updated_at' => 2434,
+            'created_at' => 123123,
+            'start_hour' => 123123,
+            'start_minute' => 123,
+            'end_hours' => 123,
+            'week_days' => $row['week_day'],
+            'location' => $row['location']
+        ]);
 //        $class = $this->checkClassInFile($row);
 //        dd($class, 123);
         return true;
     }
 
-//    private function checkClassInFile($data) {
-//        $dataFind = [
-//            'name' => $data['class'],
-//            'code' => $data['code_class']
-//        ];
-//        $class = Class_::where($dataFind)->first();
-//        if (empty($class)) {
-//            $dataFind['uuid'] = Str::uuid();
-//            $dataFind['department_id'] = Str::uuid();
-//            $dataFind['created_at'] = Carbon::today();
-//            $dataFind['updated_at'] = Carbon::today();
-//            $dataFind['start_year'] = $data['start_year'];
-//            $dataFind['end_year'] = $data['end_year'];
-//            $class = Class_::create($dataFind);
-//        }
-//        return $class;
-//    }
+    private function convertTime() {
+
+    }
 
     public function chunkSize(): int
     {

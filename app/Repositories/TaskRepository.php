@@ -25,8 +25,8 @@ class TaskRepository extends AbstractRepository
         return $this->transferDataMember([
             'tasks_to_do' => $taskToDo,
             'tasks_in_process' => $taskInProcess,
-            'task_review' => $taskReview,
-            'task_done' => $taskDone,
+            'tasks_review' => $taskReview,
+            'tasks_done' => $taskDone,
             'is_task' => $checkTask,
         ]);
     }
@@ -51,13 +51,13 @@ class TaskRepository extends AbstractRepository
                 'backgroundTag' => '#fe9431',
                 'border' => 'border-warning',
             ],
-            'task_review' => [
+            'tasks_review' => [
                 'key' => 'task_review',
                 'type' => __('texts.texts.review.' . auth()->user()->lang),
                 'backgroundTag' => '#673bb7',
                 'border' => 'border-secondary',
             ],
-            'task_done' => [
+            'tasks_done' => [
                 'key' => 'task_done',
                 'type' =>  __('texts.texts.done.' . auth()->user()->lang),
                 'backgroundTag' => '#10d876',

@@ -29,7 +29,7 @@ class Task extends Model
     }
 
     const STATUS_TASK_DONE = 'done';
-    const STATUS_TASK_IN_PROCESS = 'progress';
+    const STATUS_TASK_IN_PROCESS = 'in_process';
     const STATUS_TASK_TO_DO = 'to_do';
     const STATUS_TASK_REVIEW = 'review';
 }

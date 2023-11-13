@@ -32,6 +32,16 @@
                 errorProfile.classList.add('d-none');
             }, 5000)
         }
+        function showProfileMessageSchedule(type, message) {
+            $('#loadingSpinner').addClass("d-none");
+            let errorProfile = document.getElementById("error-profile-schedule");
+            errorProfile.classList.remove("d-none");
+            errorProfile.classList.add("alert-" + type);
+            errorProfile.innerHTML = `${message}`;
+            setTimeout(() => {
+                errorProfile.classList.add('d-none');
+            }, 5000)
+        }
         function handleUploadFile() {
             $('#uploadFileStudent').removeClass('disable_btn');
         }
@@ -40,8 +50,11 @@
         }
 
         function resetDataInput() {
-            $('#loadingSpinner').classList.add("d-none");
-            $('#fileStudent').value('');
+            $('#fileStudent').val('');
+            $('#uploadFileStudent').addClass('disable_btn');
+        }
+        function resetDataInputSchedule() {
+            $('#fileStudentSchedule').val('');
             $('#uploadFileStudent').addClass('disable_btn');
         }
 
@@ -52,58 +65,60 @@
             window.location = '/export-schedule';
         })
 
-        $('#uploadFileStudent').click(function() {
-            let fileInput = $('#fileStudent')[0].files[0]; // Lấy ra file từ input
-            let formData = new FormData(); // Tạo đối tượng FormData
+        function handleUploadFileStudent() {
+                let fileInput = $('#fileStudent')[0].files[0];
+                let formData = new FormData();
 
-            formData.append('file', fileInput); // Thêm file vào FormData
-            $.ajax({
-                url: '/import',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    document.getElementById("loadingSpinner").classList.remove("d-none");
-                },
-                success: function() {
-                    resetDataInput();
-                    showProfileMessage("success", data.meta.message);
-                },
-                error: function(error) {
-                    showProfileMessage("danger", error.statusText);
-                },
-                complete: function() {
-                    $('#loadingSpinner').addClass("d-none");
-                },
-            });
-        });
-        $('#uploadFileStudentSchedule').click(function() {
-            let fileInput = $('#fileStudent')[0].files[0]; // Lấy ra file từ input
-            let formData = new FormData(); // Tạo đối tượng FormData
+                formData.append('file', fileInput);
+                $.ajax({
+                    url: '/import',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        document.getElementById("loadingSpinner").classList.remove("d-none");
+                    },
+                    success: function (data) {
+                        resetDataInput();
+                        showProfileMessage("success", "{{__('texts.texts.import_success.' . auth()->user()->lang)}}");
+                    },
+                    error: function (error) {
+                        showProfileMessage("danger", "{{__('texts.texts.import_failed.' . auth()->user()->lang)}}");
+                    },
+                    complete: function () {
+                        $('#loadingSpinner').addClass('d-none');
+                    }
+                })
+        }
 
-            formData.append('file', fileInput); // Thêm file vào FormData
+
+        function uploadFileStudentSchedule() {
+            let fileInput = $('#fileStudentSchedule')[0].files[0];
+            let formData = new FormData();
+
+            formData.append('file', fileInput)
             $.ajax({
                 url: '/import-schedule',
                 type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
-                beforeSend: function() {
+                beforeSend: function () {
                     document.getElementById("loadingSpinner").classList.remove("d-none");
                 },
-                success: function() {
-                    resetDataInput();
-                    showProfileMessage("success", data.meta.message);
+                success: function (data) {
+                    resetDataInputSchedule();
+                    showProfileMessageSchedule("success", "{{__('texts.texts.import_success.' . auth()->user()->lang)}}");
                 },
-                error: function(error) {
-                    showProfileMessage("danger", error.statusText);
+                error: function (error) {
+                    showProfileMessageSchedule("danger", "{{__('texts.texts.import_failed.' . auth()->user()->lang)}}");
                 },
-                complete: function() {
-                    $('#loadingSpinner').addClass("d-none");
-                },
+                complete: function () {
+                    $('#loadingSpinner').addClass('d-none');
+                }
             });
-        });
+        }
     </script>
 @endpush
 
@@ -134,7 +149,7 @@
                                         </span>
                                     <div class="mt-4">
                                         <button class="btn btn-primary disable_btn text-white ps-3 pe-3" type="button"
-                                                id="uploadFileStudent">
+                                                id="uploadFileStudent" onclick="handleUploadFileStudent()">
                                             {{ __('texts.texts.upload_file.' . auth()->user()->lang) }}
                                         </button>
                                     </div>
@@ -153,7 +168,7 @@
                             </h2>
                             <div class="row">
                                 <div class="col-12">
-                                    <div id="error-profile" class="alert d-none" role="alert">
+                                    <div id="error-profile-schedule" class="alert d-none" role="alert">
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -167,7 +182,8 @@
                                         </span>
                                     <div class="mt-4">
                                         <button class="btn btn-primary disable_btn text-white ps-3 pe-3" type="button"
-                                                id="uploadFileStudentSchedule">
+                                                id="uploadFileStudentSchedule"
+                                                onclick="uploadFileStudentSchedule()">
                                             {{ __('texts.texts.upload_file.' . auth()->user()->lang) }}
                                         </button>
                                     </div>

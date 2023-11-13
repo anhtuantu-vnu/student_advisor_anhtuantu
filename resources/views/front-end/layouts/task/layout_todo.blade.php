@@ -10,6 +10,7 @@
 @push('js_page')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
+        let listTask = [];
         //get list task by plan
         function getDataTask() {
             let idPlan = window.location.search.slice(4);
@@ -21,6 +22,9 @@
                 cache: false,
                 contentType: false,
                 processData: true,
+                before: function () {
+                    $('#loadingSpinner').removeClass('d-none');
+                },
                 success: function (data) {
                     for (const [key, listTaskByType] of Object.entries(data.data)) {
                         if (['is_task' , 'author'].includes(key)) continue;
@@ -35,6 +39,7 @@
                                 </div>`;
 
                         if (data.data.is_task) {
+                            console.log(key)
                             typeTask += `<div class="${key}">`;
                             // append ui task
                             for (const [keyTask, task] of Object.entries(listTaskByType)) {
@@ -203,7 +208,7 @@
                 complete: function (data) {
                     //init drop drag
                     initDropDrag();
-                    document.getElementById("loadingSpinner").classList.add("d-none");
+                    $('#loadingSpinner').addClass('d-none');
                 }
             });
         }
@@ -212,7 +217,6 @@
 
         //logic drag drop
         let currentTarget = null;
-        let currentBox = null;
 
         function initDropDrag() {
             let boxDraggebles = document.querySelectorAll(".draggable_item");
@@ -242,9 +246,6 @@
         }
 
         function dragEnter(event) {
-            if(['task_done' , 'task_review', 'tasks_in_process', 'tasks_to_do'].includes(event.target.id)) {
-                currentBox = event.target.id;
-            }
             event.preventDefault();
         }
 
@@ -253,7 +254,7 @@
         }
 
         function dropBox() {
-            updateStatusTask(currentBox, currentTarget.id)
+            updateStatusTask(this.id, currentTarget.id)
             this.append(currentTarget);
         }
 
@@ -262,18 +263,12 @@
                 url: "/task/update-status",
                 method: "put",
                 data: {status, idTask},
-                beforeSend: function() {
-                    showLoadingBtnModalDelete(idTask)
-                },
                 success: async function(data) {
-                    await getDataTask();
+                    getDataTask();
                 },
                 error: function(error) {
                     console.log(error)
                 },
-                complete: function(data) {
-                    removeLoadingBtnModalDelete(idTask)
-                }
             })
         }
 
