@@ -91,9 +91,36 @@
         {{-- End Footer --}}
     </div>
 
+    <div id="notificationPreviewContainer" style="position: fixed;bottom: 56px;left: 56px;z-index: 2;"
+        class="bg-white rounded p-3 border d-none">
+    </div>
+
     {{--  Modal  --}}
     @yield('modal')
     {{--  End Modal  --}}
 
     @stack('js_page')
+    <script>
+	    getDepartments()
+	    // load departments
+	    function getDepartments() {
+		    $.ajax({
+			    type: "GET",
+			    url: "/api/unread-message",
+			    headers: {
+				    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+			    },
+			    success: function(data) {
+				    if (data.meta.success) {
+					    $("#countMessage").html(data.data)
+					    if(data.data === 0) {
+						    $("#haveMessage").css("visibility", "hidden");
+                        } else {
+						    $("#haveMessage").css("visibility", "visible");
+					    }
+				    }
+			    },
+		    });
+	    }
+    </script>
 </body>

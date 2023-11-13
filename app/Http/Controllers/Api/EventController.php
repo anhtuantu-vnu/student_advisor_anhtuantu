@@ -23,7 +23,10 @@ class EventController extends Controller
             $currentUser = Auth::guard('api')->user();
 
             $events = Event::whereHas('eventMembers', function ($query) use ($currentUser) {
-                return $query->where('user_id', '=', $currentUser->uuid);
+                return $query->where([
+                    ['user_id', '=', $currentUser->uuid],
+                    ['status', '=', EventMember::STATUS_GOING],
+                ]);
             });
             if (isset($request->end_date)) {
                 $events = $events->whereDate('end_date', '<=', $request->end_date);

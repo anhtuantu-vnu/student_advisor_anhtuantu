@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Class_;
+use App\Models\ClassRole;
+use App\Models\IntakeMember;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -46,9 +49,9 @@ class MessageController extends Controller
     public function index(int $id = null): View|Factory|Application
     {
         return view('chat.pages.app', [
-            'id' => $id ?? 0,
+            'id'             => $id ?? 0,
             'messengerColor' => Chat::getFallbackColor(),
-            'dark_mode' => 'light',
+            'dark_mode'      => 'light',
         ]);
     }
 
@@ -63,12 +66,12 @@ class MessageController extends Controller
     {
         $favorite = Chat::inFavorite($request['id']);
         $fetch = User::where('id', $request['id'])->first();
-        if($fetch){
+        if ($fetch) {
             $userAvatar = Chat::getUserWithAvatar($fetch)->avatar;
         }
         return Response::json([
-            'favorite' => $favorite,
-            'fetch' => $fetch ?? null,
+            'favorite'    => $favorite,
+            'fetch'       => $fetch ?? null,
             'user_avatar' => $userAvatar ?? null,
         ]);
     }
@@ -95,13 +98,14 @@ class MessageController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function send(Request $request): JsonResponse
     {
         // default variables
         $error = (object)[
-            'status' => 0,
-            'message' => null
+            'status'  => 0,
+            'message' => null,
         ];
         $attachment = null;
         $attachment_title = null;
@@ -110,8 +114,8 @@ class MessageController extends Controller
         if ($request->hasFile('file')) {
             // allowed extensions
             $allowed_images = Chat::getAllowedImages();
-            $allowed_files  = Chat::getAllowedFiles();
-            $allowed        = array_merge($allowed_images, $allowed_files);
+            $allowed_files = Chat::getAllowedFiles();
+            $allowed = array_merge($allowed_images, $allowed_files);
 
             $file = $request->file('file');
             // check file size
@@ -134,9 +138,9 @@ class MessageController extends Controller
 
         if (! $error->status) {
             $message = Chat::newMessage([
-                'from_id' => Auth::user()->id,
-                'to_id' => $request['id'],
-                'body' => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
+                'from_id'    => Auth::user()->id,
+                'to_id'      => $request['id'],
+                'body'       => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
                 'attachment' => ($attachment) ? json_encode((object)[
                     'new_name' => $attachment,
                     'old_name' => htmlentities(trim($attachment_title), ENT_QUOTES, 'UTF-8'),
@@ -144,20 +148,33 @@ class MessageController extends Controller
             ]);
             $messageData = Chat::parseMessage($message);
             if (Auth::user()->id != $request['id']) {
-                Chat::push("private-chatify.".$request['id'], 'messaging', [
+                Chat::push("private-chatify." . $request['id'], 'messaging', [
                     'from_id' => Auth::user()->id,
-                    'to_id' => $request['id'],
-                    'message' => Chat::messageCard($messageData, true)
+                    'to_id'   => $request['id'],
+                    'message' => Chat::messageCard($messageData, true),
                 ]);
             }
         }
+        $beamsClient = new \Pusher\PushNotifications\PushNotifications([
+            "instanceId" => "6c6ab1a2-5728-4c80-a4d9-a56e17f29e3c",
+            "secretKey"  => "234948EFDC058CA9BD470F9970FB9EF7ABC47B6AB965F04C1111FF3173D69D7D",
+        ]);
+
+        $publishResponse = $beamsClient->publishToInterests(
+            ['user-' . \auth()->id()],
+            ["web" => ["notification" => [
+                "title"     => auth()->user()->last_name . ' ' . \auth()->user()->first_name,
+                "body"      => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
+                "deep_link" => "https://www.pusher.com",
+            ]],
+            ]);
 
         // send the response
         return Response::json([
-            'status' => '200',
-            'error' => $error,
+            'status'  => '200',
+            'error'   => $error,
             'message' => Chat::messageCard(@$messageData),
-            'tempID' => $request['temporaryMsgId'],
+            'tempID'  => $request['temporaryMsgId'],
         ]);
     }
 
@@ -174,15 +191,15 @@ class MessageController extends Controller
         $totalMessages = $messages->total();
         $lastPage = $messages->lastPage();
         $response = [
-            'total' => $totalMessages,
-            'last_page' => $lastPage,
+            'total'           => $totalMessages,
+            'last_page'       => $lastPage,
             'last_message_id' => collect($messages->items())->last()->id ?? null,
-            'messages' => '',
+            'messages'        => '',
         ];
 
         // if there is no messages yet.
         if ($totalMessages < 1) {
-            $response['messages'] ='<p class="message-hint center-el"><span>Say \'hi\' and start messaging</span></p>';
+            $response['messages'] = '<p class="message-hint center-el"><span>Say \'hi\' and start messaging</span></p>';
             return Response::json($response);
         }
         if (count($messages->items()) < 1) {
@@ -224,7 +241,7 @@ class MessageController extends Controller
     public function getContacts(Request $request)
     {
         // get all users that received/sent message from/to [Auth user]
-        $users = Message::join('user',  function ($join) {
+        $users = Message::join('user', function ($join) {
             $join->on('ch_messages.from_id', '=', 'user.id')
                 ->orOn('ch_messages.to_id', '=', 'user.id');
         })
@@ -232,8 +249,8 @@ class MessageController extends Controller
                 $q->where('ch_messages.from_id', Auth::user()->id)
                     ->orWhere('ch_messages.to_id', Auth::user()->id);
             })
-            ->where('user.id','!=',Auth::user()->id)
-            ->select('user.*',DB::raw('MAX(ch_messages.created_at) max_created_at'))
+            ->where('user.id', '!=', Auth::user()->id)
+            ->select('user.*', DB::raw('MAX(ch_messages.created_at) max_created_at'))
             ->orderBy('max_created_at', 'desc')
             ->groupBy('user.id')
             ->paginate($request->per_page ?? $this->perPage);
@@ -250,8 +267,8 @@ class MessageController extends Controller
         }
 
         return Response::json([
-            'contacts' => $contacts,
-            'total' => $users->total() ?? 0,
+            'contacts'  => $contacts,
+            'total'     => $users->total() ?? 0,
             'last_page' => $users->lastPage() ?? 1,
         ], 200);
     }
@@ -266,7 +283,7 @@ class MessageController extends Controller
     {
         // Get user data
         $user = User::where('id', $request['user_id'])->first();
-        if(!$user){
+        if (! $user) {
             return Response::json([
                 'message' => 'User not found!',
             ], 401);
@@ -317,7 +334,7 @@ class MessageController extends Controller
         }
         // send the response
         return Response::json([
-            'count' => $favorites->count(),
+            'count'     => $favorites->count(),
             'favorites' => $favorites->count() > 0
                 ? $favoritesList
                 : 0,
@@ -334,24 +351,43 @@ class MessageController extends Controller
     {
         $getRecords = null;
         $input = trim(filter_var($request['input']));
-        $records = User::where('id','!=',Auth::user()->id)
+        $userId = Auth::user()->uuid;
+        $classRoles = ClassRole::where('user_id', $userId)->get();
+        $intakeMembers = IntakeMember::where('user_id', $userId)->get();
+        $classUser = [];
+        $intakeMember = [];
+        foreach ($classRoles as $classRole) {
+            $classUser[] = ClassRole::where('class_id', $classRole->class_id)->get()->pluck('user_id')->toArray();
+        }
+        foreach ($intakeMembers as $intake) {
+            $intakeMember[] = IntakeMember::where('intake_id', $intake->intake_id)->get()->pluck('user_id')->toArray();
+        }
+        $mergedUser = call_user_func_array('array_merge', $classUser);
+        $mergedMember = call_user_func_array('array_merge', $intakeMember);
+        $mergedArray = array_merge($mergedUser, $mergedMember);
+        $uniqueArray = array_unique($mergedArray);
+        $uniqueArray = array_values($uniqueArray);
+
+        $records = User::where('id', '!=', Auth::user()->id)
             ->where('first_name', 'LIKE', "%{$input}%")
             ->orWhere('last_name', 'LIKE', "%{$input}%")
+            ->whereIn('uuid', $uniqueArray)
             ->paginate($request->per_page ?? $this->perPage);
+
         foreach ($records->items() as $record) {
             $getRecords .= view('chat.layouts.listItem', [
-                'get' => 'search_item',
+                'get'  => 'search_item',
                 'user' => Chat::getUserWithAvatar($record),
             ])->render();
         }
-        if($records->total() < 1){
+        if ($records->total() < 1) {
             $getRecords = '<p class="message-hint center-el"><span>Nothing to show.</span></p>';
         }
         // send the response
         return Response::json([
-            'records' => $getRecords,
-            'total' => $records->total(),
-            'last_page' => $records->lastPage()
+            'records'   => $getRecords,
+            'total'     => $records->total(),
+            'last_page' => $records->lastPage(),
         ], 200);
     }
 
@@ -369,7 +405,7 @@ class MessageController extends Controller
         // shared with its template
         for ($i = 0; $i < count($shared); $i++) {
             $sharedPhotos .= view('chat.layouts.listItem', [
-                'get' => 'sharedPhoto',
+                'get'   => 'sharedPhoto',
                 'image' => Chat::getAttachmentUrl($shared[$i]),
             ])->render();
         }
@@ -468,8 +504,8 @@ class MessageController extends Controller
 
         // send the response
         return Response::json([
-            'status' => $success ? 1 : 0,
-            'error' => $error ? 1 : 0,
+            'status'  => $success ? 1 : 0,
+            'error'   => $error ? 1 : 0,
             'message' => $error ? $msg : 0,
         ], 200);
     }

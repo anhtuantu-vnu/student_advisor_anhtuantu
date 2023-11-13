@@ -34,7 +34,7 @@
                 </div>
                 <ul class="mb-3">
                     <li>
-                        <a href="default-hotel.html" class="nav-content-bttn open-font">
+                        <a href="{{ route('event.get.lastest') }}" class="nav-content-bttn open-font">
                             <i class="font-xl text-current feather-map-pin me-3"></i>
                             <span>{{ __('texts.texts.latest_events.' . auth()->user()->lang) }}</span>
                         </a>
@@ -47,7 +47,7 @@
                 </div>
                 <ul class="mb-1">
                     <li class="logo d-none d-xl-block d-lg-block"></li>
-                    @if(auth()->user()->role === "admin")
+                    @if (auth()->user()->role === 'admin')
                         <li>
                             <a href="{{ route('view_import') }}" class="nav-content-bttn open-font h-auto pt-2 pb-2">
                                 <i class="font-sm feather-settings me-3 text-grey-500"></i>
@@ -56,11 +56,11 @@
                         </li>
                     @endif
                     <li>
-                        <a href="default-email-box.html" class="nav-content-bttn open-font">
+                        <a href="/student-chat" class="nav-content-bttn open-font">
                             <i class="font-sm feather-message-square me-3 text-grey-500">
                             </i>
                             <span>{{ __('texts.texts.chat.' . auth()->user()->lang) }}</span>
-                            <span class="circle-count bg-warning mt-1">584</span>
+                            <span class="circle-count bg-warning mt-1" id = "countMessage">0</span>
                         </a>
                     </li>
                 </ul>

@@ -56,14 +56,16 @@
             @include('front-end.components.header.notifications')
         </div>
 
-        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn"><i
-                class="feather-message-square font-xl text-current"></i></a>
+        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn" style="position: relative"><i
+                class=" feather-message-square font-xl text-current"></i>
+            <span id="haveMessage" style="position: absolute;width: 10px; height: 10px; background: red;border-radius: 50%;"></span>
+        </a>
 
         {{-- settings here if needed --}}
         {{-- @include('front-end.components.header.settings') --}}
 
         <span class="p-0 ms-3 menu-icon" id="dropdownProfile" data-bs-toggle="dropdown" aria-expanded="false">
-            <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1"
+            <img id="headerUserAvatar" src="{{ auth()->user()->avatar }}" alt="user" class="mt--1 border"
                 style="border-radius: 100%; object-fit: cover; width: 40px; height: 40px;">
         </span>
         <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" aria-labelledby="dropdownProfile">
