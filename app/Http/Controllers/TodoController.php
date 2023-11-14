@@ -90,11 +90,10 @@ class TodoController extends Controller
     {
         try {
             DB::beginTransaction();
-//            $this->taskRepository->updateByCondition(
-//                ['status' => substr($request->input('status'), 6)],
-//                ['id' => $request->input('idTask')]
-//            );
-            $this->taskServices->sendMailWhenUpdateStatusTask($request->input('idTask'));
+            $this->taskRepository->updateByCondition(
+                ['status' => substr($request->input('status'), 6)],
+                ['id' => $request->input('idTask')]
+            );
             DB::commit();
             return $this->successWithNoContent('Update success');
         } catch (\Throwable $throwable) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMailInvitePlan;
 use App\Models\Plan;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\PlanRepository;
@@ -13,8 +14,10 @@ use App\Services\PlanService;
 use App\Repositories\UserRepository;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Carbon\Carbon;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class PlanController extends Controller
 {

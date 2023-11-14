@@ -538,5 +538,13 @@ return [
       'vi' => 'Bạn không thể chỉnh sửa sự kiện này',
       'en' => 'You cannot update this event'
     ],
+    'import_success' => [
+        'vi' => 'Nhập dữ liệu thành công',
+        'en' => 'Import success'
+    ],
+    'import_failed' => [
+        'vi' => 'Nhập dữ liệu thất bại',
+        'en' => 'Import failed'
+    ]
   ]
 ];

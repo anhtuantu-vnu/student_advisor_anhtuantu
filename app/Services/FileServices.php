@@ -42,11 +42,17 @@ class FileServices
         $this->classRoleRepository = $classRoleRepository;
     }
 
-    public function importFileStudent ($data) {
-        try {
-//            DB::beginTransaction();
-            $class = $this->classRepository->checkClassInFileUpload($data);
-            $users = $this->userRepository->create([
+    /**
+     * @param $data
+     * @return array
+     */
+    public function importFileStudent ($data): array
+    {
+        $class = $this->classRepository->checkClassInFileUpload($data);
+        $checkUser = $this->userRepository->findOne(["email" => $data['email']]);
+        $user = [];
+        if(empty($checkUser)) {
+            $user = $this->userRepository->create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
                 'role' => User::ROLE_STUDENT,
@@ -55,7 +61,7 @@ class FileServices
                 'password' => $data['password'],
                 'uuid' => Str::uuid(),
                 'gender' => User::CONFIG_GENDER[$data['gender']],
-                'date_of_birth' => $data['date_of_birth'],
+                'date_of_birth' => format_time_import($data['date_of_birth']),
                 'active_status' => User::DEFAULT_STATUS_ACTIVE,
                 'avatar' => User::LINK_AVA,
                 'dark_mode' => User::DEFAULT_DARK_MODE,
@@ -63,19 +69,15 @@ class FileServices
                 'created_at' => Carbon::today(),
                 'updated_at' => Carbon::today()
             ]);
-            dd($users);
-            $this->classRepository->create([
-                'uuid' => Str::uuid(),
-                'user_id' => $users['department_id'],
-                'created_at' => Carbon::today(),
-                'updated_at' => Carbon::today(),
-                'class_id' => $class['department_id']
-            ]);
-//            DB::commit();
-            return true;
-        } catch (\Throwable $th){
-//            DB::rollBack();
-            return $th;
         }
+
+        return [
+            'class' => $class,
+            'user' => $user
+        ];
+    }
+
+    public function importFileStudentSchedule($data) {
+
     }
 }

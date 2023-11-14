@@ -81,10 +81,4 @@ class TaskServices
         $result = $this->taskRepository->create($task);
         return $this->successWithContent($result);
     }
-
-    public function sendMailWhenUpdateStatusTask($idTask) {
-        $task = $this->taskRepository->getDataUserSendMail($idTask);
-        Mail::to("leminhquan59@gmail.com")->cc($task['mail_user_created_by'])->send(new CustomEmail($subject, $content, $fromName, $toName));
-        dd($task);
-    }
 }

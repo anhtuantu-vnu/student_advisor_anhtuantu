@@ -10,6 +10,7 @@ class Class_ extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+//    protected $fillable = ['name', 'uuid', 'code', 'department_id', 'created_at', 'start_year', 'end_year'];
     protected $table = TableConstant::CLASS__TABLE;
 
     public function classRoles()
