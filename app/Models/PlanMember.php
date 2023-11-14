@@ -12,6 +12,8 @@ class PlanMember extends Model
 
     protected $guarded = ['id'];
     protected $table = TableConstant::PLAN_MEMBER_TABLE;
+    CONST STATUS_ACCEPT_PLAN = 1;
+    CONST STATUS_PENDING_ACCEPT_PLAN = 0;
 
     /**
      * @return BelongsTo

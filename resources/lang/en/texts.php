@@ -545,6 +545,14 @@ return [
     'import_failed' => [
         'vi' => 'Nhập dữ liệu thất bại',
         'en' => 'Import failed'
+    ],
+    'required_name_plan' => [
+        'vi' => 'Trường tên kế hoạch bắt bộc phải nhập',
+        'en' => 'Name plan is required'
+    ],
+    'required_des_plan' => [
+      'vi' => 'Trường mô tả bắt bộc phải nhập',
+      'en' => 'Description is required'
     ]
   ]
 ];
