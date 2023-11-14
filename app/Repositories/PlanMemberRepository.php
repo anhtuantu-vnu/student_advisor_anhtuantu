@@ -38,7 +38,7 @@ class PlanMemberRepository extends AbstractRepository
      */
     public function getListPlanByMember($idMember): mixed
     {
-        return $this->model->where('user_id', $idMember)->with('planByMemberId')->get();
+        return $this->model->where('user_id', $idMember)->where('status_invite' , PlanMember::STATUS_ACCEPT_PLAN)->with('planByMemberId')->get();
     }
 
     /**

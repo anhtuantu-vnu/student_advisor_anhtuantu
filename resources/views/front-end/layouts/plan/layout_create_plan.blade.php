@@ -121,6 +121,14 @@
             });
             $('.list_member_selected').append(uiMember);
         }
+
+        function handleCreatePlan() {
+            let data = {
+                'name' : $('.input_name').val(),
+                'list_member' : $('#list_member').val(),
+                'description': $('#description').val()
+            };
+        }
     </script>
 @endpush
 
@@ -136,64 +144,64 @@
                             <h4 class="font-xs text-white fw-600 ms-4 mb-0 mt-2">{{ __('texts.texts.create_plan.' . auth()->user()->lang) }}</h4>
                         </div>
                         <div class="card-body p-lg-5 p-4 w-100 border-0 ">
-                            <form method="POST" action="/create-plan">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <div class="form-group">
-                                            <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
-                                                *</label>
-                                            <input type="text" class="form-control input_name" name="name" required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <div tabindex="0">
-                                            <div class="form-group select_add_customer">
-                                                <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
-                                                <div class="input_add_member form-control position-relative d-flex"
-                                                     style="padding: 4px !important;">
-                                                    <div class="position-relative w-100 ms-1">
-                                                        <input type="text" class="d-none" name="list_member" id="list_member" />
-                                                        <input type="text"
-                                                               class="list_member_search w-100 position-absolute top-0"
-                                                               style="line-height: 40px"
-                                                               name="list_member_search" id="list_member_search" />
-                                                        <i class="feather-search font-xss fw-700 position-absolute"
-                                                           style="margin-top: 6px; right: 26px"
-                                                           onclick="getListMember()"></i>
-                                                    </div>
-                                                </div>
-                                                {{-- Show list member selected --}}
-                                                <div class="list_member_selected w-100">
-                                                </div>
-                                            </div>
-                                            <p class="alert_list_member m-0 d-none"
-                                               style="color: red;"> {{ __('texts.texts.not_found_member.' . auth()->user()->lang) }}</p>
-                                            {{-- Show list member --}}
-                                            <div style="position: relative; z-index: 1"
-                                                 class="list_customer d-none">
-                                                <ul id="selected" class="list">
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12 mb-3">
-                                        <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div class="form-group">
+                                        <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
                                             *</label>
-                                        <textarea
-                                                class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
-                                                name="description" rows="5"
-                                                placeholder="{{ __('texts.texts.description_for_plan.' . auth()->user()->lang) }}"
-                                                spellcheck="false" required></textarea>
+                                        <input type="text" class="form-control input_name" name="name" required />
+                                        <p class="alert-danger" style="background: none !important;" id="required_name">{{ __('texts.texts.required_name_plan.' . auth()->user()->lang) }}</p>
                                     </div>
                                 </div>
-                                <input type="submit" value="{{ __('texts.texts.save.' . auth()->user()->lang) }}"
-                                       class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
-                            </form>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div tabindex="0">
+                                        <div class="form-group select_add_customer">
+                                            <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.add_member.' . auth()->user()->lang) }}</label>
+                                            <div class="input_add_member form-control position-relative d-flex"
+                                                 style="padding: 4px !important;">
+                                                <div class="position-relative w-100 ms-1">
+                                                    <input type="text" class="d-none" name="list_member" id="list_member" />
+                                                    <input type="text"
+                                                           class="list_member_search w-100 position-absolute top-0"
+                                                           style="line-height: 40px"
+                                                           name="list_member_search" id="list_member_search" />
+                                                    <i class="feather-search font-xss fw-700 position-absolute"
+                                                       style="margin-top: 6px; right: 26px"
+                                                       onclick="getListMember()"></i>
+                                                </div>
+                                            </div>
+                                            {{-- Show list member selected --}}
+                                            <div class="list_member_selected w-100">
+                                            </div>
+                                        </div>
+                                        <p class="alert_list_member m-0 d-none"
+                                           style="color: red;"> {{ __('texts.texts.not_found_member.' . auth()->user()->lang) }}</p>
+                                        {{-- Show list member --}}
+                                        <div style="position: relative; z-index: 1"
+                                             class="list_customer d-none">
+                                            <ul id="selected" class="list">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.description.' . auth()->user()->lang) }}
+                                        *</label>
+                                    <textarea
+                                            class="form-control input_description mb-0 p-3 h200 bg-greylight lh-16"
+                                            name="description" rows="5"
+                                            id="description"
+                                            placeholder="{{ __('texts.texts.description_for_plan.' . auth()->user()->lang) }}"
+                                            spellcheck="false" required></textarea>
+                                    <p class="alert-danger" id="required_description" style="background: none !important;">{{ __('texts.texts.required_des_plan.' . auth()->user()->lang) }}</p>
+                                </div>
+                            </div>
+                            <input value="{{ __('texts.texts.save.' . auth()->user()->lang) }}"
+                                   class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
                         </div>
                     </div>
                 </div>

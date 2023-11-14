@@ -2,6 +2,7 @@
 namespace App\Services;
 use App\Mail\SendMailInvitePlan;
 use App\Models\Plan;
+use App\Models\PlanMember;
 use App\Models\Task;
 use App\Repositories\PlanRepository;
 use App\Repositories\TaskRepository;
@@ -81,30 +82,31 @@ class PlanService
         $today = Carbon::today();
 
         //create member by author
-        $member = [
-                'uuid'       => Str::uuid(),
-                'plan_id'    => $plan['uuid'],
-                'user_id'    => Auth::user()->uuid,
-                'created_at' => $today,
-                'updated_at' => $today,
-        ];
-        $this->planMemberRepository->create($member);
+        $this->planMemberRepository->create([
+            'uuid'       => Str::uuid(),
+            'plan_id'    => $plan['uuid'],
+            'user_id'    => Auth::user()->uuid,
+            'created_at' => $today,
+            'updated_at' => $today,
+            'status_invite' => PlanMember::STATUS_ACCEPT_PLAN
+        ]);
 
         foreach ($idUsers as $userId) {
             $user = $this->userRepository->findOne(['uuid' => $userId]);
-            Mail::to('namnq@omegatheme.com')->send(new SendMailInvitePlan([
-                'fist_name' => $user['first_name'],
-                'author'  => Auth::user()->first_name,
-                'plan_name' => $plan['name'],
-                'url' => url('/') . '/to-do?id=' .$plan['uuid'],
-            ]));
             $member = [
                 'uuid'       => Str::uuid(),
                 'plan_id'    => $plan['uuid'],
                 'user_id'    => $userId,
                 'created_at' => $today,
                 'updated_at' => $today,
+                'status_invite' => PlanMember::STATUS_PENDING_ACCEPT_PLAN
             ];
+            Mail::to('namnq@omegatheme.com')->send(new SendMailInvitePlan([
+                'fist_name' => $user['first_name'],
+                'author'  => Auth::user()->first_name,
+                'plan_name' => $plan['name'],
+                'url' => url('/accept-plan?plan_member=') . $member['uuid'],
+            ]));
             $this->planMemberRepository->create($member);
         }
         return true;

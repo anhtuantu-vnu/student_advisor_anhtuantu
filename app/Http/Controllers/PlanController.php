@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendMailInvitePlan;
 use App\Models\Plan;
+use App\Models\PlanMember;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\PlanRepository;
 use Illuminate\Contracts\Foundation\Application;
@@ -75,6 +76,16 @@ class PlanController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
+     */
+    public function acceptInvitePlan(Request $request): \Illuminate\Foundation\Application|Redirector|RedirectResponse|Application
+    {
+        $data = $this->planMemberRepository->updateOrCreate(['uuid' => $request->input('plan_member')], ['status_invite' => PlanMember::STATUS_ACCEPT_PLAN]);
+        return redirect('/to-do?id='. $data['plan_id']);
+    }
+
+    /**
      * @return JsonResponse
      */
     public function getPlanLimit(): JsonResponse
@@ -142,15 +153,22 @@ class PlanController extends Controller
 
     /**
      * @param Request $request
-     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
+     * @return JsonResponse
      */
-    public function createPlan(Request $request): \Illuminate\Foundation\Application|Redirector|RedirectResponse|Application
+    public function createPlan(Request $request): JsonResponse
     {
-        $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
-        if($request->input('list_member')) {
-            $this->planService->createPlanMember($request->only('list_member'), $plan);
+        try {
+            DB::beginTransaction;
+            $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
+            if($request->input('list_member')) {
+                $this->planService->createPlanMember($request->only('list_member'), $plan);
+            }
+            DB::commit();
+            return $this->successWithContent(['link_redirect' => "/to-do?id=".$plan['uuid']], 'Create Success');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return $this->failedWithErrors(500, $th->getMessage());
         }
-        return redirect("/to-do?id=".$plan['uuid']);
     }
 
     /**
