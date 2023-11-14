@@ -10,7 +10,6 @@ use App\Repositories\PlanMemberRepository;
 use App\Repositories\UserRepository;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -101,7 +100,7 @@ class PlanService
                 'updated_at' => $today,
                 'status_invite' => PlanMember::STATUS_PENDING_ACCEPT_PLAN
             ];
-            Mail::to('namnq@omegatheme.com')->send(new SendMailInvitePlan([
+            Mail::to($user['email'])->send(new SendMailInvitePlan([
                 'fist_name' => $user['first_name'],
                 'author'  => Auth::user()->first_name,
                 'plan_name' => $plan['name'],

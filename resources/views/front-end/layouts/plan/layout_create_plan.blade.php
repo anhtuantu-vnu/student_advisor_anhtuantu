@@ -123,11 +123,47 @@
         }
 
         function handleCreatePlan() {
+            let name = $('.input_name').val();
+            let description = $('#description').val();
+            hideMessageValidate()
+            console.log(name);
+            if(!name) {
+                console.log(130)
+                $('#required_name').removeClass('d-none');
+                return;
+            }
+            if(!description) {
+                $('#required_description').removeClass('d-none');
+                return;
+            }
             let data = {
-                'name' : $('.input_name').val(),
+                'name' : name,
                 'list_member' : $('#list_member').val(),
-                'description': $('#description').val()
+                'description': description
             };
+
+            $.ajax({
+                url: "/create-plan",
+                method: "post",
+                data: data,
+                before: function() {
+                  $('#loadingSpinner').removeClass('d-none');
+                },
+                success: function(res) {
+                    console.log(res);
+                },
+                error: function(data) {
+                    $('#loadingSpinner').addClass('d-none');
+                    console.log(data);
+                },
+                complete: function() {
+                    $('#loadingSpinner').addClass('d-none');
+                }
+            });
+        }
+
+        function hideMessageValidate() {
+            $('.message_validate').addClass('d-none');
         }
     </script>
 @endpush
@@ -150,7 +186,7 @@
                                         <label class="mont-font fw-600 font-xsss">{{ __('texts.texts.name_plan.' . auth()->user()->lang) }}
                                             *</label>
                                         <input type="text" class="form-control input_name" name="name" required />
-                                        <p class="alert-danger" style="background: none !important;" id="required_name">{{ __('texts.texts.required_name_plan.' . auth()->user()->lang) }}</p>
+                                        <p class="alert-danger message_validate d-none" style="background: none !important;" id="required_name">{{ __('texts.texts.required_name_plan.' . auth()->user()->lang) }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -197,11 +233,13 @@
                                             id="description"
                                             placeholder="{{ __('texts.texts.description_for_plan.' . auth()->user()->lang) }}"
                                             spellcheck="false" required></textarea>
-                                    <p class="alert-danger" id="required_description" style="background: none !important;">{{ __('texts.texts.required_des_plan.' . auth()->user()->lang) }}</p>
+                                    <p class="alert-danger message_validate d-none" id="required_description" style="background: none !important;">{{ __('texts.texts.required_des_plan.' . auth()->user()->lang) }}</p>
                                 </div>
                             </div>
-                            <input value="{{ __('texts.texts.save.' . auth()->user()->lang) }}"
-                                   class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"/>
+                            <button class="bg-current text-center text-white font-xsss fw-600 p-3 w175 rounded-3 d-inline-block border-0"
+                            onclick="handleCreatePlan()">
+                                {{ __('texts.texts.save.' . auth()->user()->lang) }}
+                                </button>
                         </div>
                     </div>
                 </div>
