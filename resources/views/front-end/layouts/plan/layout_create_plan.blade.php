@@ -126,9 +126,7 @@
             let name = $('.input_name').val();
             let description = $('#description').val();
             hideMessageValidate()
-            console.log(name);
             if(!name) {
-                console.log(130)
                 $('#required_name').removeClass('d-none');
                 return;
             }
@@ -146,11 +144,11 @@
                 url: "/create-plan",
                 method: "post",
                 data: data,
-                before: function() {
+                beforeSend: function() {
                   $('#loadingSpinner').removeClass('d-none');
                 },
                 success: function(res) {
-                    console.log(res);
+                    window.location.replace(res.data.link_redirect);
                 },
                 error: function(data) {
                     $('#loadingSpinner').addClass('d-none');

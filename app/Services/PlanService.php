@@ -123,7 +123,7 @@ class PlanService
             $plan['date_created'] = $date->format('F d, Y');
             $plan['count_date'] = $date->diffInDays(now());
             $dataReturn = $this->handleStatusPlan($plan['uuid'], $plan);
-            $listMember = $this->planMemberRepository->findByConditionWithLimit(['plan_id' => $plan['uuid']], 3);
+            $listMember = $this->planMemberRepository->findByConditionWithLimit(['plan_id' => $plan['uuid'], 'status_invite' => PlanMember::STATUS_ACCEPT_PLAN], 3);
             $dataUser = [];
             foreach ($listMember as $member) {
                 $dataUser[] = $this->userRepository->selectFirstByCondition(

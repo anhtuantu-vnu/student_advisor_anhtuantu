@@ -160,7 +160,7 @@ class PlanController extends Controller
                 $this->planService->createPlanMember($request->only('list_member'), $plan);
             }
             DB::commit();
-            return $this->successWithContent(['link_redirect' => "/to-do?id=".$plan['uuid']], 'Create Success');
+            return $this->successWithContent(['link_redirect' => url("/to-do?id=".$plan['uuid'])], 'Create Success');
         } catch (\Throwable $th) {
             DB::rollback();
             return $this->failedWithErrors(500, $th->getMessage());
