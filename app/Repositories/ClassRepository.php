@@ -16,9 +16,8 @@ class ClassRepository extends AbstractRepository
 
     /**
      * @param $data
-     * @return mixed
      */
-    public function checkClassInFileUpload($data): mixed
+    public function checkClassInFileUpload($data)
     {
         $dataFind = [
             'name' => $data['class'],
@@ -32,7 +31,7 @@ class ClassRepository extends AbstractRepository
             $dataFind['updated_at'] = Carbon::today();
             $dataFind['start_year'] = $data['start_year'];
             $dataFind['end_year'] = $data['end_year'];
-            $class = $this->model->insert($dataFind);
+            $class = $this->create($dataFind);
         }
         return $class;
     }

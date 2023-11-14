@@ -1,5 +1,6 @@
 <?php
 namespace App\Services;
+use App\Mail\SendMailInvitePlan;
 use App\Models\Plan;
 use App\Models\Task;
 use App\Repositories\PlanRepository;
@@ -11,7 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class PlanService
 {
@@ -76,7 +79,25 @@ class PlanService
     {
         $idUsers = json_decode($user['list_member'], true);
         $today = Carbon::today();
+
+        //create member by author
+        $member = [
+                'uuid'       => Str::uuid(),
+                'plan_id'    => $plan['uuid'],
+                'user_id'    => Auth::user()->uuid,
+                'created_at' => $today,
+                'updated_at' => $today,
+        ];
+        $this->planMemberRepository->create($member);
+
         foreach ($idUsers as $userId) {
+            $user = $this->userRepository->findOne(['uuid' => $userId]);
+            Mail::to('namnq@omegatheme.com')->send(new SendMailInvitePlan([
+                'fist_name' => $user['first_name'],
+                'author'  => Auth::user()->first_name,
+                'plan_name' => $plan['name'],
+                'url' => url('/') . '/to-do?id=' .$plan['uuid'],
+            ]));
             $member = [
                 'uuid'       => Str::uuid(),
                 'plan_id'    => $plan['uuid'],
@@ -149,7 +170,9 @@ class PlanService
                 ],
                 ['uuid' => $data['id_plan']]
             );
-            $this->planMemberRepository->deleteMemberWhenUpdatePlan(json_decode($data['list_member_deleted'], true), $data['id_plan']);
+            $listMemberDelete = json_decode($data['list_member_deleted'], true);
+            $this->taskRepository->updateStatusUnAssignTask($listMemberDelete, $data['id_plan']);
+            $this->planMemberRepository->deleteMemberWhenUpdatePlan($listMemberDelete, $data['id_plan']);
             $today = Carbon::today();
             $listNewMember = json_decode($data['list_member_add'], true);
             foreach ($listNewMember as $userId) {

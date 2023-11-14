@@ -73,15 +73,12 @@ class TaskRepository extends AbstractRepository
     }
 
     /**
-     * @param $idTask
-     * @return array
+     * @param $listIdMember
+     * @param $idPlan
+     * @return mixed
      */
-    public function getDataUserSendMail($idTask): array
+    public function updateStatusUnAssignTask($listIdMember, $idPlan): mixed
     {
-        $data = $this->model->where(['id' => $idTask])->with('userAssign')->with('userCreatedBy')->first();
-        return [
-            'mail_user_assign' => $data['userAssign']['email'],
-            'mail_user_created_by' =>  $data['userCreatedBy']['email']
-        ];
+        return $this->model->whereIn('assigned_to', $listIdMember)->where('plan_id' , $idPlan)->update(['assigned_to' => null]);
     }
 }

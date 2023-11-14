@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Imports;
+use App\Models\User;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -11,62 +13,65 @@ use App\Models\Intake;
 use App\Models\IntakeMember;
 use App\Models\Subject;
 use Carbon\Carbon;
-class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow
+class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow, SkipsEmptyRows
 {
     use Importable;
 
     /**
      * @param array $row
      *
-     * @return bool
      * @throws BindingResolutionException
      */
-    public function model(array $row): bool
+    public function model(array $row)
     {
         $subject = Subject::where('code' ,$row['code_class'])->first();
+        $user = User::where('email', $row['student_email'])->first();
         $now = Carbon::now();
-        echo json_encode([
-            'uuid' => Str::uuid(),
-            'code' => sprintf('%s%u%u', $row['code_class'], $now->month, $now->year),
-            'subject_id' => $subject['uuid'],
-            'start_date' => format_time_import($row['start_date']),
-            'end_date' => format_time_import($row['end_date']),
-            'duration_weeks' => 3,
-            'updated_at' => 2434,
-            'created_at' => 123123,
-            'start_hour' => 123123,
-            'start_minute' => 123,
-            'end_hours' => 123,
-            'week_days' => $row['week_day'],
-            'location' => $row['location']
-        ]);
-        dd($subject, $row);
+        $startDate = format_time_import($row['start_date'], 'Y-m-d');
+        $endDate = format_time_import($row['end_date'], 'Y-m-d');
         $intake = Intake::create([
             'uuid' => Str::uuid(),
-            'code' => sprintf('%E%u%u', $row['code_class'], $now->month, $now->year),
+            'code' => sprintf('%s-%u%u', $row['code_class'], $now->month, $now->year),
             'subject_id' => $subject['uuid'],
-            'start_date' => format_time_import($row['start_date']),
-            'end_date' => 23123,
-            'duration_weeks' => 3,
-            'updated_at' => 2434,
-            'created_at' => 123123,
-            'start_hour' => 123123,
-            'start_minute' => 123,
-            'end_hours' => 123,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'duration_weeks' => count_week($startDate, $endDate),
+            'updated_at' => Carbon::today(),
+            'created_at' => Carbon::today(),
+            'start_hour' => $row['start_hour'],
+            'start_minute' => $row['start_minute'],
+            'end_hours' => $row['end_hour'],
+            'end_minute' => $row['end_minute'],
             'week_days' => $row['week_day'],
             'location' => $row['location']
         ]);
-//        $class = $this->checkClassInFile($row);
-//        dd($class, 123);
-        return true;
+        return new IntakeMember([
+            'uuid' => Str::uuid(),
+            'updated_at' => Carbon::today(),
+            'created_at' => Carbon::today(),
+            'attendance_points' => $row['attendance_points'],
+            'mid_term_points' => $row['mid_term_points'],
+            'last_term_points' => $row['last_term_points'],
+            'user_id'  => $user['uuid'],
+            'role' => User::ROLE_STUDENT,
+            'intake_id' => $intake['uuid']
+        ]);
     }
 
-    private function convertTime() {
-
+    public function rules(): array
+    {
+        return [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'gender' => 'required',
+            'date_of_birth' => 'required'
+        ];
     }
 
     public function chunkSize(): int
     {
-        return 100;
+        return 50;
     }
 }
