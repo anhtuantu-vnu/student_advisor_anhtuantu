@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Repositories;
-use App\Repositories\Contracts\RepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserRepository extends AbstractRepository
 {
@@ -22,7 +22,7 @@ class UserRepository extends AbstractRepository
             $query->orWhere('email', 'LIKE' , "%$search%")
                 ->orWhere('last_name', 'LIKE' , "%$search%")
                 ->orWhere('first_name', 'LIKE' , "%$search%");
-        });
+        })->where('uuid' , '<>', Auth::user()->uuid);
         if(count(json_decode($data['member_selected'], true))) {
             $listIdMemberSelected = collect(json_decode($data['member_selected'], true))->map(function($member) {
                 return $member['id'];

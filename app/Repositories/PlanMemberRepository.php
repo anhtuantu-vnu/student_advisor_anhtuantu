@@ -17,7 +17,7 @@ class PlanMemberRepository extends AbstractRepository
      */
     public function getMemberByPlanId($idPlan): mixed
     {
-        return $this->model->where('plan_id' , $idPlan)->with('userByPlan')->get()->map(function($member) {
+        return $this->model->where('plan_id' , $idPlan)->where('status_invite' ,PlanMember::STATUS_ACCEPT_PLAN)->with('userByPlan')->get()->map(function($member) {
             return $member['userByPlan'];
         })->toArray();
     }

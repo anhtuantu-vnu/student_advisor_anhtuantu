@@ -397,10 +397,10 @@
                             <i class="feather-book-open text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
                             <h2 class="ms-2">{{ __('texts.texts.description.' . auth()->user()->lang) }}</h2>
                         </div>`;
-            if("{{auth()->user()->uuid}}" == data.data['author']) {
-                UIModal += `<textarea id="description_${task['id']}" class="description_modal p-3 lh-16" name="description" rows="5">${task['description'] || "{{ __('texts.texts.description_task.' . auth()->user()->lang)}}"}</textarea>`
+            if(task['description']){
+                UIModal += `<textarea id="description_${task['id']}" class="description_modal p-3 lh-16" name="description" rows="5">${task['description']}</textarea>`;
             } else {
-                UIModal += `<p id="description_${task['id']}" >${task['description'] || "{{ __('texts.texts.description_member.' . auth()->user()->lang)}}"}</p>`
+                UIModal += `<textarea id="description_${task['id']}" class="description_modal p-3 lh-16" name="description" rows="5" placeholder="{{ __('texts.texts.description_member.' . auth()->user()->lang)}}"></textarea>`;
             }
 
             UIModal +=  `</div>

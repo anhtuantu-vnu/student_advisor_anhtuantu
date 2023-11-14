@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Mail\CustomEmail;
 use App\Models\Plan;
+use App\Models\PlanMember;
 use App\Models\Task;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\PlanRepository;

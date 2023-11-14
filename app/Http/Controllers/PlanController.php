@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendMailInvitePlan;
-use App\Models\Plan;
 use App\Models\PlanMember;
 use App\Repositories\PlanMemberRepository;
 use App\Repositories\PlanRepository;
@@ -15,11 +13,9 @@ use App\Services\PlanService;
 use App\Repositories\UserRepository;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Carbon\Carbon;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-
+use Illuminate\Support\Facades\DB;
 class PlanController extends Controller
 {
     /**
@@ -158,13 +154,13 @@ class PlanController extends Controller
     public function createPlan(Request $request): JsonResponse
     {
         try {
-            DB::beginTransaction;
+            DB::beginTransaction();
             $plan = $this->planService->createPlan($request->only('name' , 'description'), Auth::user()->uuid);
             if($request->input('list_member')) {
                 $this->planService->createPlanMember($request->only('list_member'), $plan);
             }
             DB::commit();
-            return $this->successWithContent(['link_redirect' => "/to-do?id=".$plan['uuid']], 'Create Success');
+            return $this->successWithContent(['link_redirect' => url("/to-do?id=".$plan['uuid'])], 'Create Success');
         } catch (\Throwable $th) {
             DB::rollback();
             return $this->failedWithErrors(500, $th->getMessage());
