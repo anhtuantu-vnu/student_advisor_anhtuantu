@@ -155,19 +155,6 @@ class MessageController extends Controller
                 ]);
             }
         }
-        $beamsClient = new \Pusher\PushNotifications\PushNotifications([
-            "instanceId" => "6c6ab1a2-5728-4c80-a4d9-a56e17f29e3c",
-            "secretKey"  => "234948EFDC058CA9BD470F9970FB9EF7ABC47B6AB965F04C1111FF3173D69D7D",
-        ]);
-
-        $publishResponse = $beamsClient->publishToInterests(
-            ['user-' . \auth()->id()],
-            ["web" => ["notification" => [
-                "title"     => auth()->user()->last_name . ' ' . \auth()->user()->first_name,
-                "body"      => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
-                "deep_link" => "https://www.pusher.com",
-            ]],
-            ]);
 
         // send the response
         return Response::json([
