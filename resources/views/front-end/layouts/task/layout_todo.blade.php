@@ -39,7 +39,6 @@
                                 </div>`;
 
                         if (data.data.is_task) {
-                            console.log(key)
                             typeTask += `<div class="${key}">`;
                             // append ui task
                             for (const [keyTask, task] of Object.entries(listTaskByType)) {
@@ -368,12 +367,18 @@
                             <div class="modal_customer" tabindex="-1">
                                 <div class="modal-content pt-3 ps-3 pe-3">
                                     <div class="rounded-0 text-left">
-                                        <div class="title_task d-flex">
-                                            <i class="feather-bookmark text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
-                                            <div class="title_task_text ms-2">
-                                                <h2 style="margin-bottom: 0">${task['name']}</h2>
-                                                <p class="mb-3" style="font-size: 14px">{{ __('texts.texts.in_list.' . auth()->user()->lang) }}
-                                                    ${typeTask}
+                                        <div class="title_tasK">
+                                            <div class="d-flex">
+                                                <i class="feather-bookmark text-grey-900" style="margin-top: 2px; font-size: 20px;"></i>
+                                                <div class="title_task_text ms-2 w-100">
+                                                    <h2 class="mb-1">{{ __('texts.texts.edit_name.' . auth()->user()->lang) }}</h2>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1">
+                                                    <input id="name_${task['id']}" class="w-100 p-1" style="border-radius: 6px; border: 1px solid;" value=${task['name']}>
+                                                    <p class="mb-3" style="font-size: 14px">{{ __('texts.texts.in_list.' . auth()->user()->lang) }}
+                                                        ${typeTask}
+                                                    <p>
                                             </div>
                                         </div>
                                         <div class="assign_to mt-1">
@@ -468,6 +473,7 @@
                     'id': idTask,
                     'member_selected': $(`#selected_${idTask} option:selected`).val(),
                     'description': $(`#description_${idTask}`).val(),
+                    'name' : $(`#name_${idTask}`).val()
                 }
             };
             $.ajax({
