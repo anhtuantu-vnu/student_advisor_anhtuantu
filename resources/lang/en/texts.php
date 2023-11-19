@@ -423,7 +423,7 @@ return [
       'en' => 'Task'
     ],
     'in_list' => [
-      'vi' => 'loại task',
+      'vi' => 'loại nhiệm vụ',
       'en' => 'in list'
     ],
     'description_task' => [
@@ -553,6 +553,10 @@ return [
     'required_des_plan' => [
       'vi' => 'Trường mô tả bắt bộc phải nhập',
       'en' => 'Description is required'
-    ]
+    ],
+   'edit_name' => [
+       'vi' => 'Chỉnh sửa tên nhiệm vụ',
+       'en' => 'Edit name task'
+   ]
   ]
 ];

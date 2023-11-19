@@ -52,6 +52,7 @@ class TodoController extends Controller
             DB::beginTransaction();
             $this->taskRepository->updateByCondition(
                 [
+                    'name'        => $request->input('task.name'),
                     'assigned_to' => $request->input('task.member_selected'),
                     'description' => $request->input('task.description')
                 ],
