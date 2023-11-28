@@ -10,7 +10,7 @@
                     <img src="{{ asset('assets/imgs/vietnam_flag.png') }}" alt="vietnam_flag" class="languages-choices"
                         data-lang="vi" style="height: 32px; width: 32px; border-radius: 100%; object-fit: cover;">
                     <div class="p-2 languages-choices" data-lang="vi">
-                        Viêt Nam
+                        Tiếng Việt
                     </div>
                 </div>
             </a>

@@ -38,7 +38,9 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <b>{{ __('texts.texts.department.' . $thisUser->lang) }}</b>:
-                                                    {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
+                                                    @if ($thisUser->department != null)
+                                                        {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
+                                                    @endif
                                                 </div>
                                                 @if (auth()->user()->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
                                                     <div class="col-md-6">
@@ -75,6 +77,15 @@
                                     </div>
                                 @endif
                             </div>
+                            @if (auth()->user()->role != App\Http\Controllers\_CONST::STUDENT_ROLE)
+                                <div class="mt-3">
+                                    <a href="/admin/users/{{ $thisUser->uuid }}/update">
+                                        <button class="btn btn-primary text-white" type="button">
+                                            {{ __('texts.texts.update.' . $thisUser->lang) }}
+                                        </button>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

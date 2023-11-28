@@ -26,38 +26,6 @@
             background-image: url({{ asset('assets/imgs/photos_videos.png') }});
         }
 
-        .input-color-container {
-            position: relative;
-            overflow: hidden;
-            width: 40px;
-            height: 40px;
-            border: solid 2px #ddd;
-            border-radius: 40px;
-        }
-
-        .input-color {
-            position: absolute;
-            right: -8px;
-            top: -8px;
-            width: 56px;
-            height: 56px;
-            border: none;
-        }
-
-        .input-color-label {
-            cursor: pointer;
-            text-decoration: underline;
-            color: #3498db;
-        }
-
-        .cursor-pointer {
-            cursor: pointer;
-        }
-
-        .hover-li:hover {
-            background: #ccc;
-        }
-
         /* Modal styles */
         .event-image-modal {
             position: fixed;
@@ -331,20 +299,6 @@
         }
 
         loadEvents();
-
-        function formatDateCreatedAt(timestamp) {
-            const date = new Date(timestamp);
-            const months = [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-            ];
-
-            const day = date.getDate();
-            const month = months[date.getMonth()];
-            const year = date.getFullYear();
-
-            return `${day} ${month} ${year}`;
-        }
 
         function getEventDescription(uuid, description, maxLength = 50) {
             let seeMoreText = "{{ auth()->user()->lang }}" == "vi" ? "Xem thêm" : "See more";

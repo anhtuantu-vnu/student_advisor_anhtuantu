@@ -17,4 +17,9 @@ class ClassRole extends Model
         return $this->belongsTo(Class_::class, 'class_id', 'uuid')
             ->select(['uuid', 'name', 'code', 'start_year', 'end_year']);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'uuid');
+    }
 }

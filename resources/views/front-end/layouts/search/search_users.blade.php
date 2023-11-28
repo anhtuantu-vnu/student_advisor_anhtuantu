@@ -65,7 +65,9 @@
         foundSearchUsers.forEach(item => {
             if (!item.shown) {
                 item.shown = true;
-                let thisClass = item.class_roles.length ? item.class_roles[0].class_.name : '';
+                let thisDepartment = item.department ? JSON.parse(item.department.name)[
+                        "{{ auth()->user()->lang }}"] :
+                    "";
                 userResultsContainer.innerHTML += `
                 <div class="col-md-4">
                     <div class="card-body d-flex flex-wrap pt-0 ps-4 pe-4 pb-3">
@@ -78,7 +80,10 @@
                               <h4 class="fw-700 text-grey-900 font-xssss mt-2">
                                 ${item.last_name + ' ' + item.first_name}
                                 <span class="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">
-                                    ${thisClass}
+                                    ${item.email}
+                                </span>
+                                <span class="d-block font-xsssss fw-500 mt-1 lh-4 text-grey-500">
+                                    ${thisDepartment}
                                 </span>
                               </h4>
                             </div>

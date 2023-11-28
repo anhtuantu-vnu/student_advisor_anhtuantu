@@ -170,8 +170,12 @@ return [
       "vi" => 'Khoa',
       "en" => 'Department'
     ],
+    'departments' => [
+      "vi" => 'Khoa',
+      "en" => 'Departments'
+    ],
     'role' => [
-      "vi" => 'Role',
+      "vi" => 'Vai trò',
       "en" => 'Role'
     ],
     'class' => [
@@ -269,10 +273,6 @@ return [
     'action' => [
       "vi" => 'Thao tác',
       "en" => 'Action'
-    ],
-    'attendance_points' => [
-      "vi" => 'Điểm chuyên cần',
-      "en" => 'Attendance points'
     ],
     'attendance_points' => [
       "vi" => 'Điểm chuyên cần',
@@ -539,20 +539,232 @@ return [
       'en' => 'You cannot update this event'
     ],
     'import_success' => [
-        'vi' => 'Nhập dữ liệu thành công',
-        'en' => 'Import success'
+      'vi' => 'Nhập dữ liệu thành công',
+      'en' => 'Import success'
     ],
     'import_failed' => [
-        'vi' => 'Nhập dữ liệu thất bại',
-        'en' => 'Import failed'
+      'vi' => 'Nhập dữ liệu thất bại',
+      'en' => 'Import failed'
     ],
     'required_name_plan' => [
-        'vi' => 'Trường tên kế hoạch bắt bộc phải nhập',
-        'en' => 'Name plan is required'
+      'vi' => 'Trường tên kế hoạch bắt bộc phải nhập',
+      'en' => 'Name plan is required'
     ],
     'required_des_plan' => [
       'vi' => 'Trường mô tả bắt bộc phải nhập',
       'en' => 'Description is required'
-    ]
+    ],
+    'teachers' => [
+      'vi' => 'Giảng viên',
+      'en' => 'Teachers'
+    ],
+    'students' => [
+      'vi' => 'Sinh viên',
+      'en' => 'Students'
+    ],
+    'subjects' => [
+      'vi' => 'Môn học',
+      'en' => 'Subjects'
+    ],
+    'classes' => [
+      'vi' => 'Lớp học',
+      'en' => 'Classes'
+    ],
+    'intakes' => [
+      'vi' => 'Lớp theo môn học',
+      'en' => 'Intakes'
+    ],
+    'name' => [
+      'vi' => 'Tên',
+      'en' => 'Name'
+    ],
+    'vi' => [
+      'vi' => 'Tiếng Việt',
+      'en' => 'Vietnamese'
+    ],
+    'en' => [
+      'vi' => 'Tiếng Anh',
+      'en' => 'English'
+    ],
+    'name_required' => [
+      'vi' => 'Vui lòng điền tên',
+      'en' => 'Name is required'
+    ],
+    'code_required' => [
+      'vi' => 'Vui lòng điền mã',
+      'en' => 'Code is required'
+    ],
+    'department_required' => [
+      'vi' => 'Vui lòng chọn khoa',
+      'en' => 'Department is required'
+    ],
+    'time_information_required' => [
+      'vi' => 'Vui lòng điền thông tin thời gian',
+      'en' => 'Time information is required'
+    ],
+    'subject_required' => [
+      'vi' => 'Vui lòng chọn môn học',
+      'en' => 'Subject is required'
+    ],
+    'location_required' => [
+      'vi' => 'Vui lòng điền địa điểm',
+      'en' => 'Location is required'
+    ],
+    'email_required' => [
+      'vi' => 'Vui lòng điền địa chỉ email',
+      'en' => 'Email is required'
+    ],
+    'update_success' => [
+      'vi' => 'Cập nhật thành công',
+      'en' => 'Updated successfully'
+    ],
+    'not_found' => [
+      'vi' => 'Không tìm thấy dữ liệu',
+      'en' => 'Entity not found'
+    ],
+    'last_updated_by' => [
+      'vi' => 'Cập nhật lần cuối bởi',
+      'en' => 'Last updated by'
+    ],
+    'at' => [
+      'vi' => 'vào lúc',
+      'en' => 'at'
+    ],
+    'code' => [
+      'vi' => 'Mã',
+      'en' => 'Code'
+    ],
+    'color' => [
+      'vi' => 'Màu',
+      'en' => 'Color'
+    ],
+    'choose_an_option' => [
+      'vi' => 'Chọn dữ liệu',
+      'en' => 'Choose an option'
+    ],
+    'start_year' => [
+      'vi' => 'Năm bắt đầu',
+      'en' => 'Start year'
+    ],
+    'end_year' => [
+      'vi' => 'Năm kết thúc',
+      'en' => 'End year'
+    ],
+    'remove' => [
+      'vi' => 'Xoá bỏ',
+      'en' => 'Remove'
+    ],
+    'add' => [
+      'vi' => 'Thêm',
+      'en' => 'Add'
+    ],
+    'dashboard' => [
+      'vi' => 'Bảng điều khiển',
+      'en' => 'Dashboard'
+    ],
+    'information' => [
+      'vi' => 'Thông tin',
+      'en' => 'Information'
+    ],
+    'subject_' => [
+      'vi' => 'Môn học',
+      'en' => 'Subject'
+    ],
+    'week_days' => [
+      'vi' => 'Ngày trong tuần',
+      'en' => 'Week days'
+    ],
+    'start_date' => [
+      'vi' => 'Ngày bắt đầu',
+      'en' => 'Start date'
+    ],
+    'end_date' => [
+      'vi' => 'Ngày kết thúc',
+      'en' => 'End date'
+    ],
+    'start_time' => [
+      'vi' => 'Giờ bắt đầu',
+      'en' => 'Start time'
+    ],
+    'end_time' => [
+      'vi' => 'Giờ kết thúc',
+      'en' => 'End time'
+    ],
+    'intake_time' => [
+      'vi' => 'Ngày học',
+      'en' => 'Intake range'
+    ],
+    'intake_time_hour' => [
+      'vi' => 'Giờ học',
+      'en' => 'Intake hour'
+    ],
+    'day_2' => [
+      'vi' => 'Thứ hai',
+      'en' => 'Monday'
+    ],
+    'day_3' => [
+      'vi' => 'Thứ ba',
+      'en' => 'Tuesday'
+    ],
+    'day_4' => [
+      'vi' => 'Thứ tư',
+      'en' => 'Wednesday'
+    ],
+    'day_5' => [
+      'vi' => 'Thứ năm',
+      'en' => 'Thursday'
+    ],
+    'day_6' => [
+      'vi' => 'Thứ sáu',
+      'en' => 'Friday'
+    ],
+    'day_7' => [
+      'vi' => 'Thứ bảy',
+      'en' => 'Saturday'
+    ],
+    'day_1' => [
+      'vi' => 'Chủ nhật',
+      'en' => 'Sunday'
+    ],
+    'male' => [
+      'vi' => 'Nam',
+      'en' => 'Male'
+    ],
+    'female' => [
+      'vi' => 'Nữ',
+      'en' => 'Female'
+    ],
+    'other' => [
+      'vi' => 'Khác',
+      'en' => 'Other'
+    ],
+    'unique_id' => [
+      'vi' => 'Mã giảng viên/sinh viên',
+      'en' => 'Unique ID'
+    ],
+    'first_name' => [
+      'vi' => 'Tên',
+      'en' => 'First name'
+    ],
+    'last_name' => [
+      'vi' => 'Họ',
+      'en' => 'Last name'
+    ],
+    'system_notifications' => [
+      'vi' => 'Thông báo',
+      'en' => 'Notifications'
+    ],
+    'title' => [
+      'vi' => 'Tiêu đê',
+      'en' => 'Title'
+    ],
+    'content' => [
+      'vi' => 'Nội dung',
+      'en' => 'Content'
+    ],
+    'content_en' => [
+      'vi' => 'Nội dung tiếng Anh',
+      'en' => 'English Content'
+    ],
   ]
 ];

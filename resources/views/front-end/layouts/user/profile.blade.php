@@ -91,10 +91,12 @@
                     let lcUser = JSON.parse(localStorage.getItem("user"));
                     lcUser.avatar = newAvatar;
                     localStorage.setItem("user", JSON.stringify(lcUser))
-                    showProfileMessage("success", {{ __('texts.texts.import_success.' . auth()->user()->lang) }});
+                    showProfileMessage("success",
+                        {{ __('texts.texts.import_success.' . auth()->user()->lang) }});
                 },
                 error: function(error) {
-                    showProfileMessage("danger", {{ __('texts.texts.import_failed.' . auth()->user()->lang) }});
+                    showProfileMessage("danger",
+                        {{ __('texts.texts.import_failed.' . auth()->user()->lang) }});
                 },
                 complete: function(data) {
                     document.getElementById("loadingSpinner").classList.add("d-none");
@@ -167,7 +169,9 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <b>{{ __('texts.texts.department.' . $thisUser->lang) }}</b>:
-                                                {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
+                                                @if ($thisUser->department != null)
+                                                    {{ json_decode($thisUser->department->name, true)[$thisUser->lang] }}
+                                                @endif
                                             </div>
                                             @if (auth()->user()->role == App\Http\Controllers\_CONST::STUDENT_ROLE)
                                                 <div class="col-md-6">

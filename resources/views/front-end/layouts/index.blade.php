@@ -16,6 +16,39 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app_custom.css') }}">
 
+    <style>
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .hover-li:hover {
+            background: #ccc;
+        }
+
+        .input-color-container {
+            position: relative;
+            overflow: hidden;
+            width: 40px;
+            height: 40px;
+            border: solid 2px #ddd;
+            border-radius: 40px;
+        }
+
+        .input-color {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            width: 56px;
+            height: 56px;
+            border: none;
+        }
+
+        .input-color-label {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #3498db;
+        }
+    </style>
     {{--  Style for page  --}}
     @yield('style_page')
 
@@ -23,6 +56,20 @@
     <script type="text/javascript" src="{{ asset('js/app_custom.js') }}"></script>
 
     <script>
+        function formatDateCreatedAt(timestamp) {
+            const date = new Date(timestamp);
+            const months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day} ${month} ${year}`;
+        }
+
         function formatRelativeTime(timestamp) {
             const now = new Date();
             const date = new Date(timestamp);
@@ -101,26 +148,26 @@
 
     @stack('js_page')
     <script>
-	    getDepartments()
-	    // load departments
-	    function getDepartments() {
-		    $.ajax({
-			    type: "GET",
-			    url: "/api/unread-message",
-			    headers: {
-				    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
-			    },
-			    success: function(data) {
-				    if (data.meta.success) {
-					    $("#countMessage").html(data.data)
-					    if(data.data === 0) {
-						    $("#haveMessage").css("visibility", "hidden");
+        getDepartments()
+        // load departments
+        function getDepartments() {
+            $.ajax({
+                type: "GET",
+                url: "/api/unread-message",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+                },
+                success: function(data) {
+                    if (data.meta.success) {
+                        $("#countMessage").html(data.data)
+                        if (data.data === 0) {
+                            $("#haveMessage").css("visibility", "hidden");
                         } else {
-						    $("#haveMessage").css("visibility", "visible");
-					    }
-				    }
-			    },
-		    });
-	    }
+                            $("#haveMessage").css("visibility", "visible");
+                        }
+                    }
+                },
+            });
+        }
     </script>
 </body>

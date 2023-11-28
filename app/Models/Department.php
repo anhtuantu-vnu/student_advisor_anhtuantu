@@ -16,4 +16,9 @@ class Department extends Model
     {
         return $this->hasMany(Subject::class, 'subject_id', 'uuid')->select(['uuid', 'name']);
     }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'uuid');
+    }
 }
