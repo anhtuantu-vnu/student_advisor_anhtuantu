@@ -766,9 +766,13 @@ return [
       'vi' => 'Nội dung tiếng Anh',
       'en' => 'English Content'
     ],
-   'edit_name' => [
-       'vi' => 'Chỉnh sửa tên nhiệm vụ',
-       'en' => 'Edit name task'
-   ]
+    'edit_name' => [
+      'vi' => 'Chỉnh sửa tên nhiệm vụ',
+      'en' => 'Edit name task'
+    ],
+    'admin' => [
+      'vi' => 'Quản trị hệ thống',
+      'en' => 'Admin'
+    ],
   ]
 ];

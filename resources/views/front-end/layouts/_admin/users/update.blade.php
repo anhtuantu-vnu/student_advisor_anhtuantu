@@ -162,6 +162,9 @@
                                             <option value="teacher" <?php if($user->role == 'teacher') { ?>selected<?php } ?>>
                                                 {{ __('texts.texts.teacher.' . auth()->user()->lang) }}
                                             </option>
+                                            <option value="admin" <?php if($user->role == 'admin') { ?>selected<?php } ?>>
+                                                {{ __('texts.texts.admin.' . auth()->user()->lang) }}
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mt-2">
