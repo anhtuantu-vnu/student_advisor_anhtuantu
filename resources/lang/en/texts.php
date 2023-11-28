@@ -423,7 +423,7 @@ return [
       'en' => 'Task'
     ],
     'in_list' => [
-      'vi' => 'loại task',
+      'vi' => 'loại nhiệm vụ',
       'en' => 'in list'
     ],
     'description_task' => [
@@ -766,5 +766,9 @@ return [
       'vi' => 'Nội dung tiếng Anh',
       'en' => 'English Content'
     ],
+   'edit_name' => [
+       'vi' => 'Chỉnh sửa tên nhiệm vụ',
+       'en' => 'Edit name task'
+   ]
   ]
 ];
