@@ -92,11 +92,11 @@
                     lcUser.avatar = newAvatar;
                     localStorage.setItem("user", JSON.stringify(lcUser))
                     showProfileMessage("success",
-                        {{ __('texts.texts.import_success.' . auth()->user()->lang) }});
+                        "{{ __('texts.texts.import_success.' . auth()->user()->lang) }}");
                 },
                 error: function(error) {
                     showProfileMessage("danger",
-                        {{ __('texts.texts.import_failed.' . auth()->user()->lang) }});
+                        "{{ __('texts.texts.import_failed.' . auth()->user()->lang) }}");
                 },
                 complete: function(data) {
                     document.getElementById("loadingSpinner").classList.add("d-none");
