@@ -46,20 +46,23 @@
             @include('front-end.components.header.languages')
         </div>
 
-        <span class="p-2 ms-3 text-center menu-icon" id="dropdownNotifications" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <span class="dot-count bg-warning d-none" id="headerHasNotificationDot"></span>
-            <i class="feather-bell font-xl text-current" id="dropdownNotificationsI"></i>
-        </span>
-        <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg" id="headerNotificationsWrapper"
-            aria-labelledby="dropdownNotifications">
-            @include('front-end.components.header.notifications')
-        </div>
+        @if (auth()->user()->role != 'admin')
+            <span class="p-2 ms-3 text-center menu-icon" id="dropdownNotifications" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <span class="dot-count bg-warning d-none" id="headerHasNotificationDot"></span>
+                <i class="feather-bell font-xl text-current" id="dropdownNotificationsI"></i>
+            </span>
+            <div class="dropdown-menu dropdown-menu-end p-4 rounded-3 border-0 shadow-lg"
+                id="headerNotificationsWrapper" aria-labelledby="dropdownNotifications">
+                @include('front-end.components.header.notifications')
+            </div>
 
-        <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn" style="position: relative"><i
-                class=" feather-message-square font-xl text-current"></i>
-            <span id="haveMessage" style="position: absolute;width: 10px; height: 10px; background: red;border-radius: 50%;"></span>
-        </a>
+            <a href="{{ route('chat') }}" class="p-2 text-center ms-3 menu-icon chat-active-btn"
+                style="position: relative"><i class=" feather-message-square font-xl text-current"></i>
+                <span id="haveMessage"
+                    style="position: absolute;width: 10px; height: 10px; background: red;border-radius: 50%;"></span>
+            </a>
+        @endif
 
         {{-- settings here if needed --}}
         {{-- @include('front-end.components.header.settings') --}}
@@ -73,3 +76,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    let paramsSearch = new URL(window.location.href);
+    var searchKeyWord = paramsSearch.searchParams.get("search") || '';
+    if (document.getElementById("headerSearchKeyword")) {
+        document.getElementById("headerSearchKeyword").value = searchKeyWord;
+    }
+</script>

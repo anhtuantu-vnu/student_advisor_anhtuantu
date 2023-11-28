@@ -17,7 +17,10 @@
                             </h1>
                             <div>
                                 @include('front-end.layouts.search.search_users')
-                                @include('front-end.layouts.search.search_events')
+
+                                @if (auth()->user()->role != 'admin')
+                                    @include('front-end.layouts.search.search_events')
+                                @endif
                             </div>
                         </div>
                     </div>

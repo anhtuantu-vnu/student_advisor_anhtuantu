@@ -27,8 +27,8 @@ class StudentScheduleImport implements ToModel, WithChunkReading, WithHeadingRow
         $subject = Subject::where('code' ,$row['code_class'])->first();
         $user = User::where('email', $row['student_email'])->first();
         $now = Carbon::now();
-        $startDate = format_time_import($row['start_date'], 'Y-m-d');
-        $endDate = format_time_import($row['end_date'], 'Y-m-d');
+        $startDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['start_date'])->format('Y-m-d');
+        $endDate = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['end_date'])->format('Y-m-d');
         $intake = Intake::create([
             'uuid' => Str::uuid(),
             'code' => sprintf('%s-%u%u', $row['code_class'], $now->month, $now->year),

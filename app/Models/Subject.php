@@ -22,4 +22,9 @@ class Subject extends Model
         return $this->belongsTo(Department::class, 'department_id', 'uuid')
             ->select(['uuid', 'name']);
     }
+
+    public function updatedByUser()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'uuid');
+    }
 }

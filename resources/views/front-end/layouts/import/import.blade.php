@@ -2,7 +2,7 @@
 
 @section('style_page')
     <style>
-        .download_example_template:hover{
+        .download_example_template:hover, .download_example_template_schedule:hover {
             cursor: pointer;
         }
         .disable_btn{
@@ -61,7 +61,7 @@
         $('.download_example_template').click(function() {
             window.location = '/export';
         })
-        $('.download_example_template').click(function() {
+        $('.download_example_template_schedule').click(function() {
             window.location = '/export-schedule';
         })
 
@@ -174,9 +174,9 @@
                                 <div class="col-12">
                                         <span class="hiddenFileInput">
                                             @if(auth()->user()->lang === "vi")
-                                                <p> Tải xuống mẫu<a class="download_example_template"> .csv</a> để xem ví dụ về định dạng được yêu cầu.</p>
+                                                <p> Tải xuống mẫu<a class="download_example_template_schedule"> .csv</a> để xem ví dụ về định dạng được yêu cầu.</p>
                                             @else
-                                                <p> Download our <a class="download_example_template"> .csv</a> template to see an example of the required format.</p>
+                                                <p> Download our <a class="download_example_template_schedule"> .csv</a> template to see an example of the required format.</p>
                                             @endif
                                             <input type="file" name="file" accept="xlsx" id="fileStudentSchedule" onchange="handleUploadFileSchedule()"/>
                                         </span>

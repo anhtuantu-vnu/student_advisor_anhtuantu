@@ -22,6 +22,16 @@ class Intake extends Model
         "7" => 'saturday',
     );
 
+    const WEEKDAYS_MAP_VI = array(
+        "1" => 'chủ nhật',
+        "2" => 'thứ hai',
+        "3" => 'thứ ba',
+        "4" => 'thứ tư',
+        "5" => 'thứ năm',
+        "6" => 'thứ sáu',
+        "7" => 'thứ bảy',
+    );
+
     public function intakeMembers()
     {
         return $this->hasMany(IntakeMember::class, 'intake_id', 'uuid');
@@ -31,5 +41,10 @@ class Intake extends Model
     {
         return $this->belongsTo(Subject::class, 'subject_id', 'uuid')
             ->select(['uuid', 'name', 'code', 'description']);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'uuid');
     }
 }

@@ -15,7 +15,11 @@ class HomeController extends Controller
             return redirect('/login');
         }
 
-        return view('front-end.layouts.layout_home');
+        if ($user->role == _CONST::ADMIN_ROLE) {
+            return redirect('/admin-dashboard');
+        } else {
+            return view('front-end.layouts.layout_home');
+        }
     }
 
     /**

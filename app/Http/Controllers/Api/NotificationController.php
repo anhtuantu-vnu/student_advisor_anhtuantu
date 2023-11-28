@@ -38,7 +38,7 @@ class NotificationController extends Controller
                 ->skip($skip)
                 ->take($limit)
                 ->with(['targetUserInfo', 'originUserInfo', 'event'])
-                ->orderBy('id', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             $data = [

@@ -12,7 +12,14 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\IntakeController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\Class_Controller;
+use App\Http\Controllers\AdminIntakeController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\SystemNotificationController;
+use App\Http\Controllers\UserSystemNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +50,9 @@ Route::middleware(['auth.login'])->group(function () {
     Route::get("/my-profile", [AccountController::class, 'showProfile'])->name('app.my.profile');
     Route::post("/update-avatar", [AccountController::class, 'updateAvatar'])->name('app.update.avatar');
     Route::post("/update-allow-search-by-teachers-only", [AccountController::class, 'updateAllowSearchByTeachersOnly'])->name('app.update.allow_search_by_teacher_only');
+
+    Route::get("/system-notifications", [UserSystemNotificationController::class, 'index'])->name('users.system.notifications');
+    Route::get("/get-system-notifications", [UserSystemNotificationController::class, 'getNotifications'])->name('users.get.system.notifications');
 
     // route event
     Route::post("/create-event", [EventController::class, 'createEvent'])->name('event.create');
@@ -87,21 +97,6 @@ Route::middleware(['auth.login'])->group(function () {
     Route::put('task/update-status', [TodoController::class, 'updateStatusTask'])->name('update_status_task');
     Route::get("/to-do", [TodoController::class, 'showTasks'])->name('show_task');
     Route::post("/to-do", [TodoController::class, 'createTask'])->name('create_task');
-
-    //Route import
-    Route::get("/import", [FileController::class, 'index'])->name('view_import');
-    Route::post("/import", [FileController::class, 'uploadFile'])->name('upload_filed');
-    Route::post("/import-schedule", [FileController::class, 'uploadFileSchedule'])->name('upload_filed');
-    Route::middleware(['auth.role_admin'])->group(function () {
-        Route::get('/export', function () {
-            $path = storage_path('export/data_student_example.xlsx');
-            return response()->download($path);
-        })->name('export');
-        Route::get('/export-schedule', function () {
-            $path = storage_path('export/import_schedule_student.xlsx');
-            return response()->download($path);
-        })->name('export-schedule');
-    });
 
     /**
      *  Fetch calendar events for a user
@@ -191,4 +186,67 @@ Route::middleware(['auth.login'])->group(function () {
      */
     Route::post('/student-chat/setActiveStatus', [MessageController::class, 'setActiveStatus'])->name('activeStatus.set');
     Route::get('/student-chat/{id}', [MessageController::class, 'index'])->name('user');
+
+    /**
+     * Admin routes
+     */
+    Route::middleware(['check.auth.admin'])->group(function () {
+        Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('admin.index');
+
+        // departments
+        Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
+        Route::get('/admin/departments/{uuid}/update', [DepartmentController::class, 'update'])->name('admin.departments.update');
+        Route::post('/admin/departments/{uuid}/update', [DepartmentController::class, 'postUpdate'])->name('admin.departments.post.update');
+
+        // subjects
+        Route::get('/admin/subjects', [SubjectController::class, 'index'])->name('admin.subjects');
+        Route::get('/admin/subjects/{uuid}/update', [SubjectController::class, 'update'])->name('admin.subjects.update');
+        Route::post('/admin/subjects/{uuid}/update', [SubjectController::class, 'postUpdate'])->name('admin.subjects.post.update');
+
+        // classes
+        Route::get('/admin/classes', [Class_Controller::class, 'index'])->name('admin.classes');
+        Route::get('/admin/classes/{uuid}/detail', [Class_Controller::class, 'detail'])->name('admin.classes.detail');
+        Route::get('/admin/classes/{uuid}/update', [Class_Controller::class, 'update'])->name('admin.classes.update');
+        Route::post('/admin/classes/{uuid}/update', [Class_Controller::class, 'postUpdate'])->name('admin.classes.post.update');
+        Route::post('/admin/classes/{uuid}/remove-member', [Class_Controller::class, 'removeMember'])->name('admin.classes.remove.member');
+        Route::post('/admin/classes/{uuid}/add-teachers', [Class_Controller::class, 'addTeachers'])->name('admin.classes.add.teachers');
+        Route::post('/admin/classes/{uuid}/add-students', [Class_Controller::class, 'addStudents'])->name('admin.classes.add.students');
+
+        // intakes
+        Route::get('/admin/intakes', [AdminIntakeController::class, 'index'])->name('admin.intakes');
+        Route::get('/admin/intakes/{uuid}/detail', [AdminIntakeController::class, 'detail'])->name('admin.intakes.detail');
+        Route::get('/admin/intakes/{uuid}/update', [AdminIntakeController::class, 'update'])->name('admin.intakes.update');
+        Route::post('/admin/intakes/{uuid}/update', [AdminIntakeController::class, 'postUpdate'])->name('admin.intakes.post.update');
+        Route::post('/admin/intakes/{uuid}/remove-member', [AdminIntakeController::class, 'removeMember'])->name('admin.intakes.remove.member');
+        Route::post('/admin/intakes/{uuid}/add-teachers', [AdminIntakeController::class, 'addTeachers'])->name('admin.intakes.add.teachers');
+        Route::post('/admin/intakes/{uuid}/add-students', [AdminIntakeController::class, 'addStudents'])->name('admin.intakes.add.students');
+        Route::post('/admin/intakes/{uuid}/update-member', [AdminIntakeController::class, 'updateMember'])->name('admin.intakes.update.member');
+
+        // users
+        Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users');
+        Route::get('/admin/users/{uuid}/update', [AdminUserController::class, 'update'])->name('admin.users.update');
+        Route::post('/admin/users/{uuid}/update', [AdminUserController::class, 'postUpdate'])->name('admin.users.post');
+
+        // notifications
+        Route::get('/admin/notifications', [SystemNotificationController::class, 'index'])->name('admin.notifications');
+        Route::get('/admin/notifications/create', [SystemNotificationController::class, 'create'])->name('admin.notifications.create');
+        Route::post('/admin/notifications/create', [SystemNotificationController::class, 'postCreate'])->name('admin.notifications.post.create');
+        Route::get('/admin/notifications/{id}/update', [SystemNotificationController::class, 'update'])->name('admin.notifications.update');
+        Route::post('/admin/notifications/{id}/update', [SystemNotificationController::class, 'postUpdate'])->name('admin.notifications.post.update');
+
+        //Route import
+        Route::get("/import", [FileController::class, 'index'])->name('view_import');
+        Route::post("/import", [FileController::class, 'uploadFile'])->name('upload_filed');
+        Route::post("/import-schedule", [FileController::class, 'uploadFileSchedule'])->name('upload_filed');
+        Route::middleware(['auth.role_admin'])->group(function () {
+            Route::get('/export', function () {
+                $path = storage_path('export/data_student_example.xlsx');
+                return response()->download($path);
+            })->name('export');
+            Route::get('/export-schedule', function () {
+                $path = storage_path('export/import_schedule_student.xlsx');
+                return response()->download($path);
+            })->name('export-schedule');
+        });
+    });
 });

@@ -24,4 +24,5 @@ class TableConstant
     const INTAKE_SCHEDULES_TABLE = 'intake_schedules';
     const NOTIFICATION_TABLE = 'notifications';
     const EVENT_INVITATION_TABLE = 'event_invitations';
+    const SYSTEM_NOTIFICATION_TABLE = 'system_notifications';
 }
