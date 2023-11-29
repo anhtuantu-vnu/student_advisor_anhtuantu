@@ -11,6 +11,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FileController extends Controller
 {
@@ -29,8 +31,16 @@ class FileController extends Controller
      */
     public function uploadFile(Request $request): JsonResponse
     {
-        Excel::import(new StudentImport, $request->file('file'));
-        return $this->successWithContent('Import success');
+        try {
+            DB::beginTransaction();
+            Excel::import(new StudentImport, $request->file('file'));
+            DB::commit();
+            return $this->successWithContent('Import success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
     }
 
     /**
@@ -39,7 +49,15 @@ class FileController extends Controller
      */
     public function uploadFileSchedule(Request $request): JsonResponse
     {
-        Excel::import(new StudentScheduleImport, $request->file('file'));
-        return $this->successWithContent('Import success');
+        try {
+            DB::beginTransaction();
+            Excel::import(new StudentScheduleImport, $request->file('file'));
+            DB::commit();
+            return $this->successWithContent('Import success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
     }
 }
