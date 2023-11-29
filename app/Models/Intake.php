@@ -40,7 +40,7 @@ class Intake extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class, 'subject_id', 'uuid')
-            ->select(['uuid', 'name', 'code', 'description']);
+            ->select(['uuid', 'name', 'code', 'description', 'color']);
     }
 
     public function user()

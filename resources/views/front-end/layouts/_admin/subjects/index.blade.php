@@ -16,6 +16,9 @@
                                 {{ __('texts.texts.subjects.' . auth()->user()->lang) }}
                             </h1>
                             <div>
+                                <a class="btn btn-primary text-white mb-3" href="/admin/subjects/create">
+                                    {{ __('texts.texts.add.' . auth()->user()->lang) }}
+                                </a>
                                 <table class="table table-bordered table-sm">
                                     <thead class="thead-dark">
                                         <tr>
@@ -24,6 +27,12 @@
                                             </th>
                                             <th scope="col">
                                                 {{ __('texts.texts.name.' . auth()->user()->lang) }}
+                                            </th>
+                                            <th scope="col">
+                                                {{ __('texts.texts.department.' . auth()->user()->lang) }}
+                                            </th>
+                                            <th scope="col">
+                                                {{ __('texts.texts.color.' . auth()->user()->lang) }}
                                             </th>
                                             <th scope="col">
                                                 {{ __('texts.texts.action.' . auth()->user()->lang) }}
@@ -38,6 +47,19 @@
                                                 </td>
                                                 <td>
                                                     {{ json_decode($subject->name, true)[auth()->user()->lang] }}
+                                                </td>
+                                                <td>
+                                                    @if ($subject->department)
+                                                        <a
+                                                            href="/admin/departments/{{ $subject->department->uuid }}/update">
+                                                            {{ json_decode($subject->department->name, true)[auth()->user()->lang] }}
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div
+                                                        style="width: 32px; height: 32px; background: {{ $subject->color }};">
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <a href="/admin/subjects/{{ $subject->uuid }}/update">

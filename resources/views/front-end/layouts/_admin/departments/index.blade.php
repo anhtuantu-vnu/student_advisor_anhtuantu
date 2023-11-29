@@ -16,6 +16,9 @@
                                 {{ __('texts.texts.departments.' . auth()->user()->lang) }}
                             </h1>
                             <div>
+                                <a class="btn btn-primary text-white mb-3" href="/admin/departments/create">
+                                    {{ __('texts.texts.add.' . auth()->user()->lang) }}
+                                </a>
                                 <table class="table table-bordered table-sm">
                                     <thead class="thead-dark">
                                         <tr>

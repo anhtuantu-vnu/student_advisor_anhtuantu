@@ -24,6 +24,69 @@ class AdminUserController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $departments = Department::all();
+
+        return view('front-end.layouts._admin.users.create', [
+            'departments' => $departments,
+        ]);
+    }
+
+    public function postCreate(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $last_name = $request->last_name;
+            $first_name = $request->first_name;
+            $email = $request->email;
+            $phone = $request->phone;
+            $date_of_birth = $request->date_of_birth;
+            $gender = $request->gender;
+            $unique_id = $request->unique_id;
+            $role = $request->role;
+            $department = $request->department;
+
+            if (
+                $last_name == null || $last_name == ''
+                || $first_name == null || $first_name == ''
+            ) {
+                return $this->failedWithErrors(400, __('texts.texts.name_required.' . auth()->user()->lang));
+            }
+
+            if ($email == null || $email == '') {
+                return $this->failedWithErrors(400, __('texts.texts.email_required.' . auth()->user()->lang));
+            }
+
+            if ($unique_id == null || $unique_id == '') {
+                return $this->failedWithErrors(400, __('texts.texts.code_required.' . auth()->user()->lang));
+            }
+
+            $user = new User();
+            $user->uuid = Str::uuid();
+            $user->last_name = $last_name;
+            $user->first_name = $first_name;
+            $user->email = $email;
+            $user->phone = $phone;
+            $user->date_of_birth = $date_of_birth;
+            $user->gender = $gender;
+            $user->unique_id = $unique_id;
+            $user->role = $role;
+            $user->department_id = $department;
+            $user->save();
+            DB::commit();
+
+            return $this->successWithContent([
+                'user' => $user,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return $this->failedWithErrors(500, $e->getMessage());
+        }
+    }
+
     public function update($uuid)
     {
         $departments = Department::all();
@@ -33,9 +96,14 @@ class AdminUserController extends Controller
             abort(404);
         }
 
+        $classes = ClassRole::where('user_id', '=', $user->uuid)->with([
+            'class_'
+        ])->get();
+
         return view('front-end.layouts._admin.users.update', [
             'user' => $user,
             'departments' => $departments,
+            'classes' => $classes,
         ]);
     }
 

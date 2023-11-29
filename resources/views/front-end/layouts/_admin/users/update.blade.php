@@ -89,103 +89,116 @@
                                 {{ $user->last_name . ' ' . $user->first_name }}
                             </h1>
                             <div class="mt-3">
-                                <form class="row" id="updateUserForm" autocomplete="off">
-                                    <div class="col-md-6 mt-2">
-                                        <label for="last_name">
-                                            {{ __('texts.texts.last_name.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="text" id="last_name" name="last_name" class="form-control"
-                                            value="{{ $user->last_name }}">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="{{ $user->avatar }}" alt="{{ $user->last_name }}_avatar" class="border"
+                                            style="width: 100%; aspect-ratio: 1; object-cover: fit; border-radius: 100%;">
                                     </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="first_name">
-                                            {{ __('texts.texts.first_name.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="text" id="first_name" name="first_name" class="form-control"
-                                            value="{{ $user->first_name }}">
+                                    <div class="col-md-10">
+                                        <form class="row" id="updateUserForm" autocomplete="off">
+                                            <div class="col-md-6 mt-2">
+                                                <label for="last_name">
+                                                    {{ __('texts.texts.last_name.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="text" id="last_name" name="last_name" class="form-control"
+                                                    value="{{ $user->last_name }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="first_name">
+                                                    {{ __('texts.texts.first_name.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="text" id="first_name" name="first_name" class="form-control"
+                                                    value="{{ $user->first_name }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="email">
+                                                    {{ __('texts.texts.email.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="email" id="email" name="email" class="form-control"
+                                                    value="{{ $user->email }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="phone">
+                                                    {{ __('texts.texts.phone.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="text" id="phone" name="phone" class="form-control"
+                                                    value="{{ $user->phone }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="date_of_birth">
+                                                    {{ __('texts.texts.date_of_birth.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="date" id="date_of_birth" name="date_of_birth"
+                                                    class="form-control" value="{{ $user->date_of_birth }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="gender">
+                                                    {{ __('texts.texts.gender.' . auth()->user()->lang) }}
+                                                </label>
+                                                <select name="gender" id="gender" class="form-control">
+                                                    <option value="1" <?php if($user->gender == 1) { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.male.' . auth()->user()->lang) }}
+                                                    </option>
+                                                    <option value="2" <?php if($user->gender == 2) { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.female.' . auth()->user()->lang) }}
+                                                    </option>
+                                                    <option value="3" <?php if($user->gender == 3) { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.other.' . auth()->user()->lang) }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="unique_id">
+                                                    {{ __('texts.texts.unique_id.' . auth()->user()->lang) }}
+                                                </label>
+                                                <input type="text" id="unique_id" name="unique_id" class="form-control"
+                                                    value="{{ $user->unique_id }}">
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="role">
+                                                    {{ __('texts.texts.role.' . auth()->user()->lang) }}
+                                                </label>
+                                                <select name="role" id="role" class="form-control">
+                                                    <option value="">
+                                                        {{ __('texts.texts.choose_an_option.' . auth()->user()->lang) }}
+                                                    </option>
+                                                    <option value="student" <?php if($user->role == 'student') { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.student.' . auth()->user()->lang) }}
+                                                    </option>
+                                                    <option value="teacher" <?php if($user->role == 'teacher') { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.teacher.' . auth()->user()->lang) }}
+                                                    </option>
+                                                    <option value="admin" <?php if($user->role == 'admin') { ?>selected<?php } ?>>
+                                                        {{ __('texts.texts.admin.' . auth()->user()->lang) }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                                <label for="department">
+                                                    {{ __('texts.texts.department.' . auth()->user()->lang) }}
+                                                </label>
+                                                <select name="department" id="department" class="form-control">
+                                                    @foreach ($departments as $department)
+                                                        <option value="{{ $department->uuid }}"
+                                                            <?php if($user->department_id == $department->uuid) { ?>selected<?php } ?>>
+                                                            {{ json_decode($department->name, true)[auth()->user()->lang] }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12 mt-2">
+                                                <button class="btn btn-primary text-white" type="button"
+                                                    id="saveFormUpdateButton">
+                                                    {{ __('texts.texts.save.' . auth()->user()->lang) }}
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="email">
-                                            {{ __('texts.texts.email.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="email" id="email" name="email" class="form-control"
-                                            value="{{ $user->email }}">
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="phone">
-                                            {{ __('texts.texts.phone.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="text" id="phone" name="phone" class="form-control"
-                                            value="{{ $user->phone }}">
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="date_of_birth">
-                                            {{ __('texts.texts.date_of_birth.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="date" id="date_of_birth" name="date_of_birth" class="form-control"
-                                            value="{{ $user->date_of_birth }}">
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="gender">
-                                            {{ __('texts.texts.gender.' . auth()->user()->lang) }}
-                                        </label>
-                                        <select name="gender" id="gender" class="form-control">
-                                            <option value="1" <?php if($user->gender == 1) { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.male.' . auth()->user()->lang) }}
-                                            </option>
-                                            <option value="2" <?php if($user->gender == 2) { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.female.' . auth()->user()->lang) }}
-                                            </option>
-                                            <option value="3" <?php if($user->gender == 3) { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.other.' . auth()->user()->lang) }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="unique_id">
-                                            {{ __('texts.texts.unique_id.' . auth()->user()->lang) }}
-                                        </label>
-                                        <input type="text" id="unique_id" name="unique_id" class="form-control"
-                                            value="{{ $user->unique_id }}">
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="role">
-                                            {{ __('texts.texts.role.' . auth()->user()->lang) }}
-                                        </label>
-                                        <select name="role" id="role" class="form-control">
-                                            <option value="">
-                                                {{ __('texts.texts.choose_an_option.' . auth()->user()->lang) }}
-                                            </option>
-                                            <option value="student" <?php if($user->role == 'student') { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.student.' . auth()->user()->lang) }}
-                                            </option>
-                                            <option value="teacher" <?php if($user->role == 'teacher') { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.teacher.' . auth()->user()->lang) }}
-                                            </option>
-                                            <option value="admin" <?php if($user->role == 'admin') { ?>selected<?php } ?>>
-                                                {{ __('texts.texts.admin.' . auth()->user()->lang) }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mt-2">
-                                        <label for="department">
-                                            {{ __('texts.texts.department.' . auth()->user()->lang) }}
-                                        </label>
-                                        <select name="department" id="department" class="form-control">
-                                            @foreach ($departments as $department)
-                                                <option value="{{ $department->uuid }}"
-                                                    <?php if($user->department_id == $department->uuid) { ?>selected<?php } ?>>
-                                                    {{ json_decode($department->name, true)[auth()->user()->lang] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12 mt-2">
-                                        <button class="btn btn-primary text-white" type="button" id="saveFormUpdateButton">
-                                            {{ __('texts.texts.save.' . auth()->user()->lang) }}
-                                        </button>
-                                    </div>
-                                </form>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                @include('front-end.layouts._admin.users.update_classes')
                             </div>
                         </div>
                     </div>

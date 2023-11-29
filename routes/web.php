@@ -195,11 +195,15 @@ Route::middleware(['auth.login'])->group(function () {
 
         // departments
         Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
+        Route::get('/admin/departments/create', [DepartmentController::class, 'create'])->name('admin.departments.create');
+        Route::post('/admin/departments/create', [DepartmentController::class, 'postCreate'])->name('admin.departments.post.create');
         Route::get('/admin/departments/{uuid}/update', [DepartmentController::class, 'update'])->name('admin.departments.update');
         Route::post('/admin/departments/{uuid}/update', [DepartmentController::class, 'postUpdate'])->name('admin.departments.post.update');
 
         // subjects
         Route::get('/admin/subjects', [SubjectController::class, 'index'])->name('admin.subjects');
+        Route::get('/admin/subjects/create', [SubjectController::class, 'create'])->name('admin.subjects.create');
+        Route::post('/admin/subjects/create', [SubjectController::class, 'postCreate'])->name('admin.subjects.post.create');
         Route::get('/admin/subjects/{uuid}/update', [SubjectController::class, 'update'])->name('admin.subjects.update');
         Route::post('/admin/subjects/{uuid}/update', [SubjectController::class, 'postUpdate'])->name('admin.subjects.post.update');
 
@@ -224,6 +228,8 @@ Route::middleware(['auth.login'])->group(function () {
 
         // users
         Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users');
+        Route::get('/admin/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+        Route::post('/admin/users/create', [AdminUserController::class, 'postCreate'])->name('admin.users.post.create');
         Route::get('/admin/users/{uuid}/update', [AdminUserController::class, 'update'])->name('admin.users.update');
         Route::post('/admin/users/{uuid}/update', [AdminUserController::class, 'postUpdate'])->name('admin.users.post');
 

@@ -116,14 +116,10 @@
 
             function processEvents() {
                 let res = [];
-                let intakeColorMap = {};
                 if (intakesData.intakeMembers) {
                     if (intakesData.intakeMembers.length) {
                         intakesData.intakeMembers.map(item => {
                             if (item.intake) {
-                                if (!intakeColorMap[item.intake.uuid]) {
-                                    intakeColorMap[item.intake.uuid] = getRandomEventColor();
-                                }
                                 var givenDateString = item.intake.end_date;
                                 var givenDate = new Date(givenDateString);
                                 var today = new Date();
@@ -156,7 +152,7 @@
                                                     addPreFixHourMinute(
                                                         item.intake.end_minute),
                                                 display: "block",
-                                                backgroundColor: intakeColorMap[item.intake.uuid],
+                                                backgroundColor: item.intake.subject.color,
                                                 extendedProps: {
                                                     intake: item.intake,
                                                     subject: item.intake.subject,
@@ -278,7 +274,6 @@
                         "{{ __('texts.texts.student.' . auth()->user()->lang) }} " + `<a href="/users/${currentCreatedBy.uuid}" target="_blank">${currentCreatedBy.last_name +
                         " " + currentCreatedBy.first_name}</a>`;
                 }
-
 
                 document.getElementById("eventModalTimeInfo").textContent = populateEventDateInfo(originalEvent);
                 document.getElementById("eventModalLocationInfo").textContent = originalEvent.location;
