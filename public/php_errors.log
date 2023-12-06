@@ -1,0 +1,1 @@
+[05-Sep-2023 14:17:54 UTC] PHP Fatal error:  Cannot use "parent" when current class scope has no parent in /Users/pc/student_advisor_anhtuantu/app/Repositories/UserRepository.php on line 11

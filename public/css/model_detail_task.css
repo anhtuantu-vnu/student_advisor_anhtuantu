@@ -1,0 +1,67 @@
+.list_member_modal_task select{
+    width: 100%;
+    max-height: 200px;
+    overflow-y: scroll;
+    font-size: 14px;
+}
+.activity_comment {
+    display: flex;
+    width: 100%;
+}
+.activity_comment img {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border-radius: 30px;
+}
+
+.activity_comment_input {
+    width: 100%;
+}
+.input_comment {
+    line-height: 42px;
+    height: 42px;
+    font-size: 14px;
+    display: inline-block;
+    border-radius: 4px;
+    border: 1px #cdcdcd solid;
+    background-color: #f1f1f1;
+    padding: 4px 12px;
+    width: 100%;
+    color: #565657;
+}
+.description_modal {
+    width: 100%;
+    resize: none;
+}
+
+.ui_modal_detail_task {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9;
+    pointer-events: none;
+    opacity: 0; /* Bắt đầu với độ mờ là 0 */
+    transform: scale(0.8); /* Thu nhỏ phần tử */
+    transition: opacity 1s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.ui_modal_detail_task_show {
+    opacity: 1; /* Khi class .show được thêm vào, phần tử sẽ hiển thị */
+    transform: scale(1); /* Kích thước phần tử trở về bình thường */
+}
+
+.modal_customer {
+    width: 500px;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+.disable_ui {
+    pointer-events: none;
+}
