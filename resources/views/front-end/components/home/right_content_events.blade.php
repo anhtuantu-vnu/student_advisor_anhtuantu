@@ -51,10 +51,8 @@
         } else {
             rightSideBarEventsContainer.innerHTML = `
             <div class="card-body d-flex align-items-center p-4">
-              <h4 class="fw-700 text-grey-900 font-xssss mt-2">
-                <span
-                  {{ __('texts.texts.no_events_found.' . auth()->user()->lang) }}
-                </span>
+              <h4 class="fw-700 text-grey-900 font-xssss">
+                {{ __('texts.texts.no_events_found.' . auth()->user()->lang) }}
               </h4>
             </div>
             `;

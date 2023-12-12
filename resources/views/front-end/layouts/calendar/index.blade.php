@@ -204,14 +204,13 @@
                 }
 
                 allEvents = [...res];
-                return res;
             }
 
             function initCalendar() {
                 let params = new URL(window.location.href);
                 var view_mode = params.searchParams.get("view_mode") || 'dayGridMonth';
+                processEvents();
 
-                let events = processEvents();
                 var calendarEl = document.getElementById('huet_calendar');
                 calendar = new FullCalendar.Calendar(calendarEl, {
                     headerToolbar: {
@@ -410,6 +409,191 @@
                 });
             }
         });
+
+        // add event
+        let eventValidations = {
+            name_required: {
+                vi: "Vui lòng điền tên sự kiện",
+                en: "Please input event name",
+            },
+            description_required: {
+                vi: "Vui lòng điền mô tả sự kiện",
+                en: "Please input event description",
+            },
+            location_required: {
+                vi: "Vui lòng điền địa điểm tổ chức sự kiện",
+                en: "Please input event location",
+            },
+            start_time_required: {
+                vi: "Vui lòng chọn thời gian bắt đầu sự kiện",
+                en: "Please input event start time",
+            },
+            end_time_required: {
+                vi: "Vui lòng chọn thời gian kết thúc sự kiện",
+                en: "Please input event end time",
+            },
+            invalid_time: {
+                vi: "Thời gian sự kiện không hợp lệ",
+                en: "Invalid event time",
+            },
+            invalid_files: {
+                vi: "Vui lòng chỉ upload file ảnh",
+                en: "Please only upload image files",
+            },
+        }
+
+        let saveAddEventButton = document.getElementById("saveAddEventButton");
+        let addEventStartTime = document.getElementById("addEventStartTime");
+        let addEventEndTime = document.getElementById("addEventEndTime");
+
+        function getEventDate(input) {
+            try {
+                return input.split("T")[0];
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function getEventHour(input) {
+            try {
+                let time = input.split("T")[1];
+                return parseInt(time.split(":")[0]);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function getEventMinute(input) {
+            try {
+                let time = input.split("T")[1];
+                return parseInt(time.split(":")[1]);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function addPreFixHourMinute(input) {
+            if (input < 10) {
+                return '0' + input;
+            }
+            return input;
+        }
+
+        saveAddEventButton.addEventListener("click", e => {
+            let currentLang = "{{ auth()->user()->lang }}";
+            let eventName = document.getElementById("addEventName");
+            let eventDescription = document.getElementById("addEventDescription");
+            let eventLocation = document.getElementById("addEventLocation");
+            let eventColor = document.getElementById("addEventColor");
+
+            let eventMessages = [];
+            if (!eventName.value) {
+                eventMessages.push(eventValidations.name_required[currentLang]);
+            }
+            if (!eventDescription.value) {
+                eventMessages.push(eventValidations.description_required[currentLang]);
+            }
+            if (!eventLocation.value) {
+                eventMessages.push(eventValidations.location_required[currentLang]);
+            }
+            if (!addEventStartTime.value) {
+                eventMessages.push(eventValidations.start_time_required[currentLang]);
+            }
+            if (!addEventEndTime.value) {
+                eventMessages.push(eventValidations.end_time_required[currentLang]);
+            }
+            if (addEventStartTime.value && addEventEndTime.value) {
+                var date1 = new Date(addEventStartTime.value);
+                var date2 = new Date(addEventEndTime.value);
+                if (date1 >= date2) {
+                    eventMessages.push(eventValidations.invalid_time[currentLang]);
+                }
+            }
+
+            if (eventMessages.length) {
+                alret(eventMessages.join(', '));
+                return;
+            }
+
+            let startDate = getEventDate(addEventStartTime.value);
+            let startHour = getEventHour(addEventStartTime.value);
+            let startMinute = getEventMinute(addEventStartTime.value);
+
+            let endDate = getEventDate(addEventEndTime.value);
+            let endHour = getEventHour(addEventEndTime.value);
+            let endMinute = getEventMinute(addEventEndTime.value);
+
+            let formData = new FormData();
+
+            formData.append("event_name", eventName.value);
+            formData.append("color", eventColor.value);
+            formData.append("event_description", eventDescription.value);
+            formData.append("event_location", eventLocation.value);
+            formData.append("start_date", startDate);
+            formData.append("end_date", endDate);
+            formData.append("start_hour", startHour);
+            formData.append("start_minute", startMinute);
+            formData.append("end_hour", endHour);
+            formData.append("end_minute", endMinute);
+
+            $.ajax({
+                type: "POST",
+                url: `/create-event`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function() {
+                    document.getElementById("loadingSpinner").classList.remove("d-none");
+                },
+                complete: function(data) {
+                    document.getElementById("loadingSpinner").classList.add("d-none");
+                },
+                error: function(error) {
+                    alert(error.statusText);
+                },
+                success: function(data) {
+                    if (data.meta.success) {
+                        if (calendar) {
+                            let item = data.data.event;
+                            calendar.addEvent({
+                                id: item.uuid,
+                                title: item.name,
+                                start: item.start_date.split(" ")[0] + 'T' +
+                                    addPreFixHourMinute(item.start_hour) + ":" +
+                                    addPreFixHourMinute(
+                                        item.start_minute) + ":00+07:00",
+                                startStr: addPreFixHourMinute(item.start_hour) + ":" +
+                                    addPreFixHourMinute(
+                                        item.start_minute),
+                                end: item.end_date.split(" ")[0] + 'T' +
+                                    addPreFixHourMinute(item.end_hour) + ":" +
+                                    addPreFixHourMinute(
+                                        item.end_minute) + ":00+07:00",
+                                endStr: addPreFixHourMinute(item.end_hour) + ":" +
+                                    addPreFixHourMinute(
+                                        item.end_minute),
+                                display: "block",
+                                backgroundColor: item.color,
+                                extendedProps: {
+                                    originalEvent: item,
+                                    type: 'event',
+                                },
+                            });
+                        }
+                        document.getElementById("closeAddEventModal").click();
+                    } else {
+                        let message = currentLang == "vi" ?
+                            "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
+                            "Error happened. Please try again later."
+                        if (data.message) {
+                            message = data.message;
+                        }
+                        alert(message);
+                    }
+                },
+            });
+        });
     </script>
 @endpush
 
@@ -445,6 +629,7 @@
             </div>
         </div>
     </div>
+    @include('front-end.layouts.calendar.add_event_modal')
 @endsection
 
 @section('content')
@@ -457,6 +642,12 @@
                             <h1 class="fw-700 mb-0 mt-0 text-grey-900 mb-4" style="font-size: 34px !important;">
                                 {{ __('texts.texts.events.' . auth()->user()->lang) }}
                             </h1>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-success text-white" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#addEventCalendarModal">
+                                    {{ __('texts.texts.add.' . auth()->user()->lang) }}
+                                </button>
+                            </div>
                             <div>
                                 <div class="response"></div>
                                 <div id='huet_calendar'></div>

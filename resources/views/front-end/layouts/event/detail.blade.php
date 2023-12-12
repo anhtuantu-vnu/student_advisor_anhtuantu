@@ -374,15 +374,13 @@
                                         <div>
                                             <i class="feather-calendar me-3"></i>
                                             @if ($event->start_date == $event->end_date)
-                                                {{ $event->start_hour . ':' . $event->start_minute }}
-                                                - {{ $event->start_hour . ':' . $event->start_minute }}
+                                                {{ ($event->start_hour >= 10 ? $event->start_hour : '0' . $event->start_hour) . ':' . ($event->start_minute >= 10 ? $event->start_minute : '0'. $event->start_minute) }}
+                                                - {{ ($event->end_hour >= 10 ? $event->end_hour : '0' . $event->end_hour) . ':' . ($event->end_minute >= 10 ? $event->end_minute : '0'. $event->end_minute) }}
                                                 {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }}
                                             @else
-                                                {{ $event->start_hour . ':' . $event->start_minute }}
-                                                - {{ $event->start_hour . ':' . $event->start_minute }}
+                                                {{ ($event->start_hour >= 10 ? $event->start_hour : '0' . $event->start_hour) . ':' . ($event->start_minute >= 10 ? $event->start_minute : '0'. $event->start_minute) }}
                                                 {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y') }}
-                                                - {{ $event->start_hour . ':' . $event->start_minute }}
-                                                - {{ $event->start_hour . ':' . $event->start_minute }}
+                                                {{ ($event->end_hour >= 10 ? $event->end_hour : '0' . $event->end_hour) . ':' . ($event->end_minute >= 10 ? $event->end_minute : '0'. $event->end_minute) }} 
                                                 {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y') }}
                                             @endif
                                         </div>

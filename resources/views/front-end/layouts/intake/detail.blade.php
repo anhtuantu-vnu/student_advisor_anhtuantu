@@ -111,7 +111,6 @@
                 </div>
                 `;
 
-
                 let genderMap = {
                     1: 'Male',
                     2: 'Female',
@@ -564,6 +563,46 @@
                                                                         @else
                                                                             <span>
                                                                                 {{ $member->last_term_points }}
+                                                                            </span>
+                                                                        @endif
+                                                                    </li>
+                                                                    <li>
+                                                                        {{ __('texts.texts.ave_points.' . auth()->user()->lang) }}:
+                                                                        <?php
+                                                                        $avePoints = '';
+                                                                        if ($member->attendance_points >= 0 && $member->mid_term_points >= 0 && $member->last_term_points >= 0) {
+                                                                            $avePoints = $member->attendance_points * 0.1 + $member->mid_term_points * 0.3 + $member->last_term_points * 0.6;
+                                                                        }
+                                                                        ?>
+                                                                        @if ($avePoints <= 6)
+                                                                            <span class="text-danger">
+                                                                                {{ $avePoints }}
+                                                                            </span>
+                                                                        @else
+                                                                            <span>
+                                                                                {{ $avePoints }}
+                                                                            </span>
+                                                                        @endif
+                                                                    </li>
+                                                                    <li>
+                                                                        {{ __('texts.texts.gpa.' . auth()->user()->lang) }}:
+                                                                        <?php
+                                                                        $gpa = 0;
+                                                                        $count = 0;
+                                                                        foreach ($member->user->intakeMembers as $iMember) {
+                                                                            if ($iMember->attendance_points >= 0 && $iMember->mid_term_points >= 0 && $iMember->last_term_points >= 0) {
+                                                                                $gpa += $iMember->attendance_points * 0.1 + $iMember->mid_term_points * 0.3 + $iMember->last_term_points * 0.6;
+                                                                                $count++;
+                                                                            }
+                                                                        }
+                                                                        ?>
+                                                                        @if ($gpa / $count <= 6)
+                                                                            <span class="text-danger">
+                                                                                {{ number_format($gpa / $count, 2, '.', '') }}
+                                                                            </span>
+                                                                        @else
+                                                                            <span>
+                                                                                {{ number_format($gpa / $count, 2, '.', '') }}
                                                                             </span>
                                                                         @endif
                                                                     </li>

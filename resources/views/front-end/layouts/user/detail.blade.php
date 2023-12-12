@@ -77,7 +77,7 @@
                                     </div>
                                 @endif
                             </div>
-                            @if (auth()->user()->role != App\Http\Controllers\_CONST::STUDENT_ROLE)
+                            @if (auth()->user()->role == App\Http\Controllers\_CONST::ADMIN_ROLE)
                                 <div class="mt-3">
                                     <a href="/admin/users/{{ $thisUser->uuid }}/update">
                                         <button class="btn btn-primary text-white" type="button">

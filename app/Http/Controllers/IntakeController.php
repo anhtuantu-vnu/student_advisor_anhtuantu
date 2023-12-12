@@ -29,7 +29,7 @@ class IntakeController extends Controller
                 ['intake_id', '=', $uuid],
                 ['role', '=', _CONST::STUDENT_ROLE],
             ])->with(['user' => function ($query) {
-                $query->with('department');
+                $query->with(['department', 'intakeMembers']);
             }])->get();
 
             $intakeMembersTeachers = IntakeMember::where([

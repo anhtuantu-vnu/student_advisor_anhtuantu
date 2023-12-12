@@ -254,6 +254,10 @@ return [
       "vi" => 'Không tìm thấy sự kiện nào',
       "en" => 'No events found'
     ],
+    'no_plans_found' => [
+      "vi" => 'Không tìm thấy kế hoạch nào',
+      "en" => 'No plans found'
+    ],
     'intakes' => [
       "vi" => 'Tiết học',
       "en" => 'Intakes'
@@ -285,6 +289,14 @@ return [
     'last_term_points' => [
       "vi" => 'Điểm cuối kì',
       "en" => 'Last-term points'
+    ],
+    'ave_points' => [
+      "vi" => 'Điểm trung bình',
+      "en" => 'Average points'
+    ],
+    'gpa' => [
+      "vi" => 'GPA',
+      "en" => 'GPA'
     ],
     'schedule_meeting' => [
       "vi" => 'Tạo lịch hẹn',

@@ -1,4 +1,4 @@
-<div class="card w-100 shadow-none bg-transparent bg-transparent-card border-0 p-0 mb-0">
+{{-- <div class="card w-100 shadow-none bg-transparent bg-transparent-card border-0 p-0 mb-0">
     <div class="owl-carousel category-card owl-theme overflow-hidden nav-none">
         <div class="item">
             <div class="card w200 d-block border-0 shadow-xss rounded-xxl overflow-hidden mb-3 me-2 mt-3">
@@ -133,4 +133,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

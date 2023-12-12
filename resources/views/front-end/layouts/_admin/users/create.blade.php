@@ -62,7 +62,11 @@
                     }
                 },
                 error: function(error) {
-                    alert(error.responseJSON.errors.error_message);
+                    let msg = error.responseJSON.errors.error_message;
+                    if (msg.toLowerCase().indexOf('duplicate') != -1) {
+                        msg = 'Duplicate data';
+                    }
+                    alert(msg);
                     return;
                 },
             });

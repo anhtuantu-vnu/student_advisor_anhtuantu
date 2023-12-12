@@ -8,8 +8,7 @@
                 {{ __('texts.texts.see_all.' . auth()->user()->lang) }}
             </a>
         </div>
-        <div class="card-body pt-0 ps-4 pe-4 pb-3 overflow-hidden plan_list">
-
+        <div class="card-body pt-0 pb-3 overflow-hidden plan_list">
         </div>
     </div>
 
@@ -26,10 +25,10 @@
         type: 'GET',
         processData: true,
         contentType: false,
-        success: function (data) {
+        success: function(data) {
             let uiPlanList = '';
             let listTask = data.data;
-            if( Object.keys(listTask).length){
+            if (Object.keys(listTask).length) {
                 for (const plan of listTask) {
                     uiPlanList += `
                         <div class="project-box w-100 p-2 mb-2 rounded"
@@ -46,10 +45,18 @@
                         </div>
                     `;
                 }
+                $('.plan_list').append(uiPlanList)
+            } else {
+                $('.plan_list').append(`
+                <div class="card-body d-flex align-items-center">
+                    <h4 class="fw-700 text-grey-900 font-xssss">
+                        {{ __('texts.texts.no_plans_found.' . auth()->user()->lang) }}
+                    </h4>
+                </div>
+                `);
             }
-            $('.plan_list').append(uiPlanList)
         },
-        error: function (error) {
+        error: function(error) {
             console.log(error);
         },
     });

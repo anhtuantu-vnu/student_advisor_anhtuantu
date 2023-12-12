@@ -353,8 +353,6 @@ class EventController extends Controller
             $thisEvent->save();
             DB::commit();
 
-            return $this->successWithContent($thisEvent);
-
             $data = [
                 'event' => Event::with(['createdByUser', 'updatedByUser', 'eventMembers'])->find($id),
             ];

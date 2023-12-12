@@ -308,6 +308,8 @@
             "{{ $event->end_hour }}", "{{ $event->end_minute }}");
 
         function formdateDateTimeValueEventUpdate(date, hour, minute) {
+            hour = hour >= 10 ? hour: '0' + hour;
+            minute = minute >= 10 ? minute: '0' + minute;
             return date.split(" ")[0] + "T" + hour + ":" + minute;
         }
 
@@ -419,7 +421,6 @@
                     alert(error.statusText);
                 },
                 success: function(data) {
-                    console.log('data', data);
                     if (data.meta.success) {
                         let message = currentLang == "vi" ? "Cập nhật sự kiện thành công." :
                             "Event updated successfully.";

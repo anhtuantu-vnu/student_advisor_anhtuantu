@@ -233,6 +233,50 @@
                                                                     {{ $student->last_term_points }}
                                                                 </span>
                                                             </li>
+                                                            <li>
+                                                                <b>
+                                                                    {{ __('texts.texts.ave_points.' . auth()->user()->lang) }}:
+                                                                </b>
+                                                                <?php
+                                                                $avePoints = '';
+                                                                if ($student->attendance_points >= 0 && $student->mid_term_points >= 0 && $student->last_term_points >= 0) {
+                                                                    $avePoints = $student->attendance_points * 0.1 + $student->mid_term_points * 0.3 + $student->last_term_points * 0.6;
+                                                                }
+                                                                ?>
+                                                                @if ($avePoints <= 6)
+                                                                    <span class="text-danger">
+                                                                        {{ $avePoints }}
+                                                                    </span>
+                                                                @else
+                                                                    <span>
+                                                                        {{ $avePoints }}
+                                                                    </span>
+                                                                @endif
+                                                            </li>
+                                                            <li>
+                                                                <b>
+                                                                    {{ __('texts.texts.gpa.' . auth()->user()->lang) }}:
+                                                                </b>
+                                                                <?php
+                                                                $gpa = 0;
+                                                                $count = 0;
+                                                                foreach ($student->user->intakeMembers as $iMember) {
+                                                                    if ($iMember->attendance_points >= 0 && $iMember->mid_term_points >= 0 && $iMember->last_term_points >= 0) {
+                                                                        $gpa += $iMember->attendance_points * 0.1 + $iMember->mid_term_points * 0.3 + $iMember->last_term_points * 0.6;
+                                                                        $count++;
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                @if ($gpa / $count <= 6)
+                                                                    <span class="text-danger">
+                                                                        {{ number_format($gpa / $count, 2, '.', '') }}
+                                                                    </span>
+                                                                @else
+                                                                    <span>
+                                                                        {{ number_format($gpa / $count, 2, '.', '') }}
+                                                                    </span>
+                                                                @endif
+                                                            </li>
                                                         </ul>
                                                     </td>
                                                     <td>

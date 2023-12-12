@@ -115,9 +115,6 @@
 
                         @include('front-end.components.home.events_feeds')
 
-                        {{-- live here --}}
-                        {{-- @include('front-end.components.home.live_stream') --}}
-
                         <div class="card w-100 text-center shadow-xss rounded-xxl border-0 p-4 mb-3 mt-3 d-none"
                             id="mainFeedsLoading">
                             <div class="snippet mt-2 ms-auto me-auto" data-title=".dot-typing">
@@ -382,7 +379,10 @@
         }
 
         function formdateDateTimeValueEvent(event, type) {
-            return event[type + '_date'].split(" ")[0] + "T" + event[type + '_hour'] + ":" + event[type + '_minute'];
+            let date = event[type + '_date'].split(" ")[0];
+            let hour = event[type + '_hour'] >= 10 ? event[type + '_hour']: '0' + event[type + '_hour'];
+            let minute = event[type + '_minute'] >= 10 ? event[type + '_minute']: '0' + event[type + '_minute'];
+            return date + "T" + hour + ":" + minute;
         }
 
         function populateEventsFeeds() {
@@ -1082,7 +1082,7 @@
                 let updateActionDescription = "{{ auth()->user()->lang }}" == "vi" ?
                     "Chỉnh sửa mô tả, thời gian, địa điểm sự kiện" : "Update event time, description, location";
 
-                if ("{{ auth()->user()->uuid }}" == event.created_by_user.uuid) {
+                if ("{{ auth()->user()->uuid }}" == event.created_by) {
                     actions = `
                     <a href="#" class="ms-auto" id="dropdownMenuEvent_${event.uuid}" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss"></i>

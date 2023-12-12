@@ -34,11 +34,10 @@
                     if (result.meta.success) {
                         if (!result.data.systemNotifications.length) {
                             loadMoreSystemNotifications.classList.add("d-none");
-                        } else {
-                            populateSystemNotifications(result.data.systemNotifications);
                         }
+                        populateSystemNotifications(result.data.systemNotifications);
                     } else {
-
+                        populateSystemNotifications([]);
                     }
                 },
                 error: function(error) {
@@ -52,8 +51,9 @@
         function populateSystemNotifications(data) {
             let currentHtml = systemNotificationsContainer.innerHTML;
 
-            data.forEach(item => {
-                currentHtml += `
+            if (data && data.length) {
+                data.forEach(item => {
+                    currentHtml += `
                 <div class="col-md-4 p-1" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
                   <div class="bg-white p-3 rounded border cursor-pointer notification-item" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}" id="notification_${item.id}">
                     <div data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
@@ -65,10 +65,17 @@
                   </div>
                 </div>
                 `;
-            });
+                });
 
-            systemNotificationsContainer.innerHTML = currentHtml;
-            addNotificationItemEvent();
+                systemNotificationsContainer.innerHTML = currentHtml;
+                addNotificationItemEvent();
+            } else {
+                systemNotificationsContainer.innerHTML = `
+                <div class="ps-3">
+                    {{ __('texts.texts.no_notifications_found.' . auth()->user()->lang) . ' ' }}
+                </div>
+                `;
+            }
         }
 
         function addNotificationItemEvent() {
