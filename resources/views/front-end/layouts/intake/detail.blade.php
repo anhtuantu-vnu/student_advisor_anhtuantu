@@ -404,7 +404,7 @@
                         alert(
                             "{{ __('texts.texts.meeting_created_successfully.' . auth()->user()->lang) }}"
                         );
-                        sendEventInvitations(data.data.event, chosenStudents);
+                        sendEventInvitations(data.data.event, chosenStudents, true);
                     } else {
                         let message = currentLang == "vi" ?
                             "Đã có lỗi xảy ra. Xin vui lòng thử lại sau." :
@@ -420,7 +420,7 @@
             });
         });
 
-        function sendEventInvitations(event, studentsToInvite) {
+        function sendEventInvitations(event, studentsToInvite, forceAccept) {
             let userIds = studentsToInvite.map(item => item.uuid);
             let userNames = studentsToInvite.map(item => item.last_name + " " + item.first_name);
             let userEmails = studentsToInvite.map(item => item.email);
@@ -429,6 +429,7 @@
             let formData = 'userIds=' + userIds.join(",") +
                 '&userNames=' + userNames.join(",") +
                 '&userEmails=' + userEmails.join(",") +
+                '&forceAccept=' + forceAccept +
                 '&eventUrl=' + eventUrl;
             $.ajax({
                 type: "POST",

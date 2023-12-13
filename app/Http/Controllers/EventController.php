@@ -597,6 +597,7 @@ class EventController extends Controller
             $eventUrl = $request->eventUrl;
             $usersToInvite = [];
             $eventInvitations = [];
+            $forceAccept = $request->forceAccept == 'true' ? true : false;
 
             foreach ($userIds as $userId) {
                 $findInvitation = EventInvitation::where([
@@ -616,13 +617,31 @@ class EventController extends Controller
                     'event_id' => $thisEvent->uuid,
                     'origin_user' => $thisEvent->created_by,
                     'target_user' => $userId,
-                    'status' => EventInvitation::STATUS_NO_RESPONSE,
+                    'status' => $forceAccept ? EventInvitation::STATUS_GOING : EventInvitation::STATUS_NO_RESPONSE,
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]);
             }
             if (count($eventInvitations) > 0) {
                 EventInvitation::insert($eventInvitations);
+            }
+
+            if ($forceAccept) {
+                $eventMembers = [];
+                foreach ($usersToInvite as $userId) {
+                    array_push($eventMembers, [
+                        'uuid' => Str::uuid(),
+                        'event_id' => $thisEvent->uuid,
+                        'user_id' => $userId,
+                        'status' => EventMember::STATUS_GOING,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+
+                if (count($eventMembers) > 0) {
+                    EventMember::insert($eventMembers);
+                }
             }
 
             // create event invitation notifications

@@ -32,10 +32,12 @@
                 type: "GET",
                 success: function(result) {
                     if (result.meta.success) {
-                        if (!result.data.systemNotifications.length) {
+                        if (!result.data.systemNotifications.length || result.data.systemNotifications.length <
+                            systemNotificationLimit) {
                             loadMoreSystemNotifications.classList.add("d-none");
                         }
-                        populateSystemNotifications(result.data.systemNotifications);
+                        systemNotifications = systemNotifications.concat(result.data.systemNotifications);
+                        populateSystemNotifications(systemNotifications);
                     } else {
                         populateSystemNotifications([]);
                     }
@@ -54,17 +56,17 @@
             if (data && data.length) {
                 data.forEach(item => {
                     currentHtml += `
-                <div class="col-md-4 p-1" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
-                  <div class="bg-white p-3 rounded border cursor-pointer notification-item" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}" id="notification_${item.id}">
-                    <div data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
-                      <b data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">${item.title}</b>
+                    <div class="col-md-4 p-1" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
+                        <div class="bg-white p-3 rounded border cursor-pointer notification-item" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}" id="notification_${item.id}">
+                            <div data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">
+                            <b data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}">${item.title}</b>
+                            </div>
+                            <div class="d-none" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}" id="notification_content_${item.id}">
+                            ${"{{ auth()->user()->lang }}" == "vi" ? item.content: item.content_en}
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-none" data-id="${item.id}" data-title="${item.title}" data-created-at="${item.created_at}" id="notification_content_${item.id}">
-                      ${"{{ auth()->user()->lang }}" == "vi" ? item.content: item.content_en}
-                    </div>
-                  </div>
-                </div>
-                `;
+                    `;
                 });
 
                 systemNotificationsContainer.innerHTML = currentHtml;
